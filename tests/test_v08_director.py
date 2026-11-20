@@ -71,6 +71,8 @@ class DirectorV08Tests(unittest.TestCase):
   with self.assertRaises(GuardError):self.ctrl.set_act('arrival')
  def test_19_contact_after_clock(self):
   self.ctrl.transition('desk');self.ctrl.transition('interview');self.ctrl.start_interview('s2')
+  # V11-INT: scene travel now consumes case time; pin the clock to the report time to test the window
+  self.ctrl.state.case_clock_minutes=22*60+7
   with self.assertRaises(GuardError):self.ctrl.resolve_action('contact_acquaintance','s3',approved=True)
   self.ctrl.advance_case_clock(15,approved=True)
   r=self.ctrl.resolve_action('contact_acquaintance','s3',approved=True)

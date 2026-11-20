@@ -11,6 +11,10 @@ from .outcomes import OutcomeDirector
 from .providers import ProviderGate, PreviewProvider
 
 SCENES=frozenset(['hall','room302','interview','desk'])
+# Minutes of case time consumed by moving between places (travel, booking, paperwork)
+SCENE_CLOCK_COST={('hall','room302'):4,('room302','desk'):38,('hall','desk'):38,
+                  ('desk','interview'):10,('interview','desk'):6,('desk','room302'):30,
+                  ('room302','hall'):1,('desk','hall'):30}
 SCENE_TRANSITIONS={
  'hall':{'room302','desk'},
  'room302':{'hall','desk'},
@@ -34,6 +38,7 @@ class EpisodeState:
     open_meetings:set[str]=field(default_factory=set)
     shot_history:list[str]=field(default_factory=list)
     cue_history:list[dict]=field(default_factory=list)
+    pending_proposals:list[dict]=field(default_factory=list)
     # Each arrival is not a forced cutscene: active control and subtitle timing are client-driven
 
 class EpisodeController:
@@ -58,8 +63,42 @@ class EpisodeController:
         if self.state.interview_active:raise GuardError('Finish interview before leaving')
         previous=self.state.scene
         self.state.scene=scene
-        self._log('scene_changed',{'from':previous,'to':scene})
+        # Case clock moves with real procedure (travel, paperwork), never with typing speed
+        self.state.case_clock_minutes+=SCENE_CLOCK_COST.get((previous,scene),0)
+        self._log('scene_changed',{'from':previous,'to':scene,'clock':self.clock_text()})
         return self.public_state()
+
+    def clock_text(self):
+        m=self.state.case_clock_minutes%(24*60)
+        return f'{m//60:02d}:{m%60:02d}'
+
+    def autonomy_after_interview(self, actor):
+        """Server-decided autonomous follow-up of an NPC after an interview ends.
+        Only canon-authorized edges, time windows and custody rules. Returns committed event or None."""
+        from .suspect_mind import personas
+        proposals=[p for p in self.state.pending_proposals if p['actor']==actor]
+        self.state.pending_proposals=[p for p in self.state.pending_proposals if p['actor']!=actor]
+        if actor!='s2':return None
+        seed=personas()['autonomy_seeds']['s2_contacts_s3']
+        shown=self.world.presented_to.get('s2',set())
+        wants=any(p['kind']=='contact_acquaintance' for p in proposals) or bool(shown & {'e02','e03','e05','e07','e08','e09'})
+        if not wants:return None
+        if any(e.kind=='contact_acquaintance' and e.actor=='s2' for e in self.world.events):return None
+        rules=self.world._canon['autonomy']['action_windows']['contact_acquaintance']
+        h,mi=(int(n) for n in rules['min_case_clock'].split(':'))
+        if self.state.case_clock_minutes<h*60+mi:
+            self._log('autonomy_blocked',{'actor':actor,'reason':'time_window'});return None
+        if 's2' in self.state.persons_in_custody:
+            self._log('autonomy_blocked',{'actor':actor,'reason':'custody'});return None
+        self.state.case_clock_minutes+=9
+        event=self.world.action('s2','contact_acquaintance','s3',approved=True,payload={
+            'at':self.clock_text(),
+            'summary_for_s2':f'경찰 면담을 마친 뒤 {self.clock_text()}쯤 박현수에게 전화해 경찰이 뭘 물었는지, 그날 무슨 소리를 들었는지 물어봤다',
+            'summary_for_s3':f'{self.clock_text()}쯤 302호 수연 씨 친구라는 이서연이 전화해서 경찰이 뭘 물어보던지, 그날 밤 무슨 소리 들었는지 캐물었다. 좀 이상하다고 느꼈다',
+        })
+        self._log('world_event_committed',{'id':event,'kind':'contact_acquaintance','actor':'s2','target':'s3',
+                                           'clock':self.clock_text(),'source':'autonomy_after_interview'})
+        return event
 
     def set_act(self, act):
         choices={'arrival','exploration','first_contact','pressure','redirection','aftershock'}

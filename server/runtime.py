@@ -34,6 +34,10 @@ class World:
         self.claims: list[dict] = []
         self.knowledge: dict[str,set[str]] = {k:set() for k in self.suspects}
         self.available_evidence:set[str] = set()
+        # What each suspect has actually been SHOWN (subset of available_evidence). Knowledge isolation.
+        self.presented_to:dict[str,set[str]] = {k:set() for k in self.suspects}
+        # Per-suspect interview transcript (server memory; replayed only to that suspect)
+        self.transcripts:dict[str,list[dict]] = {k:[] for k in self.suspects}
         self.motions = set(ALLOWED_MOTIONS)
         self._seq = 0
         self._last_director:dict[tuple[str,str],float] = {}
@@ -108,7 +112,7 @@ class World:
         return {'utterance':r['utterance'],'reply_mode':r['reply_mode'],'motion_proposal':r['motion_id'],
                 'action_proposal':r['request_external_action'],'claim_log_id':len(self.claims),'claims_verified':False}
 
-    def action(self,actor,kind,target=None,approved=False):
+    def action(self,actor,kind,target=None,approved=False,payload=None):
         if not approved:raise GuardError('Server must approve action')
         if actor not in self.suspects or kind not in ACTIONS:raise GuardError('Invalid actor/action')
         if kind=='contact_acquaintance':
@@ -121,9 +125,9 @@ class World:
                     return (a==actor and b==target) or (e.get('bidirectional') and a==target and b==actor)
                 return False
             if not any(edge_ok(e) for e in edges):raise GuardError('Contact not canon-authorized')
-            e=self.record(kind,actor,target,{actor,target},{'contact_occurred':True})
+            e=self.record(kind,actor,target,{actor,target},{'contact_occurred':True,**(payload or {})})
         else:
-            e=self.record(kind,actor,target,{actor}, {'approved':True})
+            e=self.record(kind,actor,target,{actor}, {'approved':True,**(payload or {})})
         for p in e.visible_to:self.knowledge[p].add(e.event_id)
         return e.event_id
 

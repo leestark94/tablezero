@@ -44,26 +44,75 @@ class PreviewProvider:
         return {'utterance':utterance,'reply_mode':'answer','motion_id':motions[0],
             'asserted_claim_ids':[], 'new_unsupported_assertion':None,'request_external_action':None}
 
+def compact_schema_for(context):
+    """Short-key schema for local models: ~25 fewer output tokens per turn on CPU.
+    Converted back to the 6-key REPLY contract by from_compact()."""
+    motions=sorted(context.get('approved_motions') or ALLOWED_MOTIONS)
+    own=[c['id'] for c in context.get('own_starting_claims',[])]
+    return {'type':'object','additionalProperties':False,
+      'properties':{'line':{'type':'string','minLength':1,'maxLength':200},
+        'mode':{'type':'string','enum':sorted(MODES)},
+        'motion':{'type':'string','enum':motions},
+        'claims':{'type':'array','items':({'type':'string','enum':own} if own else {'type':'string'}),'maxItems':4},
+        'action':{'type':['string','null'],'enum':sorted(ACTIONS)+[None]}},
+      'required':['line','mode','motion','claims','action']}
+
+def from_compact(obj):
+    if not isinstance(obj,dict) or 'line' not in obj:return obj
+    return {'utterance':obj.get('line'),'reply_mode':obj.get('mode'),'motion_id':obj.get('motion'),
+            'asserted_claim_ids':obj.get('claims') or [],'new_unsupported_assertion':None,
+            'request_external_action':obj.get('action')}
+
+def _schema_for(context):
+    """Narrow the JSON schema to this suspect's own motions/claims so decoding cannot pick others."""
+    schema=json.loads(json.dumps(REPLY_SCHEMA))
+    motions=context.get('approved_motions')
+    if motions:schema['properties']['motion_id']['enum']=sorted(motions)
+    own=[c['id'] for c in context.get('own_starting_claims',[])]
+    schema['properties']['asserted_claim_ids']['items']={'type':'string','enum':own} if own else {'type':'string'}
+    return schema
+
 class OllamaProvider:
+    """Local, zero-API-cost provider (dev + candidate shipping path via bundled runtime).
+    Uses server-built per-suspect messages (suspect_mind) when present."""
     label='OLLAMA_LOCAL'
-    def __init__(self,model=None,url='http://127.0.0.1:11434/api/chat', timeout_s=25):
+    def __init__(self,model=None,url=None, timeout_s=None):
         self.model=model or os.environ.get('TABLEZERO_OLLAMA_MODEL','')
         if not self.model:raise ProviderError('Set TABLEZERO_OLLAMA_MODEL to an installed model')
+        url=url or os.environ.get('TABLEZERO_OLLAMA_URL','http://127.0.0.1:11434/api/chat')
         if not url.startswith('http://127.0.0.1:') and not url.startswith('http://localhost:'):
             raise ProviderError('Ollama adapter restricted to localhost')
-        self.url=url;self.timeout_s=timeout_s
+        self.url=url;self.timeout_s=timeout_s or float(os.environ.get('TABLEZERO_OLLAMA_TIMEOUT','90'))
+        self.label=f'OLLAMA_LOCAL:{self.model}'
+        self.temperature=float(os.environ.get('TABLEZERO_OLLAMA_TEMPERATURE','0.7'))
+        self.last_stats={}
     def reply(self,context):
-        payload={'model':self.model,'stream':False,'format':REPLY_SCHEMA,
-          'messages':[{'role':'system','content':SYSTEM_RULES},
-                      {'role':'user','content':json.dumps(context,ensure_ascii=False)}],
-          'options':{'temperature':0.6,'num_predict':320}}
+        messages=context.get('llm_messages') or [
+            {'role':'system','content':SYSTEM_RULES},
+            {'role':'user','content':json.dumps({k:v for k,v in context.items() if k!='llm_messages'},ensure_ascii=False)}]
+        compact=bool(context.get('llm_messages'))
+        payload={'model':self.model,'stream':False,'format':compact_schema_for(context) if compact else _schema_for(context),'think':False,
+          'keep_alive':'30m','messages':messages,
+          'options':{'temperature':context.get('temperature',self.temperature),'top_p':0.9,
+                     'repeat_penalty':1.1,'num_predict':220,'num_ctx':8192,
+                     'seed':context.get('seed')}}
+        if payload['options']['seed'] is None:del payload['options']['seed']
+        # GPU offload is opt-in per machine: the renderer owns VRAM during play, and on the dev PC
+        # CUDA load triggers display-driver resets (see qa/bugs/BUG-0001). 0 = CPU-only inference.
+        if os.environ.get('TABLEZERO_OLLAMA_NUM_GPU') not in (None,''):
+            payload['options']['num_gpu']=int(os.environ['TABLEZERO_OLLAMA_NUM_GPU'])
+        if os.environ.get('TABLEZERO_OLLAMA_THREADS'):
+            payload['options']['num_thread']=int(os.environ['TABLEZERO_OLLAMA_THREADS'])
         data=json.dumps(payload,ensure_ascii=False).encode('utf-8')
         request=urllib.request.Request(self.url,data=data,headers={'Content-Type':'application/json'})
         try:
             with urllib.request.urlopen(request,timeout=self.timeout_s) as response:
                 obj=json.loads(response.read(1_000_000).decode('utf-8'))
-                return json.loads(obj['message']['content'])
-        except (ValueError,KeyError,urllib.error.URLError,TimeoutError) as e:
+            self.last_stats={k:obj.get(k) for k in ('total_duration','load_duration','prompt_eval_count',
+                             'prompt_eval_duration','eval_count','eval_duration')}
+            out=json.loads(obj['message']['content'])
+            return from_compact(out) if compact else out
+        except (ValueError,KeyError,urllib.error.URLError,TimeoutError,OSError) as e:
             raise ProviderError('Local model unavailable or invalid output') from e
 
 class ProviderGate:
@@ -72,7 +121,8 @@ class ProviderGate:
         start=time.perf_counter()
         result=self.provider.reply(context)
         return {'result':result,'provider':self.provider.label,
-                'latency_ms':round((time.perf_counter()-start)*1000,1)}
+                'latency_ms':round((time.perf_counter()-start)*1000,1),
+                'stats':getattr(self.provider,'last_stats',{})}
 
 class OpenAIProvider:
     """Optional paid API via official JSON schema Chat Completions. NEVER enabled by default.

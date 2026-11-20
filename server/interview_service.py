@@ -6,10 +6,24 @@ This is an INTERVIEW SCENE time resource, NOT the global case action budget.
 """
 from __future__ import annotations
 from dataclasses import dataclass
-import hashlib,threading
+import hashlib,threading,json,os
 from .runtime import GuardError
 from .tactics import TacticDirector,TAC_COST
-from .dialogue_quality import clean_line,lint_line
+from .dialogue_quality import clean_line,lint_line,KoreanDialogueError
+from .providers import ProviderError
+from .suspect_mind import build_messages,render_question,guard_utterance,active_memories
+
+RETRY_HINTS={
+ 'volunteered_concealed_detail':'[다시] 방금 대답은 형사가 묻지도 보여주지도 않은 구체적인 내용을 먼저 말했다. 지금 말할 수 있는 기억과 경찰에게 하기로 한 말 안에서만 다시 대답한다',
+ 'unearned_confession':'[다시] 너는 지금 그 일을 인정할 생각이 없다. 짧게 부인하거나 말을 아끼는 대답으로 다시 한다',
+ 'false_confession_innocent':'[다시] 너는 그런 일을 하지 않았다. 억울함이나 당황을 담아 다시 대답한다',
+ 'repeated_line':'[다시] 직전과 같은 말이다. 다른 표현으로, 질문에 맞게 다시 대답한다',
+ 'meta_ai_reference':'[다시] 너는 실제 사람이다. 사람으로서 다시 대답한다',
+ 'stage_direction_in_line':'[다시] 괄호나 행동 묘사 없이 입으로 하는 말만 다시 쓴다',
+ 'too_long_for_one_utterance':'[다시] 너무 길다. 한두 문장으로 짧게 다시 대답한다',
+ 'cross_suspect_knowledge_leak':'[다시] 너는 그 사람의 사정을 모른다. 모르는 건 모른다고 다시 대답한다',
+ 'default':'[다시] 규칙에 맞게 짧고 자연스러운 한국어로 다시 대답한다',
+}
 
 INPUT_MODES={'suggested':'question_suggested','typed':'question_free','voice':'question_voice'}
 FAILURES={'stock_ai_dialogue','melodramatic_exposition','forbidden_guilt_meter',
@@ -29,8 +43,11 @@ class TurnReceipt:
     motion_proposal:str
     action_proposal:str|None
     claims_verified:bool=False
+    reply_mode:str='answer'
+    generation_attempts:int=1
 
 class InterviewService:
+    max_attempts=3
     def __init__(self,episode, tactics=None):
         self.episode=episode
         self.tactics=tactics or TacticDirector()
@@ -41,7 +58,11 @@ class InterviewService:
         self.episode.start_interview(suspect_id)
         return self.tactics.begin(suspect_id)
     def close(self):
+        actor=self.episode.state.interview_active
         self.episode.finish_interview()
+        try:self.tactics.state(actor).active=False
+        except GuardError:pass
+        return self.episode.autonomy_after_interview(actor) if actor else None
 
     def ask(self,text,*,input_mode,action_id, presented_evidence=None,
             transcript_confirmed=True):
@@ -70,21 +91,68 @@ class InterviewService:
             raise GuardError('Not enough interview time')
         if presented_evidence is not None and presented_evidence not in self.episode.world.available_evidence:
             raise GuardError('Evidence not acquired')
-        ctx=self.episode.world.prompt_context(actor,text,presented_evidence)
-        ctx['interview_approach']=self.tactics.context(actor)
-        # Network / model errors, invalid outputs and invalid dialogue are uncharged
-        provider_reply=self.episode.provider.run(ctx)
-        reply=self.episode.world.validate_reply(actor,provider_reply['result'])
-        recent=[x['utterance'] for x in self.episode.world.claims if x['suspect_id']==actor]
-        issues=lint_line(reply['utterance'],recent,for_llm=True)
-        if FAILURES.intersection(issues):raise GuardError('AI dialogue failed quality gate: '+','.join(issues))
-        reply['utterance']=clean_line(reply['utterance'])
+        world=self.episode.world
+        presented_before=set(world.presented_to[actor])
+        presented_now=presented_before|({presented_evidence} if presented_evidence else set())
+        ctx=world.prompt_context(actor,text,presented_evidence)
+        tac=self.tactics.context(actor)
+        ctx['interview_approach']=tac
+        climate={'pressured':tac['pressured'],
+                 'trust_turns':sum(1 for t in world.transcripts[actor] if not t.get('pressured'))}
+        known=[{'summary':e.payload.get('summary_for_'+actor) or e.payload.get('summary','')}
+               for e in world.events if actor in e.visible_to and (e.payload.get('summary_for_'+actor) or e.payload.get('summary'))]
+        ctx['llm_messages']=build_messages(world,actor,text,presented=presented_now,
+            newly_presented=presented_evidence if presented_evidence not in presented_before else None,
+            climate=climate,known_events=known,transcript=world.transcripts[actor])
+        # Network / model errors, invalid outputs and invalid dialogue are uncharged.
+        # Server retries a bounded number of times; the player never pays for a bad generation.
+        recent=[x['utterance'] for x in world.claims if x['suspect_id']==actor]
+        detective_text=' '.join([t['q_render'] for t in world.transcripts[actor]]+[text])
+        memories=active_memories(actor,presented_now,climate)
+        attempts=[];provider_reply=None;reply=None;total_ms=0.0
+        base_messages=list(ctx['llm_messages'])
+        for attempt in range(self.max_attempts):
+            if attempts and attempts[-1] not in ('provider_error',):
+                # Bounded server-side redo with the reason; never shown to the player, never charged
+                ctx['llm_messages']=base_messages+[{'role':'system','content':RETRY_HINTS.get(attempts[-1].split(',')[0],RETRY_HINTS['default'])}]
+            ctx['temperature']=0.7+0.1*attempt
+            if os.environ.get('TABLEZERO_EVAL_SEED'):
+                ctx['seed']=int(os.environ['TABLEZERO_EVAL_SEED'])+attempt
+            try:
+                provider_reply=self.episode.provider.run(ctx)
+            except ProviderError as e:
+                attempts.append('provider_error');continue
+            total_ms+=provider_reply['latency_ms']
+            try:
+                candidate=world.validate_reply(actor,provider_reply['result'])
+                issues=lint_line(candidate['utterance'],recent,for_llm=True)
+                blocking=sorted(FAILURES.intersection(issues))+guard_utterance(actor,candidate['utterance'],
+                    presented=presented_now,detective_text=detective_text,memories=memories)
+                if blocking:
+                    attempts.append(','.join(blocking));continue
+                candidate['utterance']=clean_line(candidate['utterance'])
+                reply=candidate;break
+            except (GuardError,KoreanDialogueError) as e:
+                attempts.append(str(e));continue
+        self.episode._log('interview_generation',{'actor':actor,'attempts':len(attempts)+(1 if reply else 0),
+                          'rejections':attempts,'latency_ms_total':round(total_ms,1)})
+        if reply is None:
+            raise GuardError('AI response rejected by server gates (no time charged): '+' | '.join(attempts[-3:]))
         result=self.tactics.perform(actor,tactic,action_id=action_id,approved=True)
-        accepted=self.episode.world.accept_reply(actor,reply)
+        accepted=world.accept_reply(actor,reply)
+        if presented_evidence:world.presented_to[actor].add(presented_evidence)
+        world.transcripts[actor].append({
+            'q_render':render_question(world,text,presented_evidence if presented_evidence not in presented_before else None),
+            'a_json':json.dumps({'line':reply['utterance'],'mode':reply['reply_mode'],'motion':reply['motion_id'],
+                                 'claims':reply['asserted_claim_ids'],'action':reply['request_external_action']},ensure_ascii=False),
+            'a_text':reply['utterance'],'pressured':tac['pressured'],'evidence':presented_evidence})
+        if reply['request_external_action']:
+            self.episode.state.pending_proposals.append({'actor':actor,'kind':reply['request_external_action']})
         receipt=TurnReceipt(action_id,actor,input_mode,text,accepted['utterance'],
                            TAC_COST[tactic],result['seconds_left'],
-                           provider_reply['provider'],provider_reply['latency_ms'],
-                           accepted['motion_proposal'],accepted['action_proposal'])
+                           provider_reply['provider'],round(total_ms,1),
+                           accepted['motion_proposal'],accepted['action_proposal'],
+                           reply_mode=accepted['reply_mode'],generation_attempts=len(attempts)+1)
         self._receipts[action_id]=receipt;self._fingerprints[action_id]=fingerprint
         self.episode._log('interview_turn',{'actor':actor,'input_mode':input_mode,
              'seconds_spent':receipt.seconds_spent,'provider':receipt.provider,
