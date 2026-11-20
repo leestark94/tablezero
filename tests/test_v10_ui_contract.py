@@ -11,9 +11,9 @@ ROOT=pathlib.Path(__file__).resolve().parents[1]
 class UIContractTests(unittest.TestCase):
     def setUp(self): self.ctrl=EpisodeController(world=World())
     def test_01_uxml_is_wellformed(self):
-        ET.parse(ROOT/'unity/UI/CaseDesk.uxml')
+        ET.parse(ROOT/'TableZero.Unity/Assets/TableZero/UI/CaseDesk.uxml')
     def test_02_uxml_elements_match_controller(self):
-        doc=(ROOT/'unity/UI/CaseDesk.uxml').read_text()
+        doc=(ROOT/'TableZero.Unity/Assets/TableZero/UI/CaseDesk.uxml').read_text(encoding='utf-8')
         for n in ('case-desk','content-list','record-inspector','inspector-provenance',
                   'inspector-limitation','compare-a','compare-b','compare-clear',
                   'question-input','report-confirm','report-evidence-list'):
@@ -46,16 +46,16 @@ class UIContractTests(unittest.TestCase):
         for tab in ('case','evidence','interview','timeline','report','settings'):
             self.assertIn('LOCAL PREVIEW',page_projection(self.ctrl,tab)['connection'])
     def test_09_record_comparison_never_sets_guilt(self):
-        code=(ROOT/'unity/Runtime/TZCaseDeskUI.cs').read_text()
+        code=(ROOT/'TableZero.Unity/Assets/TableZero/Scripts/Runtime/TZCaseDeskUI.cs').read_text(encoding='utf-8')
         self.assertIn('거짓 진술이 확정되지 않습니다',code)
         self.assertNotIn('guilt_score',code)
         self.assertNotIn('lie_probability',code)
     def test_10_raw_v07_directive_preserved(self):
-        text=(ROOT/'reference/MASTER_DEVELOPMENT_DIRECTIVE_V07_ORIGINAL.txt').read_text()
+        text=(ROOT/'reference/MASTER_DEVELOPMENT_DIRECTIVE_V07_ORIGINAL.txt').read_text(encoding='utf-8')
         for s in ('AI 용의자','영화형 연출','한국적인 현실감','최종 합격 기준'):
             self.assertIn(s,text)
     def test_11_comparison_only_evidence_with_id(self):
-        code=(ROOT/'unity/Runtime/TZCaseDeskUI.cs').read_text()
+        code=(ROOT/'TableZero.Unity/Assets/TableZero/Scripts/Runtime/TZCaseDeskUI.cs').read_text(encoding='utf-8')
         self.assertIn('string.IsNullOrEmpty(selectedRecord.id)',code)
         self.assertIn('firstRecord.id != selectedRecord.id',code)
     def test_12_original_canon_unmodified(self):

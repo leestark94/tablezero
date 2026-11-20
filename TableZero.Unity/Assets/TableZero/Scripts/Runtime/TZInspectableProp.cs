@@ -32,7 +32,7 @@ namespace TableZero
         public string switchOffTrigger = "SwitchOff";
         [Header("Scene relationships")]
         public TZInspectableProp parentContainer;
-        [Header("Inspect callback to actual case backend")]
+        // Inspect callback to actual case backend
         public event Action<TZInspectableProp,TZPropAction> OnInteractionRequested;
         public bool isOpen { get; private set; }
         public bool isActive { get; private set; }
