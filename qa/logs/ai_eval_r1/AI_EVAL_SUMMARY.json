@@ -1,0 +1,11 @@
+{
+ "qwen3:4b": {
+  "turns": 44,
+  "ok": 42,
+  "failed": 2,
+  "avg_ms": 19450,
+  "p95_ms": 42193,
+  "retried": 5,
+  "flags": 1
+ }
+}

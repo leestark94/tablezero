@@ -255,6 +255,33 @@ def shade_smooth_auto(obj, angle=35):
     except Exception:
         pass
 
+_FONT = {}
+def text_mesh(name, text, size, location, rotation=(0, 0, 0), material=None, font_path=None, extrude=0.0004,
+              collection='Room302', align='CENTER'):
+    """Real Korean text as thin geometry (labels, receipts, markers). Font must be OFL (Noto)."""
+    if font_path and font_path not in _FONT:
+        _FONT[font_path] = bpy.data.fonts.load(font_path)
+    cu = bpy.data.curves.new(name + '_t', 'FONT')
+    cu.body = text
+    cu.size = size
+    cu.extrude = extrude
+    cu.align_x = align
+    cu.align_y = 'CENTER'
+    if font_path:
+        cu.font = _FONT[font_path]
+    o = bpy.data.objects.new(name, cu)
+    o.location = location
+    o.rotation_euler = rotation
+    coll(collection).objects.link(o)
+    bpy.context.view_layer.update()
+    me = bpy.data.meshes.new_from_object(o.evaluated_get(bpy.context.evaluated_depsgraph_get()))
+    mw = o.matrix_world.copy()
+    bpy.data.objects.remove(o, do_unlink=True)
+    bpy.data.curves.remove(cu)
+    bm = bmesh.new(); bm.from_mesh(me); bpy.data.meshes.remove(me)
+    bm.transform(mw)
+    return mesh_obj(name, bm, material, collection, origin=location)
+
 def export_fbx(path, collection=None):
     for o in bpy.data.objects:
         o.select_set(False)

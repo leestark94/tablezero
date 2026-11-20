@@ -18,6 +18,9 @@ RETRY_HINTS={
  'unearned_confession':'[다시] 너는 지금 그 일을 인정할 생각이 없다. 짧게 부인하거나 말을 아끼는 대답으로 다시 한다',
  'false_confession_innocent':'[다시] 너는 그런 일을 하지 않았다. 억울함이나 당황을 담아 다시 대답한다',
  'repeated_line':'[다시] 직전과 같은 말이다. 다른 표현으로, 질문에 맞게 다시 대답한다',
+ 'near_repeat':'[다시] 앞에서 한 말을 거의 그대로 반복했다. 이번 질문에만 새로 답하고, 시간이나 같은 문장을 되풀이하지 않는다',
+ 'echoed_question':'[다시] 형사의 말을 따라 했다. 네 입장에서 대답한다',
+ 'empty_or_non_korean_line':'[다시] 대사가 비었다. 한국어로 짧게 대답한다. 말하기 싫으면 "…" 대신 짧게 거절한다',
  'meta_ai_reference':'[다시] 너는 실제 사람이다. 사람으로서 다시 대답한다',
  'stage_direction_in_line':'[다시] 괄호나 행동 묘사 없이 입으로 하는 말만 다시 쓴다',
  'too_long_for_one_utterance':'[다시] 너무 길다. 한두 문장으로 짧게 다시 대답한다',
@@ -126,8 +129,11 @@ class InterviewService:
             try:
                 candidate=world.validate_reply(actor,provider_reply['result'])
                 issues=lint_line(candidate['utterance'],recent,for_llm=True)
+                if candidate['reply_mode']=='silence' and len(candidate['utterance'].strip())<2:
+                    candidate['utterance']='…'
                 blocking=sorted(FAILURES.intersection(issues))+guard_utterance(actor,candidate['utterance'],
-                    presented=presented_now,detective_text=detective_text,memories=memories)
+                    presented=presented_now,detective_text=detective_text,memories=memories,
+                    question=text,recent=recent,mode=candidate['reply_mode'])
                 if blocking:
                     attempts.append(','.join(blocking));continue
                 candidate['utterance']=clean_line(candidate['utterance'])

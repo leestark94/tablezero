@@ -124,9 +124,9 @@ def build_system_prompt(world, suspect_id, *, presented: set[str], climate: dict
               '', '[말투]', p['register'],
               f"- 입버릇(가끔만, 매번 쓰지 않는다): {', '.join(p.get('verbal_habits', []))}",
               f"- 말의 결: {sb.get('speech', '')}",
-              f"- 쓰지 않는 말투의 예: {' / '.join(sb.get('avoid', []))}",
               '', '[대사 규칙]',
-              '- 한국 사람이 경찰서에서 실제로 할 법한 말 1~2문장. 길어도 70자 안팎',
+              '- 한국 사람이 경찰서에서 실제로 할 법한 말 1~2문장. 길어도 60자 안팎',
+              '- 지금 질문에만 답한다. 묻지 않은 시간·기억을 덧붙이지 않고, 앞에서 한 말을 되풀이하지 않는다',
               '- 대사만 쓴다. 괄호 속 행동 묘사, 지문, 해설, 내레이션 금지',
               '- 문장 끝에 마침표(.)를 찍지 않는다. 물음표, 말줄임(…)은 괜찮다',
               '- 번역투, 인생 명언, 드라마 대사 같은 과장 금지. 형사를 계속 "형사님"이라 부르지 않는다',
@@ -190,9 +190,28 @@ def gated_term_violations(suspect_id, utterance, *, presented: set[str], detecti
             bad.append(term)
     return bad
 
-def guard_utterance(suspect_id, utterance, *, presented: set[str], detective_text: str = '', memories=None):
+def _bigrams(s):
+    s = re.sub(r'[\s\.\,\?\!…~]+', '', s)
+    return {s[i:i + 2] for i in range(len(s) - 1)}
+
+def similarity(a, b):
+    A, B = _bigrams(a), _bigrams(b)
+    if not A or not B:
+        return 0.0
+    return len(A & B) / len(A | B)
+
+HANGUL = re.compile(r'[가-힣]')
+
+def guard_utterance(suspect_id, utterance, *, presented: set[str], detective_text: str = '', memories=None,
+                    question: str = '', recent=(), mode: str = 'answer'):
     """Return list of blocking problems. Empty = ok."""
     problems = []
+    if len(HANGUL.findall(utterance)) < 2 and mode != 'silence':
+        problems.append('empty_or_non_korean_line')
+    if question and similarity(utterance, question) > 0.55:
+        problems.append('echoed_question')
+    if any(similarity(utterance, r) > 0.62 for r in list(recent)[-6:]):
+        problems.append('near_repeat')
     if gated_term_violations(suspect_id, utterance, presented=presented, detective_text=detective_text,
                              memories=memories or []):
         problems.append('volunteered_concealed_detail')

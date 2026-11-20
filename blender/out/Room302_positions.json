@@ -1,0 +1,2570 @@
+{
+"arch_baseboard_bn": {
+"pivot": [
+2.45,
+0.0,
+1.9075
+],
+"center": [
+2.45,
+0.035,
+1.9075
+]
+},
+"arch_baseboard_bw": {
+"pivot": [
+1.8925,
+0.0,
+1.8
+],
+"center": [
+1.8925,
+0.035,
+1.8
+]
+},
+"arch_baseboard_bw2": {
+"pivot": [
+1.8925,
+0.0,
+0.475
+],
+"center": [
+1.8925,
+0.035,
+0.475
+]
+},
+"arch_baseboard_e": {
+"pivot": [
+3.5925,
+0.0,
+4.275
+],
+"center": [
+3.5925,
+0.035,
+4.275
+]
+},
+"arch_baseboard_n1": {
+"pivot": [
+0.45,
+0.0,
+5.3925
+],
+"center": [
+0.45,
+0.035,
+5.3925
+]
+},
+"arch_baseboard_n2": {
+"pivot": [
+3.0,
+0.0,
+5.3925
+],
+"center": [
+3.0,
+0.035,
+5.3925
+]
+},
+"arch_baseboard_w": {
+"pivot": [
+0.0075,
+0.0,
+4.5
+],
+"center": [
+0.0075,
+0.035,
+4.5
+]
+},
+"arch_bath_threshold": {
+"pivot": [
+1.95,
+-0.15,
+1.325
+],
+"center": [
+1.95,
+-0.069,
+1.325
+]
+},
+"arch_ceiling_bath": {
+"pivot": [
+2.8,
+2.2,
+0.9
+],
+"center": [
+2.8,
+2.225,
+0.9
+]
+},
+"arch_ceiling_main": {
+"pivot": [
+1.8,
+2.3,
+2.7
+],
+"center": [
+1.8,
+2.325,
+2.7
+]
+},
+"arch_doorframe_bath": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+1.95,
+1.01,
+1.325
+]
+},
+"arch_floor_bath": {
+"pivot": [
+2.8,
+-0.18,
+0.9
+],
+"center": [
+2.8,
+-0.1125,
+0.9
+]
+},
+"arch_floor_corridor": {
+"pivot": [
+1.5,
+-0.15,
+0.95
+],
+"center": [
+1.5,
+-0.075,
+0.95
+]
+},
+"arch_floor_entrance": {
+"pivot": [
+0.55,
+-0.18,
+0.6
+],
+"center": [
+0.55,
+-0.15,
+0.6
+]
+},
+"arch_floor_kitchen_front": {
+"pivot": [
+0.55,
+-0.15,
+1.55
+],
+"center": [
+0.55,
+-0.075,
+1.55
+]
+},
+"arch_floor_main": {
+"pivot": [
+1.8,
+-0.15,
+3.65
+],
+"center": [
+1.8,
+-0.075,
+3.65
+]
+},
+"arch_hall_ceiling": {
+"pivot": [
+2.3,
+2.25,
+-0.975
+],
+"center": [
+2.3,
+2.275,
+-0.975
+]
+},
+"arch_hall_floor": {
+"pivot": [
+2.3,
+-0.3,
+-0.975
+],
+"center": [
+2.3,
+-0.21,
+-0.975
+]
+},
+"arch_hall_stair_0": {
+"pivot": [
+-1.0,
+-0.31,
+-1.615
+],
+"center": [
+-1.0,
+-0.3,
+-1.615
+]
+},
+"arch_hall_stair_1": {
+"pivot": [
+-1.0,
+-0.48,
+-1.345
+],
+"center": [
+-1.0,
+-0.47,
+-1.345
+]
+},
+"arch_hall_stair_2": {
+"pivot": [
+-1.0,
+-0.65,
+-1.075
+],
+"center": [
+-1.0,
+-0.64,
+-1.075
+]
+},
+"arch_hall_stair_3": {
+"pivot": [
+-1.0,
+-0.82,
+-0.805
+],
+"center": [
+-1.0,
+-0.81,
+-0.805
+]
+},
+"arch_hall_stair_4": {
+"pivot": [
+-1.0,
+-0.99,
+-0.535
+],
+"center": [
+-1.0,
+-0.98,
+-0.535
+]
+},
+"arch_hall_stair_5": {
+"pivot": [
+-1.0,
+-1.16,
+-0.265
+],
+"center": [
+-1.0,
+-1.15,
+-0.265
+]
+},
+"arch_hall_wall_302_ext": {
+"pivot": [
+4.1,
+-0.12,
+-0.145
+],
+"center": [
+4.1,
+1.09,
+-0.145
+]
+},
+"arch_hall_wall_e": {
+"pivot": [
+6.275,
+-0.12,
+-1.05
+],
+"center": [
+6.275,
+1.09,
+-1.05
+]
+},
+"arch_hall_wall_s": {
+"pivot": [
+2.3,
+-0.12,
+-1.875
+],
+"center": [
+2.3,
+1.09,
+-1.875
+]
+},
+"arch_hall_wall_west_ext": {
+"pivot": [
+-0.765,
+-0.12,
+-0.145
+],
+"center": [
+-0.765,
+1.09,
+-0.145
+]
+},
+"arch_kitchen_backsplash": {
+"pivot": [
+0.003,
+0.86,
+2.45
+],
+"center": [
+0.003,
+1.155,
+2.45
+]
+},
+"arch_wall_bath_north": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+2.75,
+1.125,
+1.85
+]
+},
+"arch_wall_bath_west_a": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+1.95,
+1.125,
+0.475
+]
+},
+"arch_wall_bath_west_b": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+1.95,
+1.125,
+1.75
+]
+},
+"arch_wall_bath_west_head": {
+"pivot": [
+1.95,
+2.0,
+1.325
+],
+"center": [
+1.95,
+2.15,
+1.325
+]
+},
+"arch_wall_east": {
+"pivot": [
+3.675,
+0.0,
+3.65
+],
+"center": [
+3.675,
+1.15,
+3.65
+]
+},
+"arch_wall_east_bath_a": {
+"pivot": [
+3.675,
+-0.05,
+0.6
+],
+"center": [
+3.675,
+1.125,
+0.6
+]
+},
+"arch_wall_east_bath_b": {
+"pivot": [
+3.675,
+-0.05,
+1.75
+],
+"center": [
+3.675,
+1.125,
+1.75
+]
+},
+"arch_wall_east_bath_head": {
+"pivot": [
+3.675,
+2.0,
+1.4
+],
+"center": [
+3.675,
+2.15,
+1.4
+]
+},
+"arch_wall_east_bath_sill": {
+"pivot": [
+3.675,
+-0.05,
+1.4
+],
+"center": [
+3.675,
+0.775,
+1.4
+]
+},
+"arch_wall_north_a": {
+"pivot": [
+0.375,
+0.0,
+5.475
+],
+"center": [
+0.375,
+1.15,
+5.475
+]
+},
+"arch_wall_north_b": {
+"pivot": [
+3.075,
+0.0,
+5.475
+],
+"center": [
+3.075,
+1.15,
+5.475
+]
+},
+"arch_wall_north_head": {
+"pivot": [
+1.65,
+2.1,
+5.475
+],
+"center": [
+1.65,
+2.2,
+5.475
+]
+},
+"arch_wall_north_sill": {
+"pivot": [
+1.65,
+0.0,
+5.475
+],
+"center": [
+1.65,
+0.45,
+5.475
+]
+},
+"arch_wall_south_a": {
+"pivot": [
+-0.025,
+-0.15,
+-0.075
+],
+"center": [
+-0.025,
+1.075,
+-0.075
+]
+},
+"arch_wall_south_b": {
+"pivot": [
+1.5,
+-0.15,
+-0.075
+],
+"center": [
+1.5,
+1.075,
+-0.075
+]
+},
+"arch_wall_south_bath": {
+"pivot": [
+2.875,
+-0.05,
+-0.075
+],
+"center": [
+2.875,
+1.125,
+-0.075
+]
+},
+"arch_wall_south_head": {
+"pivot": [
+0.55,
+1.93,
+-0.075
+],
+"center": [
+0.55,
+2.115,
+-0.075
+]
+},
+"arch_wall_west": {
+"pivot": [
+-0.075,
+-0.15,
+2.7
+],
+"center": [
+-0.075,
+1.075,
+2.7
+]
+},
+"arch_window_frame": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+1.65,
+1.5,
+5.475
+]
+},
+"arch_window_sill_inner": {
+"pivot": [
+1.65,
+0.88,
+5.37
+],
+"center": [
+1.65,
+0.89,
+5.37
+]
+},
+"bath_bath_door": {
+"pivot": [
+1.95,
+0.012,
+1.695
+],
+"center": [
+1.95,
+1.0035,
+1.325
+]
+},
+"bath_body_wash": {
+"pivot": [
+2.24,
+-0.045,
+0.1
+],
+"center": [
+2.24,
+0.08,
+0.1
+]
+},
+"bath_ceiling": {
+"pivot": [
+2.75,
+2.2,
+0.975
+],
+"center": [
+2.975,
+2.195,
+0.975
+]
+},
+"bath_cup": {
+"pivot": [
+3.05,
+0.84,
+1.45
+],
+"center": [
+3.05,
+0.89,
+1.45
+]
+},
+"bath_drain": {
+"pivot": [
+2.4,
+-0.045,
+0.45
+],
+"center": [
+2.4,
+-0.0435,
+0.45
+]
+},
+"bath_floor_mat": {
+"pivot": [
+2.275,
+-0.045,
+1.225
+],
+"center": [
+2.275,
+-0.04,
+1.225
+]
+},
+"bath_flush_handle": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+3.375,
+0.71,
+0.595
+]
+},
+"bath_laundry_bin": {
+"pivot": [
+2.2,
+-0.045,
+1.45
+],
+"center": [
+2.2,
+0.155,
+1.45
+]
+},
+"bath_light_switch": {
+"pivot": [
+1.9,
+1.2,
+1.78
+],
+"center": [
+1.89,
+1.2,
+1.78
+]
+},
+"bath_lower_cabinet": {
+"pivot": [
+2.66,
+0.1,
+1.46
+],
+"center": [
+2.85,
+0.38,
+1.6275
+]
+},
+"bath_mirror_cabinet": {
+"pivot": [
+2.55,
+1.15,
+1.65
+],
+"center": [
+2.85,
+1.475,
+1.649
+]
+},
+"bath_shampoo": {
+"pivot": [
+2.15,
+-0.045,
+0.12
+],
+"center": [
+2.15,
+0.075,
+0.12
+]
+},
+"bath_shower_head": {
+"pivot": [
+2.4,
+1.7,
+0.07
+],
+"center": [
+2.4,
+1.606,
+0.1042
+]
+},
+"bath_shower_tap": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+2.4,
+0.95,
+0.06
+]
+},
+"bath_sink": {
+"pivot": [
+2.85,
+0.7,
+1.6
+],
+"center": [
+2.85,
+0.77,
+1.6
+]
+},
+"bath_sink_faucet": {
+"pivot": [
+2.85,
+0.84,
+1.75
+],
+"center": [
+2.85,
+0.8908,
+1.707
+]
+},
+"bath_soap": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+2.7,
+0.8525,
+1.495
+]
+},
+"bath_toilet_brush": {
+"pivot": [
+3.5,
+-0.04,
+0.08
+],
+"center": [
+3.5,
+0.17,
+0.08
+]
+},
+"bath_toilet_lid": {
+"pivot": [
+3.38,
+0.375,
+0.45
+],
+"center": [
+3.18,
+0.391,
+0.45
+]
+},
+"bath_toilet_paper": {
+"pivot": [
+3.57,
+0.7,
+0.82
+],
+"center": [
+3.52,
+0.7,
+0.82
+]
+},
+"bath_toilet_seat": {
+"pivot": [
+3.38,
+0.375,
+0.45
+],
+"center": [
+3.18,
+0.366,
+0.45
+]
+},
+"bath_toothbrush": {
+"pivot": [
+2.7,
+1.49,
+1.73
+],
+"center": [
+2.7,
+1.575,
+1.73
+]
+},
+"bath_toothpaste": {
+"pivot": [
+2.62,
+1.48,
+1.73
+],
+"center": [
+2.62,
+1.565,
+1.73
+]
+},
+"bath_towel1": {
+"pivot": [
+2.16,
+0.95,
+1.7675
+],
+"center": [
+2.16,
+1.16,
+1.7675
+]
+},
+"bath_towel2": {
+"pivot": [
+2.35,
+1.0,
+1.7675
+],
+"center": [
+2.35,
+1.185,
+1.7675
+]
+},
+"bath_vent_fan": {
+"pivot": [
+1.9,
+1.2,
+1.86
+],
+"center": [
+1.89,
+1.2,
+1.86
+]
+},
+"bath_window": {
+"pivot": [
+3.64,
+1.61,
+1.4
+],
+"center": [
+3.64,
+1.8,
+1.4
+]
+},
+"entrance_delivery_box": {
+"pivot": [
+0.725,
+-0.12,
+0.26
+],
+"center": [
+0.725,
+-0.01,
+0.26
+]
+},
+"entrance_door": {
+"pivot": [
+0.98,
+-0.12,
+-0.075
+],
+"center": [
+0.55,
+0.9,
+-0.0745
+]
+},
+"entrance_doorframe": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+0.55,
+0.92,
+-0.075
+]
+},
+"entrance_entry_mirror": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+0.011,
+1.4,
+0.45
+]
+},
+"entrance_floor_trim": {
+"pivot": [
+0.55,
+-0.12,
+1.205
+],
+"center": [
+0.55,
+-0.058,
+1.205
+]
+},
+"entrance_key_hook": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+0.02,
+1.47,
+0.975
+]
+},
+"entrance_lock": {
+"pivot": [
+-0.77,
+1.1,
+0.04
+],
+"center": [
+0.21,
+1.005,
+-0.025
+]
+},
+"entrance_mat": {
+"pivot": [
+0.55,
+-0.12,
+1.065
+],
+"center": [
+0.55,
+-0.116,
+1.065
+]
+},
+"entrance_shoe_cabinet": {
+"pivot": [
+0.37,
+-0.12,
+0.152
+],
+"center": [
+0.3775,
+0.41,
+0.45
+]
+},
+"entrance_shoe_shelf": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+0.18,
+0.4175,
+0.45
+]
+},
+"entrance_shoes1": {
+"pivot": [
+0.55,
+-0.12,
+0.45
+],
+"center": [
+0.55,
+-0.0725,
+0.45
+]
+},
+"entrance_shoes2": {
+"pivot": [
+0.8,
+-0.12,
+0.82
+],
+"center": [
+0.8,
+-0.095,
+0.82
+]
+},
+"entrance_shoes3": {
+"pivot": [
+0.2,
+0.275,
+0.45
+],
+"center": [
+0.2,
+0.3225,
+0.45
+]
+},
+"entrance_switch": {
+"pivot": [
+1.15,
+1.2,
+0.0
+],
+"center": [
+1.15,
+1.2,
+0.01
+]
+},
+"entrance_umbrella": {
+"pivot": [
+0.06,
+-0.11,
+1.12
+],
+"center": [
+0.07,
+0.1953,
+1.1
+]
+},
+"fix_ceiling_light": {
+"pivot": [
+1.8,
+2.3,
+3.4
+],
+"center": [
+1.8,
+2.2765,
+3.4
+]
+},
+"fix_drawer_chest": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+0.525,
+0.39,
+5.185
+]
+},
+"fix_fridge_body": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+0.285,
+0.725,
+3.92
+]
+},
+"fix_fridge_interior": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+0.2975,
+0.623,
+3.92
+]
+},
+"fix_kitchen_carcass": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+0.3,
+0.41,
+2.45
+]
+},
+"fix_kitchen_counter": {
+"pivot": [
+0.31,
+0.82,
+2.45
+],
+"center": [
+0.31,
+0.84,
+2.45
+]
+},
+"fix_kitchen_upper": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+0.165,
+1.8,
+1.9
+]
+},
+"fix_mattress": {
+"pivot": [
+3.0,
+0.28,
+4.285
+],
+"center": [
+3.0,
+0.39,
+4.285
+]
+},
+"fix_microwave_body": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+0.2375,
+1.59,
+3.92
+]
+},
+"fix_mirror_cabinet_body": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+2.85,
+1.475,
+1.73
+]
+},
+"fix_shoe_cabinet": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+0.185,
+0.39,
+0.45
+]
+},
+"fix_toilet_bowl": {
+"pivot": [
+3.18,
+-0.045,
+0.45
+],
+"center": [
+3.18,
+0.155,
+0.45
+]
+},
+"fix_toilet_tank": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+3.48,
+0.56,
+0.45
+]
+},
+"fix_wardrobe_body": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+3.31,
+1.0,
+2.55
+]
+},
+"hall_cctv": {
+"pivot": [
+5.9,
+2.25,
+-1.6
+],
+"center": [
+5.9,
+2.21,
+-1.6
+]
+},
+"hall_intercom": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+-1.5665,
+1.29,
+-0.43
+]
+},
+"hall_mailbox": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+-1.53,
+0.98,
+-0.9
+]
+},
+"hall_neighbor_door": {
+"pivot": [
+5.5,
+-0.12,
+-0.175
+],
+"center": [
+5.05,
+0.9,
+-0.18
+]
+},
+"hall_sensor": {
+"pivot": [
+1.6,
+2.25,
+-0.9
+],
+"center": [
+1.6,
+2.225,
+-0.9
+]
+},
+"hall_stairs": {
+"pivot": [
+-0.42,
+0.78,
+-1.75
+],
+"center": [
+-0.42,
+0.28,
+-0.975
+]
+},
+"kitchen_bin": {
+"pivot": [
+0.85,
+0.0,
+1.55
+],
+"center": [
+0.85,
+0.19,
+1.55
+]
+},
+"kitchen_bin_liner": {
+"pivot": [
+0.85,
+0.0,
+1.55
+],
+"center": [
+0.85,
+0.35,
+1.55
+]
+},
+"kitchen_chopsticks": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+0.3375,
+0.975,
+2.5025
+]
+},
+"kitchen_cutting_board": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+0.26,
+0.8675,
+2.75
+]
+},
+"kitchen_dish_rack": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+0.225,
+0.93,
+2.54
+]
+},
+"kitchen_dish_soap": {
+"pivot": [
+0.08,
+0.86,
+2.58
+],
+"center": [
+0.08,
+0.96,
+2.58
+]
+},
+"kitchen_drain_cover": {
+"pivot": [
+0.29,
+0.642,
+2.25
+],
+"center": [
+0.29,
+0.644,
+2.25
+]
+},
+"kitchen_drawer_misc": {
+"pivot": [
+0.6,
+0.35,
+1.61
+],
+"center": [
+0.336,
+0.35,
+1.61
+]
+},
+"kitchen_drawer_utensils": {
+"pivot": [
+0.6,
+0.69,
+1.61
+],
+"center": [
+0.336,
+0.69,
+1.61
+]
+},
+"kitchen_faucet": {
+"pivot": [
+0.06,
+0.86,
+2.25
+],
+"center": [
+0.1282,
+1.0165,
+2.25
+]
+},
+"kitchen_fridge_bottle": {
+"pivot": [
+0.3,
+0.366,
+3.72
+],
+"center": [
+0.3,
+0.511,
+3.72
+]
+},
+"kitchen_fridge_container": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+0.21,
+0.7105,
+4.05
+]
+},
+"kitchen_fridge_door": {
+"pivot": [
+0.595,
+0.03,
+4.22
+],
+"center": [
+0.5725,
+0.49,
+3.92
+]
+},
+"kitchen_fridge_egg": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+0.39,
+0.688,
+4.05
+]
+},
+"kitchen_fridge_freezer": {
+"pivot": [
+0.595,
+1.01,
+4.22
+],
+"center": [
+0.6025,
+1.225,
+3.92
+]
+},
+"kitchen_fridge_magnet": {
+"pivot": [
+0.622,
+0.89,
+3.865
+],
+"center": [
+0.626,
+0.89,
+3.865
+]
+},
+"kitchen_fridge_milk": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+0.285,
+0.478,
+3.855
+]
+},
+"kitchen_fridge_note": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+0.621,
+0.84,
+3.865
+]
+},
+"kitchen_hood": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+0.25,
+1.6225,
+3.12
+]
+},
+"kitchen_instant_noodle1": {
+"pivot": [
+0.47,
+0.86,
+3.22
+],
+"center": [
+0.47,
+0.9,
+3.22
+]
+},
+"kitchen_instant_noodle2": {
+"pivot": [
+0.47,
+0.86,
+3.36
+],
+"center": [
+0.47,
+0.9,
+3.36
+]
+},
+"kitchen_kitchen_knife": {
+"pivot": [
+0.2,
+0.876,
+2.75
+],
+"center": [
+0.24,
+0.883,
+2.7515
+]
+},
+"kitchen_knife_rack": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+0.085,
+0.97,
+3.495
+]
+},
+"kitchen_microwave_buttons": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+0.43,
+1.6,
+4.1
+]
+},
+"kitchen_microwave_door": {
+"pivot": [
+0.43,
+1.47,
+3.67
+],
+"center": [
+0.431,
+1.59,
+3.845
+]
+},
+"kitchen_mug": {
+"pivot": [
+0.42,
+0.86,
+1.62
+],
+"center": [
+0.4382,
+0.9022,
+1.62
+]
+},
+"kitchen_overhead_cabinet1": {
+"pivot": [
+0.33,
+1.452,
+1.352
+],
+"center": [
+0.349,
+1.8,
+1.625
+]
+},
+"kitchen_overhead_cabinet2": {
+"pivot": [
+0.33,
+1.452,
+2.448
+],
+"center": [
+0.349,
+1.8,
+2.175
+]
+},
+"kitchen_pan": {
+"pivot": [
+0.3,
+0.89,
+3.27
+],
+"center": [
+0.3,
+0.911,
+3.27
+]
+},
+"kitchen_plate": {
+"pivot": [
+0.22,
+0.87,
+2.54
+],
+"center": [
+0.22,
+0.8728,
+2.5294
+]
+},
+"kitchen_pot": {
+"pivot": [
+0.3,
+0.89,
+2.97
+],
+"center": [
+0.3,
+0.95,
+2.97
+]
+},
+"kitchen_sink": {
+"pivot": [
+0.29,
+0.64,
+2.25
+],
+"center": [
+0.29,
+0.7477,
+2.25
+]
+},
+"kitchen_sponge": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+0.115,
+0.876,
+2.025
+]
+},
+"kitchen_spoon": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+0.305,
+0.945,
+2.51
+]
+},
+"kitchen_stove": {
+"pivot": [
+0.31,
+0.86,
+3.12
+],
+"center": [
+0.346,
+0.7875,
+3.12
+]
+},
+"kitchen_under_sink_left": {
+"pivot": [
+0.6,
+0.13,
+1.87
+],
+"center": [
+0.619,
+0.465,
+2.065
+]
+},
+"kitchen_under_sink_right": {
+"pivot": [
+0.6,
+0.13,
+2.65
+],
+"center": [
+0.619,
+0.465,
+2.455
+]
+},
+"living_aircon_remote": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+1.72,
+0.339,
+3.25
+]
+},
+"living_book1": {
+"pivot": [
+0.16,
+0.42,
+4.4175
+],
+"center": [
+0.16,
+0.56,
+4.4175
+]
+},
+"living_book2": {
+"pivot": [
+0.15,
+0.42,
+4.455
+],
+"center": [
+0.15,
+0.545,
+4.455
+]
+},
+"living_bookshelf": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+0.15,
+0.6,
+4.61
+]
+},
+"living_box_storage": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+0.155,
+0.165,
+4.65
+]
+},
+"living_broken_glass": {
+"pivot": [
+1.75,
+0.0,
+3.45
+],
+"center": [
+1.7299,
+0.002,
+3.4189
+]
+},
+"living_chair": {
+"pivot": [
+1.95,
+0.21,
+3.55
+],
+"center": [
+2.1296,
+0.21,
+3.1648
+]
+},
+"living_cola_can": {
+"pivot": [
+1.7,
+0.33,
+2.82
+],
+"center": [
+1.7,
+0.391,
+2.82
+]
+},
+"living_curtain_left": {
+"pivot": [
+0.965,
+2.18,
+5.36
+],
+"center": [
+0.965,
+1.515,
+5.3607
+]
+},
+"living_curtain_right": {
+"pivot": [
+2.35,
+2.18,
+5.36
+],
+"center": [
+2.35,
+1.515,
+5.3607
+]
+},
+"living_disposable_spoon": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+1.48,
+0.333,
+3.1275
+]
+},
+"living_envelope": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+1.61,
+0.3315,
+3.215
+]
+},
+"living_floor_blood": {
+"pivot": [
+1.55,
+0.0015,
+3.75
+],
+"center": [
+1.542,
+0.0015,
+3.7071
+]
+},
+"living_food_bag": {
+"pivot": [
+1.22,
+0.33,
+2.87
+],
+"center": [
+1.2205,
+0.4907,
+2.8701
+]
+},
+"living_food_container1": {
+"pivot": [
+1.47,
+0.33,
+2.9
+],
+"center": [
+1.47,
+0.3625,
+2.9
+]
+},
+"living_food_container2": {
+"pivot": [
+1.62,
+0.33,
+3.05
+],
+"center": [
+1.62,
+0.357,
+3.05
+]
+},
+"living_footprint": {
+"pivot": [
+1.29,
+0.0,
+4.085
+],
+"center": [
+1.29,
+0.0006,
+4.085
+]
+},
+"living_heater_remote": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+1.515,
+1.425,
+0.0135
+]
+},
+"living_lamp": {
+"pivot": [
+2.15,
+0.0,
+3.4
+],
+"center": [
+2.15,
+0.775,
+3.4
+]
+},
+"living_laptop": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+1.22,
+0.435,
+3.1
+]
+},
+"living_laptop_charger": {
+"pivot": [
+1.08,
+0.335,
+3.1
+],
+"center": [
+0.6909,
+0.1539,
+3.35
+]
+},
+"living_napkin": {
+"pivot": [
+1.29,
+0.33,
+3.14
+],
+"center": [
+1.29,
+0.35,
+3.14
+]
+},
+"living_notepad": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+1.66,
+0.334,
+2.82
+]
+},
+"living_paper_stack": {
+"pivot": [
+1.38,
+0.33,
+3.02
+],
+"center": [
+1.381,
+0.3334,
+3.02
+]
+},
+"living_pen": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+1.37,
+0.3375,
+3.245
+]
+},
+"living_phone": {
+"pivot": [
+1.62,
+0.0,
+3.62
+],
+"center": [
+1.62,
+0.0043,
+3.62
+]
+},
+"living_photo_frame": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+0.325,
+0.89,
+4.9895
+]
+},
+"living_power_cable": {
+"pivot": [
+0.38,
+0.01,
+3.65
+],
+"center": [
+1.1899,
+0.0089,
+4.275
+]
+},
+"living_power_strip": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+0.23,
+0.021,
+3.65
+]
+},
+"living_table": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+1.4,
+0.165,
+3.0
+]
+},
+"living_table_drawer": {
+"pivot": [
+1.4,
+0.2715,
+2.72
+],
+"center": [
+1.4,
+0.271,
+2.837
+]
+},
+"living_trash_bag": {
+"pivot": [
+0.85,
+0.0,
+1.98
+],
+"center": [
+0.8495,
+0.2507,
+1.9801
+]
+},
+"living_wall_clock": {
+"pivot": [
+2.8,
+1.95,
+1.9
+],
+"center": [
+2.8,
+1.95,
+1.92
+]
+},
+"living_wall_switch": {
+"pivot": [
+2.15,
+1.2,
+1.9
+],
+"center": [
+2.15,
+1.2,
+1.91
+]
+},
+"living_window": {
+"pivot": [
+1.325,
+0.95,
+5.505
+],
+"center": [
+1.325,
+1.5,
+5.505
+]
+},
+"living_window_latch": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+1.675,
+1.5,
+5.4875
+]
+},
+"sleep_bed": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+3.0,
+0.425,
+4.3
+]
+},
+"sleep_bedside_drawer": {
+"pivot": [
+2.21,
+0.38,
+4.9
+],
+"center": [
+2.21,
+0.38,
+5.066
+]
+},
+"sleep_bedside_phone": {
+"pivot": [
+2.1,
+0.345,
+5.05
+],
+"center": [
+2.2003,
+0.3439,
+5.0605
+]
+},
+"sleep_bedside_table": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+2.21,
+0.25,
+5.1
+]
+},
+"sleep_blanket": {
+"pivot": [
+3.0,
+0.5,
+4.0
+],
+"center": [
+3.0001,
+0.4483,
+4.0215
+]
+},
+"sleep_coat": {
+"pivot": [
+3.3,
+0.95,
+2.275
+],
+"center": [
+3.3,
+1.325,
+2.275
+]
+},
+"sleep_drawer_bottom": {
+"pivot": [
+0.525,
+0.165,
+4.95
+],
+"center": [
+0.525,
+0.165,
+5.141
+]
+},
+"sleep_drawer_mid": {
+"pivot": [
+0.525,
+0.4,
+4.95
+],
+"center": [
+0.525,
+0.4,
+5.141
+]
+},
+"sleep_drawer_top": {
+"pivot": [
+0.525,
+0.6375,
+4.95
+],
+"center": [
+0.525,
+0.6375,
+5.141
+]
+},
+"sleep_hanger": {
+"pivot": [
+3.3,
+1.78,
+2.1
+],
+"center": [
+3.3,
+1.6654,
+2.1003
+]
+},
+"sleep_laundry": {
+"pivot": [
+2.75,
+0.0,
+2.12
+],
+"center": [
+2.75,
+0.225,
+2.12
+]
+},
+"sleep_mirror": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+1.8865,
+1.075,
+0.425
+]
+},
+"sleep_pillow1": {
+"pivot": [
+2.75,
+0.56,
+5.04
+],
+"center": [
+2.75,
+0.56,
+5.04
+]
+},
+"sleep_pillow2": {
+"pivot": [
+3.25,
+0.56,
+5.04
+],
+"center": [
+3.25,
+0.56,
+5.04
+]
+},
+"sleep_sheet": {
+"pivot": [
+3.0,
+0.5,
+4.285
+],
+"center": [
+3.0,
+0.503,
+4.285
+]
+},
+"sleep_shirt": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+3.3,
+1.245,
+2.84
+]
+},
+"sleep_suitcase": {
+"pivot": [
+2.575,
+0.0,
+2.25
+],
+"center": [
+2.575,
+0.225,
+2.135
+]
+},
+"sleep_wardrobe_left": {
+"pivot": [
+3.01,
+0.082,
+1.952
+],
+"center": [
+3.0,
+1.03,
+2.25
+]
+},
+"sleep_wardrobe_right": {
+"pivot": [
+3.01,
+0.082,
+3.148
+],
+"center": [
+3.0,
+1.03,
+2.85
+]
+},
+"xprop_aircon_unit": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+3.465,
+2.085,
+3.85
+]
+},
+"xprop_bath_light": {
+"pivot": [
+2.4,
+2.2,
+1.2
+],
+"center": [
+2.4,
+2.175,
+1.2
+]
+},
+"xprop_bath_vent_grille": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+3.35,
+2.195,
+1.45
+]
+},
+"xprop_entrance_floor_trim_side": {
+"pivot": [
+1.105,
+-0.12,
+0.61
+],
+"center": [
+1.105,
+-0.058,
+0.61
+]
+},
+"xprop_entrance_lock_outside": {
+"pivot": [
+-0.77,
+1.1,
+-0.04
+],
+"center": [
+0.21,
+1.005,
+-0.117
+]
+},
+"xprop_hall_302_plate": {
+"pivot": [
+0.4,
+2.0,
+-0.1555
+],
+"center": [
+0.4,
+2.04,
+-0.1555
+]
+},
+"xprop_shower_hose": {
+"pivot": [
+2.4,
+0.95,
+0.06
+],
+"center": [
+2.4393,
+1.0695,
+0.1715
+]
+},
+"xprop_shower_riser": {
+"pivot": [
+2.4,
+1.0,
+0.03
+],
+"center": [
+2.4,
+1.475,
+0.03
+]
+},
+"xprop_towel_bar": {
+"pivot": [
+2.05,
+1.35,
+1.77
+],
+"center": [
+2.25,
+1.35,
+1.77
+]
+},
+"xprop_wardrobe_rod": {
+"pivot": [
+3.3,
+1.78,
+1.97
+],
+"center": [
+3.3,
+1.78,
+2.245
+]
+},
+"xprop_window_fixed_sash": {
+"pivot": [
+0.0,
+0.0,
+0.0
+],
+"center": [
+2.0,
+1.5,
+5.465
+]
+}
+}

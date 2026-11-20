@@ -39,6 +39,8 @@ class EpisodeState:
     shot_history:list[str]=field(default_factory=list)
     cue_history:list[dict]=field(default_factory=list)
     pending_proposals:list[dict]=field(default_factory=list)
+    flags:set[str]=field(default_factory=set)
+    chain_defects:set[str]=field(default_factory=set)
     # Each arrival is not a forced cutscene: active control and subtitle timing are client-driven
 
 class EpisodeController:
@@ -50,6 +52,9 @@ class EpisodeController:
         self.state=EpisodeState()
         self.logs:list[dict]=[]
         self.session_id=uuid.uuid4().hex
+        from .case_flow import PropAuthority,RecordDesk
+        self.props=PropAuthority(self)
+        self.desk=RecordDesk(self)
         # e01 is obtained at start by CASE001; must still be considered in player flow
         for item in self.world._canon['evidence']:
             if item.get('access')=='obtained_at_start':
@@ -198,7 +203,11 @@ class EpisodeController:
         if self.state.scene!='desk' or self.state.interview_active:
             raise GuardError('Report must be filed from investigation desk')
         if not final:raise GuardError('Explicit final confirmation required')
-        outcome=self.outcomes.submit(accused_id,submitted_evidence,chain_defects=chain_defects)
+        # Server-recorded procedure defects that touch the SUBMITTED evidence (client list is advisory only)
+        prop_to_evidence={'kitchen_mug':'e06','living_phone':'e02','living_food_bag':'e04'}
+        relevant=[d for d in self.state.chain_defects
+                  if prop_to_evidence.get(d.split(':')[0]) in set(submitted_evidence or [])]
+        outcome=self.outcomes.submit(accused_id,submitted_evidence,chain_defects=list(chain_defects)+relevant)
         self.state.closed=not outcome.can_continue
         self._log('report_submitted',{'accepted':outcome.report_accepted,'missing_axis_count':len(outcome.missing_axes)})
         return OutcomeDirector.public_projection(outcome,self.outcomes.reaction(outcome,accused_id))

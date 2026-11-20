@@ -7,14 +7,14 @@ import json,os,urllib.parse,uuid
 from http.server import BaseHTTPRequestHandler,ThreadingHTTPServer
 from .episode_controller import EpisodeController
 from .runtime import GuardError
-from .providers import choose_provider_from_env
+from .providers import choose_provider_from_env,ProviderError
 from .interview_service import InterviewService
 from .speech_adapter import choose_speech_provider,SpeechNotReady,validate_wav
 
 class LocalBridgeHandler(BaseHTTPRequestHandler):
     controller:EpisodeController=EpisodeController()
     local_token:str=''
-    max_body:int=8192
+    max_body:int=16384
     interview_service:InterviewService|None=None
     server_version='TableZeroPreview/0.8'
     def _send(self,code,obj):
@@ -66,8 +66,24 @@ class LocalBridgeHandler(BaseHTTPRequestHandler):
             elif path=='/v1/interview/start':
                 if self.interview_service is None: self.interview_service=InterviewService(self.controller)
                 actor=value.get('suspect_id')
+                if self.controller.state.interviewed:self.controller.desk.charge_interview()
                 session=self.interview_service.begin(actor)
-                result={'actor_id':actor,'opened':True,'interview':session}
+                result={'actor_id':actor,'opened':True,'interview':session,
+                        'clock':self.controller.clock_text(),'budget_left':self.controller.desk.budget-self.controller.desk.spent}
+            elif path=='/v1/prop/interact':
+                result=self.controller.props.interact(value.get('prop_id'),value.get('verb'),
+                    action_id=value.get('action_id',''),player_pos=value.get('player_pos'))
+            elif path=='/v1/prop/procedure':
+                result=self.controller.props.procedure(value.get('prop_id'),value.get('action'),
+                    player_pos=value.get('player_pos'))
+            elif path=='/v1/player/gloves':
+                result=self.controller.props.set_gloves(value.get('on') is True)
+            elif path=='/v1/desk/options':
+                result=self.controller.desk.options()
+            elif path=='/v1/desk/request':
+                result=self.controller.desk.request(value.get('request_id'))
+            elif path=='/v1/evidence/list':
+                result={'evidence':evidence_cards(self.controller)}
             elif path in ('/v1/interview/ask','/v1/interview/ask-v11'):
                 if self.interview_service is None:raise GuardError('Interview service unavailable')
                 # Legacy endpoint mapped to new time-contract; keys should be client-issued in production
@@ -82,7 +98,8 @@ class LocalBridgeHandler(BaseHTTPRequestHandler):
             elif path=='/v1/interview/end':
                 if self.interview_service:self.interview_service.close()
                 else:self.controller.finish_interview()
-                result={'ended':True}
+                # The detective does NOT learn about autonomous contacts here; only via later records/testimony
+                result={'ended':True,'clock':self.controller.clock_text()}
             elif path=='/v1/report':
                 # Local preview test route, not a production final-submission service
                 result=self.controller.file_report(value.get('accused_id'),value.get('evidence_ids',[]),
@@ -99,6 +116,9 @@ class LocalBridgeHandler(BaseHTTPRequestHandler):
             self._send(200,{'ok':True,'data':result})
         except (GuardError,SpeechNotReady,ValueError,KeyError,TypeError) as e:
             self._send(422,{'ok':False,'error':str(e)})
+        except ProviderError as e:
+            # Model unavailable: explicit error, no world mutation, no time charged
+            self._send(503,{'ok':False,'error':'ai_unavailable','detail':str(e)})
         except Exception as e:
             # No leakage of internals or secret world state in HTTP errors
             self.log_error('Unhandled exception %s',type(e).__name__)
@@ -187,3 +207,14 @@ def page_projection(ctrl, tab):
     return {'tab': tab, 'records': records, 'context': '', 'connection': 'LOCAL PREVIEW — 실제 게임 미검증'}
 
 if __name__=='__main__':serve()
+
+
+def evidence_cards(ctrl):
+    """Player-side evidence cards: only acquired items, with provenance and limitations."""
+    out=[]
+    for e in ctrl.world._canon['evidence']:
+        if e['id'] in ctrl.world.available_evidence:
+            out.append({'id':e['id'],'name':e['name'],'detail':e['detail'],'source':e['found'],
+                        'limitation':e['limitations'],'strength':e['strength'],
+                        'chain':ctrl.state.acquired_chain.get(e['id'],[])})
+    return out

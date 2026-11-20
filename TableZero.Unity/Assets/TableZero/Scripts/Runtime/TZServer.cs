@@ -1,0 +1,152 @@
+using System;
+using System.Collections;
+using System.Diagnostics;
+using System.IO;
+using System.Text;
+using UnityEngine;
+using UnityEngine.Networking;
+using Debug = UnityEngine.Debug;
+
+namespace TableZero
+{
+    /// <summary>
+    /// Single localhost link to the authoritative case server (server/api.py).
+    /// Dev/Editor: launches the Python server itself with a fresh random token (never stored in the build).
+    /// The client never holds canon, persona data, or any LLM key; it only sends intents.
+    /// </summary>
+    public sealed class TZServer : MonoBehaviour
+    {
+        public static TZServer I { get; private set; }
+        public string baseUrl = "http://127.0.0.1:8765";
+        public bool autoLaunchInDev = true;
+        [Tooltip("Ollama model used by the dev server (local, zero API cost)")]
+        public string ollamaModel = "qwen3:4b";
+        [Tooltip("0 = CPU inference (VRAM stays with the renderer; dev PC GPU resets under CUDA, see BUG-0001)")]
+        public int ollamaNumGpu = 0;
+        public bool Online { get; private set; }
+        public string LastError { get; private set; } = "";
+        public event Action<bool> OnOnlineChanged;
+
+        private string token;
+        private Process proc;
+        private bool busyLaunch;
+
+        public static string RepoRoot
+        {
+            get
+            {
+                var d = new DirectoryInfo(Application.dataPath); // .../TABLE_ZERO/TableZero.Unity/Assets
+                return d.Parent != null && d.Parent.Parent != null ? d.Parent.Parent.FullName : "";
+            }
+        }
+
+        void Awake()
+        {
+            if (I != null && I != this) { Destroy(gameObject); return; }
+            I = this;
+            DontDestroyOnLoad(gameObject);
+            token = Environment.GetEnvironmentVariable("TABLEZERO_LOCAL_DEV_TOKEN");
+            if (string.IsNullOrEmpty(token) || token.Length < 24)
+                token = Guid.NewGuid().ToString("N") + Guid.NewGuid().ToString("N");
+        }
+
+        IEnumerator Start()
+        {
+            yield return Ping();
+            if (!Online && autoLaunchInDev && (Application.isEditor || Debug.isDebugBuild)) yield return Launch();
+        }
+
+        IEnumerator Ping()
+        {
+            using (var r = UnityWebRequest.Get(baseUrl + "/v1/state"))
+            {
+                r.SetRequestHeader("X-TableZero-Dev-Token", token);
+                r.timeout = 2;
+                yield return r.SendWebRequest();
+                SetOnline(r.result == UnityWebRequest.Result.Success && r.responseCode == 200);
+                if (r.responseCode == 401) LastError = "다른 개발 서버가 이미 실행 중입니다(토큰 불일치)";
+            }
+        }
+
+        IEnumerator Launch()
+        {
+            if (busyLaunch) yield break;
+            busyLaunch = true;
+            string py = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                                     "Programs", "Python", "Python312", "python.exe");
+            if (!File.Exists(py)) py = "python";
+            try
+            {
+                var psi = new ProcessStartInfo(py, "-m server.api")
+                {
+                    WorkingDirectory = RepoRoot, UseShellExecute = false, CreateNoWindow = true,
+                    RedirectStandardOutput = true, RedirectStandardError = true
+                };
+                psi.EnvironmentVariables["TABLEZERO_LOCAL_DEV_TOKEN"] = token;
+                psi.EnvironmentVariables["TABLEZERO_AI_PROVIDER"] = "ollama";
+                psi.EnvironmentVariables["TABLEZERO_OLLAMA_MODEL"] = ollamaModel;
+                psi.EnvironmentVariables["TABLEZERO_OLLAMA_NUM_GPU"] = ollamaNumGpu.ToString();
+                psi.EnvironmentVariables["TABLEZERO_OLLAMA_THREADS"] = Mathf.Max(2, SystemInfo.processorCount / 2).ToString();
+                psi.EnvironmentVariables["TABLEZERO_ALLOW_UNAPPROVED_ART"] = "1";
+                psi.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
+                proc = Process.Start(psi);
+                proc.OutputDataReceived += (s, e) => { if (!string.IsNullOrEmpty(e.Data)) Debug.Log("[server] " + e.Data); };
+                proc.ErrorDataReceived += (s, e) => { if (!string.IsNullOrEmpty(e.Data)) Debug.LogWarning("[server] " + e.Data); };
+                proc.BeginOutputReadLine(); proc.BeginErrorReadLine();
+            }
+            catch (Exception e)
+            {
+                LastError = "로컬 수사 서버를 시작하지 못했습니다: " + e.Message;
+                busyLaunch = false;
+                yield break;
+            }
+            for (int i = 0; i < 40 && !Online; i++)
+            {
+                yield return new WaitForSecondsRealtime(0.25f);
+                yield return Ping();
+            }
+            busyLaunch = false;
+        }
+
+        void SetOnline(bool v)
+        {
+            if (v == Online) return;
+            Online = v;
+            OnOnlineChanged?.Invoke(v);
+        }
+
+        public void Post(string path, string json, Action<bool, string> done, int timeoutSeconds = 30)
+            => StartCoroutine(Send("POST", path, json, done, timeoutSeconds));
+        public void Get(string path, Action<bool, string> done) => StartCoroutine(Send("GET", path, null, done, 10));
+
+        IEnumerator Send(string method, string path, string body, Action<bool, string> done, int timeout)
+        {
+            if (!Online) yield return Ping();
+            using (var req = new UnityWebRequest(baseUrl + path, method))
+            {
+                req.downloadHandler = new DownloadHandlerBuffer();
+                req.SetRequestHeader("X-TableZero-Dev-Token", token);
+                req.timeout = timeout;
+                if (body != null)
+                {
+                    req.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(body));
+                    req.SetRequestHeader("Content-Type", "application/json; charset=utf-8");
+                }
+                yield return req.SendWebRequest();
+                string text = req.downloadHandler != null ? req.downloadHandler.text : "";
+                bool ok = req.result == UnityWebRequest.Result.Success && req.responseCode < 400;
+                if (req.result == UnityWebRequest.Result.ConnectionError) SetOnline(false);
+                done?.Invoke(ok, string.IsNullOrEmpty(text) ? req.error : text);
+            }
+        }
+
+        void OnApplicationQuit()
+        {
+            try { if (proc != null && !proc.HasExited) proc.Kill(); } catch { }
+        }
+
+        public static string NewActionId() => Guid.NewGuid().ToString("N");
+    }
+
+    [Serializable] public class TZError { public bool ok; public string error; public string detail; }
+}

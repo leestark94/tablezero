@@ -22,6 +22,9 @@ ASSETS = {
     'cotton_jersey': '베개 커버/의류',
     'dirty_carpet': '현관 발매트',
     'oak_veneer_01': '낮은 식탁/협탁',
+    'rectangular_facade_tiles_02': '화장실 벽 직사각 타일(한국 원룸 욕실)',
+    'dirty_tiles': '욕실 바닥 소형 타일 후보',
+    'brown_brick_02': '창밖 맞은편 적벽돌 빌라 외벽',
 }
 MAPS = {'Diffuse': 'diff', 'nor_gl': 'nor_gl', 'Rough': 'rough', 'AO': 'ao'}
 UA = {'User-Agent': 'TableZeroAssetFetch/1.0'}
