@@ -54,7 +54,7 @@ if ($leaks) { throw "비밀 키로 보이는 문자열 발견, 백업 중단: $(
 $existing = Get-ChildItem $Versions -Filter 'TABLE_ZERO_V*_FULL.zip' -ErrorAction SilentlyContinue |
     ForEach-Object { if ($_.Name -match 'TABLE_ZERO_V(\d+)_FULL\.zip') { [int]$Matches[1] } }
 $next = if ($existing) { ($existing | Measure-Object -Maximum).Maximum + 1 } else { 1 }
-$ver = 'V{0:D3}' -f $next
+$ver = 'V{0:D3}' -f [int]$next
 $verZip = Join-Path $Versions "TABLE_ZERO_${ver}_FULL.zip"
 if (Test-Path $verZip) { throw "버전 백업이 이미 존재함: $verZip (덮어쓰지 않음)" }
 
