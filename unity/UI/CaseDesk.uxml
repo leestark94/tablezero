@@ -1,0 +1,106 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+  <ui:VisualElement name="tz-root" class="tz-root">
+    <!-- WORLD LAYER: keeps the center of the first-person camera clear -->
+    <ui:VisualElement name="hud" class="hud">
+      <ui:VisualElement class="hud-top">
+        <ui:Label class="hud-case" text="001  /  302호의 밤" />
+        <ui:Label name="hud-scene" class="hud-scene" text="현장" />
+      </ui:VisualElement>
+      <ui:VisualElement name="hud-context" class="hud-context">
+        <ui:Label name="context-text" class="context-text" text="" />
+      </ui:VisualElement>
+      <ui:VisualElement class="hud-bottom">
+        <ui:Label text="TAB  사건기록" class="hud-shortcut" />
+        <ui:Label name="hud-subtitle" text="" class="hud-subtitle" />
+      </ui:VisualElement>
+    </ui:VisualElement>
+    <!-- FILE LAYER: deliberately opened by the player, no permanent HUD overlays -->
+    <ui:VisualElement name="case-desk" class="case-desk">
+      <ui:VisualElement name="desk-shell" class="desk-shell">
+        <ui:VisualElement class="desk-header">
+          <ui:VisualElement class="desk-brand">
+            <ui:Label text="TABLE//ZERO" class="brand-title" />
+            <ui:Label text="수사 기록  /  CASE 001" class="brand-sub" />
+          </ui:VisualElement>
+          <ui:VisualElement class="desk-header-status">
+            <ui:Label text="지금 보고 있는 자료는 확보된 기록만 표시됩니다" class="integrity-line" />
+            <ui:Label name="connection-status" text="연결 대기" class="status-label" />
+          </ui:VisualElement>
+          <ui:Button name="close-desk" text="현장으로  ESC" class="quiet-button" />
+        </ui:VisualElement>
+        <ui:VisualElement class="desk-content">
+          <ui:VisualElement class="desk-nav">
+            <ui:Label text="사건 기록" class="nav-group" />
+            <ui:Button name="nav-case" text="01   사건 개요" class="nav-button selected" />
+            <ui:Button name="nav-evidence" text="02   증거 보관함" class="nav-button" />
+            <ui:Button name="nav-interview" text="03   진술 기록" class="nav-button" />
+            <ui:Button name="nav-timeline" text="04   시간 대조" class="nav-button" />
+            <ui:Button name="nav-report" text="05   수사보고서" class="nav-button" />
+            <ui:VisualElement class="nav-spacer" />
+            <ui:Button name="nav-settings" text="설정  /  접근성" class="nav-button quiet-nav" />
+            <ui:Label text="기록되지 않은 정보는 표시하지 않음" class="nav-disclaimer" />
+          </ui:VisualElement>
+          <ui:VisualElement class="workspace">
+            <ui:VisualElement class="workspace-title">
+              <ui:Label name="page-kicker" text="INVESTIGATION RECORD" class="kicker" />
+              <ui:Label name="page-title" text="사건 개요" class="page-title" />
+              <ui:Label name="page-description" text="확인된 사실과 추정을 구분해서 기록합니다" class="page-description" />
+            </ui:VisualElement>
+            <ui:VisualElement class="workspace-columns">
+              <ui:VisualElement class="record-column">
+                <ui:VisualElement class="column-heading">
+                  <ui:Label text="자료 목록" class="column-caption" />
+                  <ui:Label name="record-count" text="0건" class="record-count" />
+                </ui:VisualElement>
+                <ui:ScrollView name="content-list" class="content-list" mode="Vertical" />
+              </ui:VisualElement>
+              <ui:VisualElement name="record-inspector" class="record-inspector">
+                <ui:Label text="자료 확인" class="column-caption" />
+                <ui:Label name="inspector-status" text="자료를 선택하세요" class="inspector-status" />
+                <ui:Label name="inspector-title" text="" class="inspector-title" />
+                <ui:Label name="inspector-observation" text="" class="inspector-observation" />
+                <ui:Label text="확보·진술 출처" class="inspector-label" />
+                <ui:Label name="inspector-provenance" text="" class="inspector-text" />
+                <ui:Label text="해석할 때 주의할 점" class="inspector-label" />
+                <ui:Label name="inspector-limitation" text="" class="inspector-text" />
+                <ui:VisualElement class="inspector-space" />
+                <ui:Button name="inspector-compare" text="비교 자료에 추가" class="secondary-button" />
+                <ui:Label name="compare-status" text="자료 두 건을 골라 직접 대조할 수 있습니다" class="inspector-hint" />
+                <ui:VisualElement name="compare-tray" class="compare-tray">
+                  <ui:Label text="대조 중인 자료" class="column-caption" />
+                  <ui:Label name="compare-a" text="첫 번째 자료를 선택하세요" class="compare-slot" />
+                  <ui:Label name="compare-b" text="두 번째 자료를 선택하세요" class="compare-slot" />
+                  <ui:Button name="compare-clear" text="대조 지우기" class="text-button" />
+                </ui:VisualElement>
+              </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="interview-compose" class="compose-area">
+              <ui:Label text="직접 질문" class="compose-label" />
+              <ui:Label text="질문은 실제 심문 장면에서 전달되며, 진술은 자동으로 사실이 되지 않습니다" class="helper" />
+              <ui:TextField name="question-input" label="" multiline="true" class="question-input" />
+              <ui:Button name="question-submit" text="질문 전달" class="primary-button" />
+            </ui:VisualElement>
+            <ui:VisualElement name="report-compose" class="compose-area">
+              <ui:Label text="수사보고서 제출 전 검토" class="compose-label" />
+              <ui:DropdownField name="accused-choice" label="조사 대상" class="accused-choice" />
+              <ui:Label text="자료의 확보 절차와 독립 입증 축은 서버에서 다시 검증합니다" class="helper" />
+              <ui:ScrollView name="report-evidence-list" class="report-evidence-list" mode="Vertical" />
+              <ui:Button name="report-submit" text="제출 내용 검토" class="primary-button" />
+              <ui:Label name="report-confirm-hint" text="" class="helper" />
+              <ui:Button name="report-confirm" text="최종 보고서 제출" class="danger-button" />
+            </ui:VisualElement>
+            <ui:VisualElement name="settings-compose" class="compose-area">
+              <ui:Toggle name="reduce-motion" text="카메라 움직임 줄이기" value="false" />
+              <ui:Toggle name="show-subtitles" text="한국어 자막" value="true" />
+              <ui:Slider name="ui-scale" label="인터페이스 크기" low-value="0.9" high-value="1.2" value="1.0" />
+            </ui:VisualElement>
+            <ui:VisualElement class="workspace-footer">
+              <ui:Label name="toast-line" text="" class="toast-line" />
+              <ui:Label text="관찰  /  기록  /  비교  /  판단" class="case-footer" />
+            </ui:VisualElement>
+          </ui:VisualElement>
+        </ui:VisualElement>
+      </ui:VisualElement>
+    </ui:VisualElement>
+  </ui:VisualElement>
+</ui:UXML>

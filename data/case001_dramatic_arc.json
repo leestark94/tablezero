@@ -1,0 +1,22 @@
+{
+ "schema":"tablezero.case001.story_arc.v1",
+ "canon_file":"reference/CASE001_CANON_LOCKED.json",
+ "truth_is_immutable":true,
+ "first_slice_minutes":"12-15 (NOT the full resolution)",
+ "full_case_target_minutes":"30-45 (requires playtest)",
+ "acts":[
+  {"act":"arrival","minute_range":"0-3","question":"누가 왜 이 평범한 집에 폭력을 남겼나?","player_task":"출입 동선/방 구조/생활 흔적 관찰; 처음엔 범인 정보 없음","cinematic_language":"실내 공기, 복도 대비, 손전등/덧신; 과도한 카메라 컷 없음","turn":"CCTV 사각지대와 생활시간표의 불완전함","forbidden":"이때 진범을 확정하는 내레이션·화면 유도"},
+  {"act":"exploration","minute_range":"3-8","question":"알고 있는 시각은 얼마나 믿을 만한가?","player_task":"e01/e02/e04 등 제한된 물증 대조, 획득에 필요한 절차","cinematic_language":"휴대폰/영수증/문고리의 손 기술, 주거 공간의 생활 소리","turn":"21:21 출입과 21:34 통화의 빈틈을 플레이어가 인지","forbidden":"비확보 e09의 통화상대 공개"},
+  {"act":"first_contact","minute_range":"8-15","question":"사람들의 말은 왜 저마다 다르게 들리는가?","player_task":"강도현/이서연의 자유질문과 첫 진술, AI의 자율 행동 반향 가능 경로 경험","cinematic_language":"중간 침묵, 컵, 손가락, 미묘한 존댓말; 외부 연락은 서버 승인 뒤","turn":"진실을 밝힌 게 아니라 다음 조사 방향을 얻는 의미 있는 전환","forbidden":"15분 내 강제 자백과 엔딩"},
+  {"act":"pressure","minute_range":"15-30","question":"구체 증거와 진술은 어떤 지점에서 부딪히나?","player_task":"e05/e07/e08/e09/e10 등 독립 확보·적법 절차, 반복 심문 전략","cinematic_language":"어느 순간엔 정적인 조사실, 어느 순간엔 서류가 테이블 위로 밀려감","turn":"다른 사람의 사생활 거짓말과 사건의 거짓말을 구분","forbidden":"화내거나 침묵했다는 이유로 유죄 추론"},
+  {"act":"redirection","minute_range":"30-38","question":"가장 그럴듯했던 가설의 빈틈은?","player_task":"CCTV 사각지대/기기 시간차/감정물증 제한을 검증하며 가설 수정","cinematic_language":"지금까지의 주장이 시간축 위에서 겹치다가 불일치 지점만 분기","turn":"접근·동기·현장 연결·대안 배제 중 빠진 축 드러남","forbidden":"드라마를 위해 새 증거를 임의 생성"},
+  {"act":"aftershock","minute_range":"38-45","question":"의심이 아니라 입증했는가?","player_task":"네 독립 증명축을 논리적으로 보고, 부족한 축은 추가 조사","cinematic_language":"무음과 종이 스치는 소리; 과장된 범인 등장 쇼 금지","turn":"충분/불충분/다른 수사 루트 등 플레이어 결론","forbidden":"게임 판정과 실제 법원 유죄 판결 혼동"}
+ ],
+ "story_requirements":[
+  "첫 15분에 최소 2개의 증거 확보 경로와 서로 다른 심문 경로를 재현 가능하게 테스트",
+  "각 심문은 질문-대답-후속 질문-증거 제시가 실제 AI 자유 발화로 진행되어야 함",
+  "범인의 자율행동은 서버의 가용 액션과 관계 그래프에서만 선택 가능",
+  "증거가 부족하면 플레이어가 틀리거나 판정을 유보해도 서사적으로 성립",
+  "참고인 진술 정정·동기와 범행 구분·물증의 한계가 각각 한번은 플레이에 드러나야 함"
+ ]
+}

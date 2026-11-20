@@ -1,0 +1,76 @@
+/* TABLE//ZERO — 2026 Korean procedural thriller desktop toolkit
+   Editorial, low-contrast, legible. No fake overlays, neon HUD or red thread maps.
+   Assign licensed Korean font assets in Unity, then audit 1080p/1440p sizing.
+   This is a code-authored design proposal: quality needs actual Play Mode review. */
+.tz-root {flex-grow:1; color:rgb(222,223,219); -unity-font-style:normal;}
+.hud {position:absolute; left:0; right:0; top:0; bottom:0; padding:24px 31px; justify-content:space-between;}
+.hud-top {flex-direction:row; justify-content:space-between; opacity:.83;}
+.hud-case,.hud-scene {font-size:12px; color:rgb(221,220,211); letter-spacing:1px;}
+.hud-context {max-width:370px; align-self:flex-end; margin-top:auto; margin-bottom:29px;}
+.context-text {font-size:14px; white-space:normal; color:rgb(232,229,218); background-color:rgba(13,15,16,.4); padding:8px 13px;}
+.hud-bottom {flex-direction:row; align-items:flex-end; justify-content:space-between;}
+.hud-shortcut {font-size:11px; color:rgb(223,220,212);}
+.hud-subtitle {white-space:normal; font-size:19px; color:rgb(244,242,236); -unity-text-outline-width:1px; -unity-text-outline-color:rgb(12,14,15);}
+.case-desk {position:absolute; left:0; right:0; top:0; bottom:0; display:none; justify-content:center; align-items:center; background-color:rgba(8,11,13,.83);}
+.desk-shell {width:90%; height:87%; min-width:820px; min-height:620px; background-color:rgb(24,29,30); border-top-width:1px; border-bottom-width:1px; border-left-width:1px; border-right-width:1px; border-top-color:rgb(62,67,66);border-bottom-color:rgb(62,67,66);border-left-color:rgb(62,67,66);border-right-color:rgb(62,67,66);}
+.desk-header {height:86px; flex-direction:row; align-items:center; justify-content:space-between; padding:0 27px; border-bottom-width:1px; border-bottom-color:rgb(65,71,70);}
+.desk-brand {min-width:205px;}
+.brand-title {font-size:23px; -unity-font-style:bold; letter-spacing:2px; color:rgb(237,234,223);}
+.brand-sub {font-size:11px; margin-top:4px; color:rgb(148,156,153);}
+.desk-header-status {flex-grow:1; padding-left:20px;}
+.integrity-line {font-size:11px; color:rgb(156,166,160);}
+.status-label {font-size:10px; margin-top:6px; color:rgb(173,138,111);}
+.quiet-button {background-color:rgba(0,0,0,0); color:rgb(216,215,206); font-size:12px; border-top-width:0;border-bottom-width:0;border-left-width:0;border-right-width:0;}
+.quiet-button:hover {color:white;}
+.desk-content {flex-grow:1; flex-direction:row;}
+.desk-nav {width:214px; background-color:rgb(19,23,24); padding:26px 13px 20px 17px;}
+.nav-group {font-size:11px; color:rgb(142,152,151); margin:2px 0 17px 15px;}
+.nav-button {height:46px; margin-bottom:5px; color:rgb(165,171,167); background-color:rgba(0,0,0,0); font-size:13px; padding-left:13px; -unity-text-align:middle-left; border-top-width:0;border-right-width:0;border-bottom-width:0;border-left-width:2px;border-left-color:rgba(0,0,0,0);}
+.nav-button:hover {background-color:rgb(36,41,40); color:rgb(239,238,231);}
+.nav-button.selected {background-color:rgb(40,44,43); border-left-color:rgb(165,130,101); color:rgb(244,240,230);}
+.quiet-nav {color:rgb(149,159,158);}
+.nav-spacer {flex-grow:1;}
+.nav-disclaimer {font-size:10px; white-space:normal; padding:9px 13px; color:rgb(105,113,114);}
+.workspace {flex-grow:1; min-width:500px; padding:28px 28px 14px 30px;}
+.workspace-title {margin-bottom:23px;}
+.kicker {font-size:10px; color:rgb(172,137,109); letter-spacing:2px;}
+.page-title {font-size:29px; margin-top:5px; color:rgb(237,234,227); -unity-font-style:bold;}
+.page-description {font-size:12px; margin-top:9px; color:rgb(147,156,153);}
+.workspace-columns {flex-grow:1; flex-direction:row; min-height:110px;}
+.record-column {flex-grow:1; min-width:210px; border-right-width:1px; border-right-color:rgb(61,68,67); padding-right:20px;}
+.column-heading {flex-direction:row; justify-content:space-between; margin-bottom:10px;}
+.column-caption {font-size:11px; color:rgb(176,184,178);}
+.record-count {font-size:11px; color:rgb(135,144,143);}
+.content-list {flex-grow:1;}
+.record {margin-bottom:8px; padding:15px 17px; background-color:rgb(33,39,39); border-left-width:2px; border-left-color:rgb(85,96,94);}
+.record:hover {background-color:rgb(42,47,46);}
+.record.selected-record {border-left-color:rgb(177,140,108); background-color:rgb(47,51,48);}
+.record-header {font-size:10px; color:rgb(178,140,114);}
+.record-main {font-size:14px; margin-top:5px; white-space:normal; color:rgb(234,232,223);}
+.record-foot {font-size:11px; margin-top:6px; white-space:normal; color:rgb(140,151,147);}
+.record-inspector {width:258px; min-width:205px; padding:3px 0 8px 22px;}
+.inspector-status {font-size:11px; color:rgb(176,140,109); margin-top:16px;}
+.inspector-title {font-size:19px; color:rgb(241,239,228); margin-top:10px; white-space:normal;}
+.inspector-observation {font-size:13px; color:rgb(209,215,209); margin-top:13px; white-space:normal;}
+.inspector-label {font-size:10px; margin-top:21px; color:rgb(137,153,151);}
+.inspector-text {font-size:12px; margin-top:7px; white-space:normal; color:rgb(198,203,197);}
+.inspector-space {flex-grow:1;}
+.inspector-hint {font-size:10px; color:rgb(150,157,152); white-space:normal; margin-top:10px;}
+.secondary-button {height:34px; color:rgb(225,223,212); background-color:rgb(59,67,65); border-top-width:0;border-right-width:0;border-bottom-width:0;border-left-width:0; font-size:12px;}
+.secondary-button:hover {background-color:rgb(75,80,75);}
+.compare-tray {margin-top:14px; border-top-width:1px; border-top-color:rgb(65,73,71); padding-top:12px;}
+.compare-slot {font-size:11px; white-space:normal; color:rgb(183,192,183); margin-top:9px; padding:6px 7px; background-color:rgb(29,35,35);}
+.text-button {font-size:11px; color:rgb(167,153,140); background-color:rgba(0,0,0,0); border-top-width:0;border-bottom-width:0;border-left-width:0;border-right-width:0; margin-top:4px; -unity-text-align:middle-left;}
+.compose-area {margin-top:15px; padding-top:11px; border-top-width:1px; border-top-color:rgb(60,68,67);}
+.compose-label {font-size:13px; color:rgb(226,224,214); -unity-font-style:bold;}
+.question-input {white-space:normal; color:rgb(238,236,226); font-size:14px; margin-top:7px;}
+.primary-button {height:38px; margin-top:10px; background-color:rgb(174,135,106); color:rgb(18,22,22); font-size:13px; -unity-font-style:bold; border-top-width:0;border-right-width:0;border-bottom-width:0;border-left-width:0;}
+.primary-button:disabled {background-color:rgb(82,90,87); color:rgb(152,158,153);}
+.danger-button {height:35px; margin-top:8px; background-color:rgb(108,70,63); color:rgb(244,238,226); font-size:12px;}
+.helper {font-size:11px; white-space:normal; color:rgb(150,164,157); margin-top:7px;}
+.report-evidence-list {max-height:132px; min-height:30px;}
+.report-evidence-checkbox {font-size:12px; margin:4px 0; color:rgb(208,211,204);}
+.accused-choice {color:rgb(241,240,231); margin-top:6px;}
+.workspace-footer {flex-direction:row; justify-content:space-between; margin-top:10px; min-height:20px;}
+.toast-line {font-size:11px; color:rgb(210,160,129); white-space:normal;}
+.case-footer {font-size:10px; letter-spacing:1px; color:rgb(115,125,122);}

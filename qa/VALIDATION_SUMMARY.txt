@@ -1,0 +1,12 @@
+TABLE//ZERO V10 validation summary
+Python unittest tests: 82 / 82 passed (qa/PYTHON_TEST_RESULTS.txt)
+JSON files syntax valid: 9
+Unity UXML: parsed successfully with Python XML parser
+HTML preview embedded JavaScript: passed Node.js syntax check
+Unity Editor & C# compilation: NOT EXECUTED (Unity runtime unavailable)
+Unity first-person cinematic Play Mode: NOT EXECUTED
+AI real LLM 20turn x 30session eval: NOT EXECUTED
+Live 3D visual quality: NOT VERIFIED
+HTML preview screenshot: NOT VERIFIED (headless browser failed to render in this environment)
+User Codex local repository: NOT ACCESSED OR MODIFIED
+All conclusions are limited to static/server-level checks.

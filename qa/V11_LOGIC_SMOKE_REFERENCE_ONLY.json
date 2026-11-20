@@ -1,0 +1,34 @@
+{
+  "status": "LOGIC_REFERENCE_ONLY_NO_UNITY_NO_LIVE_MODEL",
+  "steps": [
+    {
+      "case_scene_before": "hall",
+      "evidence_initial": [
+        "e01"
+      ],
+      "ai_provider": "SCRIPTED_PREVIEW_NOT_AI"
+    },
+    {
+      "action": "OPEN FRIDGE / LOGIC ONLY",
+      "opened": true
+    },
+    {
+      "action": "INSPECT BOTTLE / LOGIC ONLY",
+      "observation": "뚜껑과 병 표면을 확인한다",
+      "evidence_acquired": false
+    },
+    {
+      "action": "TEXT TURN / PREVIEW ONLY",
+      "text": "그 부분은 제가 확인하고 말씀드릴게요",
+      "latency_ms": 0.0,
+      "interview_seconds_left": 876,
+      "provider": "SCRIPTED_PREVIEW_NOT_AI"
+    },
+    {
+      "action": "CINEMATIC GATE",
+      "approved": false,
+      "reason": "authored_assets_missing"
+    }
+  ],
+  "private_canon_not_serialized": true
+}

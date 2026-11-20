@@ -1,0 +1,16 @@
+TABLE//ZERO V11 — VERIFICATION REPORT
+
+PASS: Python source compile / JSON parsing / 140 unique prop manifests / 55 unique cinematic beats
+PASS: Existing automated Python tests + new V11 contract tests (actual count in attached test log)
+PASS: HTML preview inline JavaScript syntax (node --check)
+PASS: Reference-only smoke walkthrough: fridge open, inside bottle inspect, free typed question, missing cinematic asset blocked
+
+NOT RUN: Unity Editor Play Mode or C# compile
+NOT RUN: 1st-person hand IK/clip alignment/realistic 3D meshes/physics audio sync
+NOT RUN: Human UI screenshot appearance review (headless Chromium screenshot attempt failed/timed out)
+NOT RUN: Live LLM/Ollama real model or live STT/microphone integrated scene
+NOT RUN: Case 001 fully playable 30–45 minute real build, Steam release review
+
+All 140 prop IDs are UNASSIGNED_NEEDS_QUALITY_ASSET in authoring manifest. 55 V11 beats are NOT_VERIFIED in Unity. These are production requirements, not completed cinematic scenes.
+
+Never treat the 117+ Python tests as proof of actual AAA/Steam visual quality. All graphics and performance still need direct Unity verification.

@@ -1,0 +1,141 @@
+﻿prop_id,zone,label_ko,interaction,required_rig,asset_file,Blender_QA,Unity_camera_QA,collision_IK_QA,sound_QA,license,status
+entrance_lock,entrance,현관 도어락,switch,control_response,,,,,,,RELEASE_BLOCKED_ASSET
+entrance_door,entrance,현관문,door,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+entrance_doorframe,entrance,현관 문틀,inspect,focus_pose,,,,,,,RELEASE_BLOCKED_ASSET
+entrance_mat,entrance,발매트,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+entrance_shoes1,entrance,운동화 한 켤레,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+entrance_shoes2,entrance,슬리퍼 한 켤레,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+entrance_shoes3,entrance,구두 한 켤레,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+entrance_shoe_cabinet,entrance,신발장 문,container,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+entrance_shoe_shelf,entrance,신발장 선반,inspect,focus_pose,,,,,,,RELEASE_BLOCKED_ASSET
+entrance_umbrella,entrance,접이식 우산,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+entrance_delivery_box,entrance,택배 상자,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+entrance_switch,entrance,현관 조명 스위치,switch,control_response,,,,,,,RELEASE_BLOCKED_ASSET
+entrance_key_hook,entrance,열쇠걸이,inspect,focus_pose,,,,,,,RELEASE_BLOCKED_ASSET
+entrance_entry_mirror,entrance,현관 거울,inspect,focus_pose,,,,,,,RELEASE_BLOCKED_ASSET
+entrance_floor_trim,entrance,현관 경계턱,inspect,focus_pose,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_fridge_door,kitchen,냉장고 문,container,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_fridge_freezer,kitchen,냉동실 문,container,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_fridge_note,kitchen,냉장고 부착 메모,inspect,focus_pose,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_fridge_magnet,kitchen,냉장고 자석,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_fridge_bottle,kitchen,냉장고 생수병,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_fridge_milk,kitchen,냉장고 우유팩,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_fridge_container,kitchen,냉장고 반찬통,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_fridge_egg,kitchen,달걀 보관함,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_sink,kitchen,싱크대,inspect,focus_pose,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_faucet,kitchen,주방 수전,switch,control_response,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_drain_cover,kitchen,싱크 배수구 커버,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_sponge,kitchen,수세미,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_dish_soap,kitchen,주방세제,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_dish_rack,kitchen,식기 건조대,inspect,focus_pose,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_plate,kitchen,접시,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_mug,kitchen,머그컵,evidence_anchor,focus_pose,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_spoon,kitchen,숟가락,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_chopsticks,kitchen,젓가락,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_pot,kitchen,냄비,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_pan,kitchen,프라이팬,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_knife_rack,kitchen,칼꽂이,inspect,focus_pose,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_kitchen_knife,kitchen,주방칼,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_cutting_board,kitchen,도마,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_stove,kitchen,가스레인지,switch,control_response,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_hood,kitchen,주방 후드,switch,control_response,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_overhead_cabinet1,kitchen,상부장 왼쪽 문,container,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_overhead_cabinet2,kitchen,상부장 오른쪽 문,container,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_under_sink_left,kitchen,싱크대 하부장 왼쪽,container,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_under_sink_right,kitchen,싱크대 하부장 오른쪽,container,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_drawer_utensils,kitchen,주방 첫 번째 서랍,container,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_drawer_misc,kitchen,주방 두 번째 서랍,container,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_microwave_door,kitchen,전자레인지 문,container,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_microwave_buttons,kitchen,전자레인지 버튼,inspect,focus_pose,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_instant_noodle1,kitchen,컵라면 A,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_instant_noodle2,kitchen,컵라면 B,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_bin,kitchen,주방 쓰레기통,container,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+kitchen_bin_liner,kitchen,쓰레기봉투,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+living_food_bag,living,음식 배달 봉투,evidence_anchor,focus_pose,,,,,,,RELEASE_BLOCKED_ASSET
+living_food_container1,living,배달 음식 용기 A,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+living_food_container2,living,배달 음식 용기 B,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+living_disposable_spoon,living,일회용 수저,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+living_cola_can,living,음료 캔,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+living_napkin,living,휴지 뭉치,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+living_table,living,낮은 식탁,inspect,focus_pose,,,,,,,RELEASE_BLOCKED_ASSET
+living_chair,living,넘어진 의자,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+living_table_drawer,living,테이블 서랍,container,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+living_floor_blood,living,바닥 흔적,inspect,focus_pose,,,,,,,RELEASE_BLOCKED_ASSET
+living_footprint,living,바닥 발자국 형태,inspect,focus_pose,,,,,,,RELEASE_BLOCKED_ASSET
+living_broken_glass,living,유리 파편,inspect,focus_pose,,,,,,,RELEASE_BLOCKED_ASSET
+living_lamp,living,스탠드 조명,switch,control_response,,,,,,,RELEASE_BLOCKED_ASSET
+living_window,living,창문,door,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+living_window_latch,living,창문 잠금장치,switch,control_response,,,,,,,RELEASE_BLOCKED_ASSET
+living_curtain_left,living,왼쪽 커튼,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+living_curtain_right,living,오른쪽 커튼,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+living_aircon_remote,living,에어컨 리모컨,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+living_wall_clock,living,벽시계,inspect,focus_pose,,,,,,,RELEASE_BLOCKED_ASSET
+living_wall_switch,living,실내 조명 스위치,switch,control_response,,,,,,,RELEASE_BLOCKED_ASSET
+living_paper_stack,living,서류 더미,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+living_envelope,living,봉투,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+living_pen,living,볼펜,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+living_laptop,living,노트북,inspect,focus_pose,,,,,,,RELEASE_BLOCKED_ASSET
+living_laptop_charger,living,노트북 충전기,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+living_power_strip,living,멀티탭,switch,control_response,,,,,,,RELEASE_BLOCKED_ASSET
+living_phone,living,피해자 휴대전화,evidence_anchor,focus_pose,,,,,,,RELEASE_BLOCKED_ASSET
+living_notepad,living,메모장,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+living_photo_frame,living,사진 액자,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+living_bookshelf,living,책장,inspect,focus_pose,,,,,,,RELEASE_BLOCKED_ASSET
+living_book1,living,책 A,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+living_book2,living,책 B,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+living_box_storage,living,수납 상자,container,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+living_power_cable,living,바닥 전원선,inspect,focus_pose,,,,,,,RELEASE_BLOCKED_ASSET
+living_trash_bag,living,생활 쓰레기봉투,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+living_heater_remote,living,보일러 조절기,switch,control_response,,,,,,,RELEASE_BLOCKED_ASSET
+sleep_bed,sleep,침대,inspect,focus_pose,,,,,,,RELEASE_BLOCKED_ASSET
+sleep_blanket,sleep,이불,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+sleep_pillow1,sleep,베개 A,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+sleep_pillow2,sleep,베개 B,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+sleep_sheet,sleep,침대 시트,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+sleep_bedside_table,sleep,협탁,inspect,focus_pose,,,,,,,RELEASE_BLOCKED_ASSET
+sleep_bedside_drawer,sleep,협탁 서랍,container,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+sleep_bedside_phone,sleep,침대 옆 충전 케이블,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+sleep_wardrobe_left,sleep,옷장 왼쪽 문,container,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+sleep_wardrobe_right,sleep,옷장 오른쪽 문,container,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+sleep_hanger,sleep,옷걸이,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+sleep_coat,sleep,걸린 외투,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+sleep_shirt,sleep,접힌 셔츠,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+sleep_laundry,sleep,빨래 바구니,container,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+sleep_suitcase,sleep,여행 가방,container,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+sleep_mirror,sleep,전신 거울,inspect,focus_pose,,,,,,,RELEASE_BLOCKED_ASSET
+sleep_drawer_top,sleep,서랍장 첫 번째 서랍,container,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+sleep_drawer_mid,sleep,서랍장 두 번째 서랍,container,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+sleep_drawer_bottom,sleep,서랍장 세 번째 서랍,container,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+bath_bath_door,bath,화장실 문,door,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+bath_light_switch,bath,화장실 전등 스위치,switch,control_response,,,,,,,RELEASE_BLOCKED_ASSET
+bath_vent_fan,bath,환풍기 스위치,switch,control_response,,,,,,,RELEASE_BLOCKED_ASSET
+bath_toilet_lid,bath,변기 뚜껑,container,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+bath_toilet_seat,bath,변기 시트,container,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+bath_flush_handle,bath,변기 물내림 버튼,switch,control_response,,,,,,,RELEASE_BLOCKED_ASSET
+bath_toilet_brush,bath,변기솔,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+bath_sink,bath,세면대,inspect,focus_pose,,,,,,,RELEASE_BLOCKED_ASSET
+bath_sink_faucet,bath,세면대 수전,switch,control_response,,,,,,,RELEASE_BLOCKED_ASSET
+bath_soap,bath,비누,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+bath_toothbrush,bath,칫솔,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+bath_toothpaste,bath,치약,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+bath_cup,bath,양치컵,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+bath_mirror_cabinet,bath,욕실 거울장,container,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+bath_lower_cabinet,bath,세면대 하부장,container,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+bath_shower_head,bath,샤워기 헤드,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+bath_shower_tap,bath,샤워 수전,switch,control_response,,,,,,,RELEASE_BLOCKED_ASSET
+bath_shampoo,bath,샴푸병,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+bath_body_wash,bath,바디워시병,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+bath_towel1,bath,수건 A,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+bath_towel2,bath,수건 B,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+bath_toilet_paper,bath,휴지걸이,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+bath_laundry_bin,bath,욕실 세탁 바구니,container,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+bath_drain,bath,화장실 배수구,container,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+bath_floor_mat,bath,욕실 발매트,move,pickup_IK,,,,,,,RELEASE_BLOCKED_ASSET
+bath_window,bath,욕실 작은 창문,door,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+bath_ceiling,bath,욕실 천장 점검구,container,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+hall_stairs,hall,공동계단,inspect,focus_pose,,,,,,,RELEASE_BLOCKED_ASSET
+hall_sensor,hall,복도 센서등,switch,control_response,,,,,,,RELEASE_BLOCKED_ASSET
+hall_neighbor_door,hall,옆집 문,door,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+hall_mailbox,hall,우편함,container,hinge_or_slide,,,,,,,RELEASE_BLOCKED_ASSET
+hall_intercom,hall,공동현관 인터폰,switch,control_response,,,,,,,RELEASE_BLOCKED_ASSET
+hall_cctv,hall,공동현관 카메라,inspect,focus_pose,,,,,,,RELEASE_BLOCKED_ASSET

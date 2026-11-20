@@ -1,0 +1,1316 @@
+{
+  "items": [
+    {
+      "id": "entrance.door_threshold_pause",
+      "group": "entrance",
+      "description": "문턱에서 걸음 멈칫",
+      "requires": [
+        "entrance_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 1,
+      "animation": "foot_pause",
+      "sfx": "door_creak",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "...",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "entrance.stale_air",
+      "group": "entrance",
+      "description": "실내 악취 감지",
+      "requires": [
+        "entrance_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 1,
+      "animation": "breath_shallow",
+      "sfx": "room_tone",
+      "physics_event": "none",
+      "camera_impulse": 0.025,
+      "subtitle": "으… 냄새가 좀 심하네.",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "entrance.corridor_duck",
+      "group": "entrance",
+      "description": "문밖 소음 희미해짐",
+      "requires": [
+        "entrance_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 1,
+      "animation": "still",
+      "sfx": "corridor_fade",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "entrance.fridge_motor",
+      "group": "entrance",
+      "description": "냉장고 모터음 부각",
+      "requires": [
+        "entrance_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 1,
+      "animation": "still",
+      "sfx": "fridge_hum",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "entrance.shoe_cover",
+      "group": "entrance",
+      "description": "덧신 끌리는 소리",
+      "requires": [
+        "entrance_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 1,
+      "animation": "inspect_down",
+      "sfx": "shoe_scuff",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "entrance.flicker_door",
+      "group": "entrance",
+      "description": "현관등 떨림",
+      "requires": [
+        "entrance_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 1,
+      "animation": "still",
+      "sfx": "light_buzz",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "entrance.neighbor_step",
+      "group": "entrance",
+      "description": "이웃 발소리에 고개 돌림",
+      "requires": [
+        "entrance_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 1,
+      "animation": "look_side",
+      "sfx": "steps",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "entrance.glove_adjust",
+      "group": "entrance",
+      "description": "장갑 소매 당김",
+      "requires": [
+        "entrance_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 1,
+      "animation": "glove_adjust",
+      "sfx": "cloth",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "entrance.light_beam",
+      "group": "entrance",
+      "description": "손전등 빔 떨림",
+      "requires": [
+        "entrance_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 1,
+      "animation": "flashlight_steady",
+      "sfx": "switch",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "entrance.door_chain",
+      "group": "entrance",
+      "description": "현관 잠금장치 확인",
+      "requires": [
+        "entrance_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 1,
+      "animation": "inspect_lock",
+      "sfx": "metal_click",
+      "physics_event": "door_chain",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "entrance.floor_crease",
+      "group": "entrance",
+      "description": "바닥 흔적 회피 보폭",
+      "requires": [
+        "entrance_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 1,
+      "animation": "step_avoid",
+      "sfx": "shoe_scuff",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "entrance.dispatch_mute",
+      "group": "entrance",
+      "description": "무전기 볼륨 낮춤",
+      "requires": [
+        "entrance_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 1,
+      "animation": "radio_lower",
+      "sfx": "radio_click",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "entrance.scent_return",
+      "group": "entrance",
+      "description": "냄새 다시 올라옴",
+      "requires": [
+        "entrance_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 1,
+      "animation": "breath_hold",
+      "sfx": "room_tone",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "entrance.threshold_glance",
+      "group": "entrance",
+      "description": "돌아갈 출입구 확인",
+      "requires": [
+        "entrance_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 1,
+      "animation": "look_back",
+      "sfx": "cloth",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "scene.blood_glimpse",
+      "group": "scene",
+      "description": "혈흔 처음 발견",
+      "requires": [
+        "scene_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 3,
+      "animation": "breath_hold",
+      "sfx": "breath",
+      "physics_event": "none",
+      "camera_impulse": 0.025,
+      "subtitle": "...",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "scene.blood_trace",
+      "group": "scene",
+      "description": "혈흔 선 따라 시선 이동",
+      "requires": [
+        "scene_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 3,
+      "animation": "look_down",
+      "sfx": "room_tone",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "scene.broken_glass",
+      "group": "scene",
+      "description": "깨진 유리 옆 발 멈춤",
+      "requires": [
+        "scene_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 3,
+      "animation": "foot_pause",
+      "sfx": "glass_crunch",
+      "physics_event": "glass",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "scene.spilled_drink",
+      "group": "scene",
+      "description": "엎질러진 컵 확인",
+      "requires": [
+        "scene_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 3,
+      "animation": "reach_hover",
+      "sfx": "drip",
+      "physics_event": "cup",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "scene.body_distance",
+      "group": "scene",
+      "description": "시신 접근 전 발 멈춤",
+      "requires": [
+        "scene_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 3,
+      "animation": "foot_pause",
+      "sfx": "breath",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "scene.phone_vibrate",
+      "group": "scene",
+      "description": "휴대전화 진동",
+      "requires": [
+        "scene_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 3,
+      "animation": "look_side",
+      "sfx": "phone_buzz",
+      "physics_event": "phone",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "scene.pet_sound",
+      "group": "scene",
+      "description": "옆집 동물 울음",
+      "requires": [
+        "scene_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 3,
+      "animation": "look_side",
+      "sfx": "pet_distant",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "scene.window_wind",
+      "group": "scene",
+      "description": "창문 틈 바람",
+      "requires": [
+        "scene_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 3,
+      "animation": "look_side",
+      "sfx": "window_rattle",
+      "physics_event": "curtain",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "scene.sink_drip",
+      "group": "scene",
+      "description": "수도 물방울",
+      "requires": [
+        "scene_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 3,
+      "animation": "listen",
+      "sfx": "water_drip",
+      "physics_event": "faucet",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "scene.closet_caution",
+      "group": "scene",
+      "description": "옷장 문 앞 정지",
+      "requires": [
+        "scene_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 3,
+      "animation": "reach_hover",
+      "sfx": "cloth",
+      "physics_event": "door",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "scene.odor_wave",
+      "group": "scene",
+      "description": "부패취에 얼굴 가림",
+      "requires": [
+        "scene_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 3,
+      "animation": "hand_cover",
+      "sfx": "breath",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "잠깐만…",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "scene.flashlight_dust",
+      "group": "scene",
+      "description": "빛 속 먼지 부유",
+      "requires": [
+        "scene_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 3,
+      "animation": "flashlight_steady",
+      "sfx": "room_tone",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "scene.shoeprint_notice",
+      "group": "scene",
+      "description": "신발자국 발견",
+      "requires": [
+        "scene_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 3,
+      "animation": "crouch_inspect",
+      "sfx": "cloth",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "scene.photo_pause",
+      "group": "scene",
+      "description": "액자 속 인물 응시",
+      "requires": [
+        "scene_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 3,
+      "animation": "hold_frame",
+      "sfx": "frame_touch",
+      "physics_event": "frame",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "scene.fan_hum",
+      "group": "scene",
+      "description": "환풍기 공진",
+      "requires": [
+        "scene_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 3,
+      "animation": "listen",
+      "sfx": "fan_hum",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "scene.tap_tape",
+      "group": "scene",
+      "description": "폴리스라인 접촉",
+      "requires": [
+        "scene_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 3,
+      "animation": "hand_brush",
+      "sfx": "tape_snap",
+      "physics_event": "tape",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "evidence.bag_open",
+      "group": "evidence",
+      "description": "증거봉투 개봉",
+      "requires": [
+        "evidence_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 1,
+      "animation": "bag_open",
+      "sfx": "plastic_rustle",
+      "physics_event": "bag",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "evidence.glove_pin",
+      "group": "evidence",
+      "description": "장갑으로 머리카락 집음",
+      "requires": [
+        "evidence_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 1,
+      "animation": "pinch",
+      "sfx": "latex",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "evidence.evidence_rotate",
+      "group": "evidence",
+      "description": "증거 회전 관찰",
+      "requires": [
+        "evidence_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 1,
+      "animation": "rotate_item",
+      "sfx": "fabric",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "evidence.photo_capture",
+      "group": "evidence",
+      "description": "기록 사진 촬영",
+      "requires": [
+        "evidence_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 1,
+      "animation": "photo_pose",
+      "sfx": "shutter",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "evidence.evidence_label",
+      "group": "evidence",
+      "description": "증거 라벨 기입",
+      "requires": [
+        "evidence_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 1,
+      "animation": "write_label",
+      "sfx": "pen",
+      "physics_event": "paper",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "evidence.dust_print",
+      "group": "evidence",
+      "description": "흔적 각도 바꿈",
+      "requires": [
+        "evidence_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 1,
+      "animation": "tilt_light",
+      "sfx": "switch",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "evidence.rebag",
+      "group": "evidence",
+      "description": "증거 재포장",
+      "requires": [
+        "evidence_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 1,
+      "animation": "bag_close",
+      "sfx": "plastic_rustle",
+      "physics_event": "bag",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "evidence.under_table",
+      "group": "evidence",
+      "description": "탁자 아래 확인",
+      "requires": [
+        "evidence_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 1,
+      "animation": "crouch_inspect",
+      "sfx": "cloth",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "evidence.door_handle",
+      "group": "evidence",
+      "description": "문고리 표면 관찰",
+      "requires": [
+        "evidence_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 1,
+      "animation": "reach_hover",
+      "sfx": "metal_click",
+      "physics_event": "door",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "evidence.fingerprint_pause",
+      "group": "evidence",
+      "description": "지문 채취 전 정지",
+      "requires": [
+        "evidence_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 1,
+      "animation": "hand_stop",
+      "sfx": "latex",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "evidence.paper_flip",
+      "group": "evidence",
+      "description": "메모 뒤집기",
+      "requires": [
+        "evidence_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 1,
+      "animation": "flip_note",
+      "sfx": "paper_rustle",
+      "physics_event": "paper",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "evidence.object_replace",
+      "group": "evidence",
+      "description": "검사 후 제자리",
+      "requires": [
+        "evidence_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 1,
+      "animation": "place_item",
+      "sfx": "object_set",
+      "physics_event": "object",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "evidence.light_reangle",
+      "group": "evidence",
+      "description": "빛 각도 변경",
+      "requires": [
+        "evidence_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 1,
+      "animation": "tilt_light",
+      "sfx": "switch",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "evidence.evidence_compare",
+      "group": "evidence",
+      "description": "두 증거 비교",
+      "requires": [
+        "evidence_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 1,
+      "animation": "compare_items",
+      "sfx": "fabric",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "interview.cup_touch",
+      "group": "interview",
+      "description": "컵을 만지작거림",
+      "requires": [
+        "interview_active"
+      ],
+      "cooldown_s": 90,
+      "repeat_limit": 3,
+      "animation": "cup_touch",
+      "sfx": "cup_slide",
+      "physics_event": "cup",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "interview.table_slam",
+      "group": "interview",
+      "description": "책상 돌발 타격",
+      "requires": [
+        "interview_active"
+      ],
+      "cooldown_s": 90,
+      "repeat_limit": 3,
+      "animation": "table_slam",
+      "sfx": "table_impact",
+      "physics_event": "cup_shake",
+      "camera_impulse": 0.12,
+      "subtitle": "아, 아니라고 했잖아요!",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "interview.long_silence",
+      "group": "interview",
+      "description": "긴 침묵",
+      "requires": [
+        "interview_active"
+      ],
+      "cooldown_s": 90,
+      "repeat_limit": 3,
+      "animation": "still",
+      "sfx": "clock_tick",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "interview.finger_tap",
+      "group": "interview",
+      "description": "손가락 두드림",
+      "requires": [
+        "interview_active"
+      ],
+      "cooldown_s": 90,
+      "repeat_limit": 3,
+      "animation": "finger_tap",
+      "sfx": "finger_tap",
+      "physics_event": "table",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "interview.chair_shift",
+      "group": "interview",
+      "description": "의자 자세 바꿈",
+      "requires": [
+        "interview_active"
+      ],
+      "cooldown_s": 90,
+      "repeat_limit": 3,
+      "animation": "shift_chair",
+      "sfx": "chair_creak",
+      "physics_event": "chair",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "interview.gaze_lower",
+      "group": "interview",
+      "description": "시선을 아래로",
+      "requires": [
+        "interview_active"
+      ],
+      "cooldown_s": 90,
+      "repeat_limit": 3,
+      "animation": "look_down",
+      "sfx": "cloth",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "interview.breath_catch",
+      "group": "interview",
+      "description": "숨 짧게 들이킴",
+      "requires": [
+        "interview_active"
+      ],
+      "cooldown_s": 90,
+      "repeat_limit": 3,
+      "animation": "deep_breath",
+      "sfx": "breath",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "interview.half_answer",
+      "group": "interview",
+      "description": "대답 망설임",
+      "requires": [
+        "interview_active"
+      ],
+      "cooldown_s": 90,
+      "repeat_limit": 3,
+      "animation": "hand_stop",
+      "sfx": "clock_tick",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "그게…",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "interview.voice_rise",
+      "group": "interview",
+      "description": "언성 높아짐",
+      "requires": [
+        "interview_active"
+      ],
+      "cooldown_s": 90,
+      "repeat_limit": 3,
+      "animation": "lean_forward",
+      "sfx": "cloth",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "interview.hand_clench",
+      "group": "interview",
+      "description": "주먹 꽉 쥠",
+      "requires": [
+        "interview_active"
+      ],
+      "cooldown_s": 90,
+      "repeat_limit": 3,
+      "animation": "fist_clench",
+      "sfx": "cloth",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "interview.lean_back",
+      "group": "interview",
+      "description": "의자에 기대기",
+      "requires": [
+        "interview_active"
+      ],
+      "cooldown_s": 90,
+      "repeat_limit": 3,
+      "animation": "lean_back",
+      "sfx": "chair_creak",
+      "physics_event": "chair",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "interview.request_lawyer",
+      "group": "interview",
+      "description": "변호인 요청",
+      "requires": [
+        "interview_active"
+      ],
+      "cooldown_s": 90,
+      "repeat_limit": 3,
+      "animation": "hand_stop",
+      "sfx": "room_tone",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "변호사랑 이야기하고 싶습니다.",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "interview.question_repeat",
+      "group": "interview",
+      "description": "되묻기",
+      "requires": [
+        "interview_active"
+      ],
+      "cooldown_s": 90,
+      "repeat_limit": 3,
+      "animation": "look_up",
+      "sfx": "room_tone",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "다시 말씀해 주시겠어요?",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "interview.photo_avoid",
+      "group": "interview",
+      "description": "사진 외면",
+      "requires": [
+        "interview_active"
+      ],
+      "cooldown_s": 90,
+      "repeat_limit": 3,
+      "animation": "look_side",
+      "sfx": "paper_rustle",
+      "physics_event": "paper",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "interview.evidence_slide",
+      "group": "interview",
+      "description": "증거 밀어 건네기",
+      "requires": [
+        "interview_active"
+      ],
+      "cooldown_s": 90,
+      "repeat_limit": 3,
+      "animation": "slide_evidence",
+      "sfx": "paper_slide",
+      "physics_event": "paper",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "interview.swallow",
+      "group": "interview",
+      "description": "침 삼킴",
+      "requires": [
+        "interview_active"
+      ],
+      "cooldown_s": 90,
+      "repeat_limit": 3,
+      "animation": "still",
+      "sfx": "swallow",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "interview.exit_threat",
+      "group": "interview",
+      "description": "의자 밀고 일어남",
+      "requires": [
+        "interview_active"
+      ],
+      "cooldown_s": 90,
+      "repeat_limit": 3,
+      "animation": "stand_up",
+      "sfx": "chair_push",
+      "physics_event": "chair",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "interview.chair_return",
+      "group": "interview",
+      "description": "다시 앉음",
+      "requires": [
+        "interview_active"
+      ],
+      "cooldown_s": 90,
+      "repeat_limit": 3,
+      "animation": "sit_down",
+      "sfx": "chair_creak",
+      "physics_event": "chair",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "interview.crossed_arms",
+      "group": "interview",
+      "description": "팔짱 끼기",
+      "requires": [
+        "interview_active"
+      ],
+      "cooldown_s": 90,
+      "repeat_limit": 3,
+      "animation": "cross_arms",
+      "sfx": "cloth",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "interview.rub_eyes",
+      "group": "interview",
+      "description": "눈가 문지름",
+      "requires": [
+        "interview_active"
+      ],
+      "cooldown_s": 90,
+      "repeat_limit": 3,
+      "animation": "rub_eyes",
+      "sfx": "cloth",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "ambience.heater_start",
+      "group": "ambience",
+      "description": "보일러 점화음",
+      "requires": [
+        "ambience_active"
+      ],
+      "cooldown_s": 240,
+      "repeat_limit": 3,
+      "animation": "still",
+      "sfx": "heater_click",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "ambience.elevator_bell",
+      "group": "ambience",
+      "description": "엘리베이터 도착",
+      "requires": [
+        "ambience_active"
+      ],
+      "cooldown_s": 240,
+      "repeat_limit": 3,
+      "animation": "look_side",
+      "sfx": "elevator_ding",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "ambience.delivery_bike",
+      "group": "ambience",
+      "description": "배달 오토바이 멀어짐",
+      "requires": [
+        "ambience_active"
+      ],
+      "cooldown_s": 240,
+      "repeat_limit": 3,
+      "animation": "still",
+      "sfx": "bike_distant",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "ambience.rain_gutter",
+      "group": "ambience",
+      "description": "빗물 받이 소리",
+      "requires": [
+        "ambience_active"
+      ],
+      "cooldown_s": 240,
+      "repeat_limit": 3,
+      "animation": "still",
+      "sfx": "rain_gutter",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "ambience.neighbor_tv",
+      "group": "ambience",
+      "description": "이웃집 TV 소리",
+      "requires": [
+        "ambience_active"
+      ],
+      "cooldown_s": 240,
+      "repeat_limit": 3,
+      "animation": "listen",
+      "sfx": "tv_muffled",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "ambience.police_radio",
+      "group": "ambience",
+      "description": "무전기 잡음",
+      "requires": [
+        "ambience_active"
+      ],
+      "cooldown_s": 240,
+      "repeat_limit": 3,
+      "animation": "radio_check",
+      "sfx": "radio_static",
+      "physics_event": "radio",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "ambience.fluorescent_buzz",
+      "group": "ambience",
+      "description": "형광등 소음",
+      "requires": [
+        "ambience_active"
+      ],
+      "cooldown_s": 240,
+      "repeat_limit": 3,
+      "animation": "still",
+      "sfx": "fluoro_buzz",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "ambience.clock_second",
+      "group": "ambience",
+      "description": "초침 소리 부각",
+      "requires": [
+        "ambience_active"
+      ],
+      "cooldown_s": 240,
+      "repeat_limit": 3,
+      "animation": "still",
+      "sfx": "clock_tick",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "ambience.hallfootsteps",
+      "group": "ambience",
+      "description": "복도 발걸음",
+      "requires": [
+        "ambience_active"
+      ],
+      "cooldown_s": 240,
+      "repeat_limit": 3,
+      "animation": "look_side",
+      "sfx": "steps",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "ambience.traffic_lull",
+      "group": "ambience",
+      "description": "도로 소음 끊김",
+      "requires": [
+        "ambience_active"
+      ],
+      "cooldown_s": 240,
+      "repeat_limit": 3,
+      "animation": "still",
+      "sfx": "road_fade",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "psychology.detective_doubt",
+      "group": "psychology",
+      "description": "형사 확신 흔들림",
+      "requires": [
+        "psychology_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 3,
+      "animation": "hand_stop",
+      "sfx": "breath",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "잠깐…",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "psychology.detective_realize",
+      "group": "psychology",
+      "description": "모순 발견 시선 정지",
+      "requires": [
+        "psychology_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 3,
+      "animation": "look_down",
+      "sfx": "room_tone",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "말이 안 맞는데.",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "psychology.suspect_relief",
+      "group": "psychology",
+      "description": "용의자 긴장 이완",
+      "requires": [
+        "psychology_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 3,
+      "animation": "deep_breath",
+      "sfx": "chair_creak",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "psychology.suspect_guard",
+      "group": "psychology",
+      "description": "용의자 방어 태세",
+      "requires": [
+        "psychology_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 3,
+      "animation": "cross_arms",
+      "sfx": "cloth",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "psychology.disbelief",
+      "group": "psychology",
+      "description": "불신의 짧은 한숨",
+      "requires": [
+        "psychology_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 3,
+      "animation": "deep_breath",
+      "sfx": "breath",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "psychology.reframe",
+      "group": "psychology",
+      "description": "형사가 질문 바꿈",
+      "requires": [
+        "psychology_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 3,
+      "animation": "paper_turn",
+      "sfx": "paper_rustle",
+      "physics_event": "paper",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "psychology.resolve",
+      "group": "psychology",
+      "description": "현장 재조사 결심",
+      "requires": [
+        "psychology_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 3,
+      "animation": "glove_adjust",
+      "sfx": "cloth",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "다시 확인해야겠어.",
+      "status": "requires_authorized_assets"
+    },
+    {
+      "id": "psychology.no_answer",
+      "group": "psychology",
+      "description": "대답 회피",
+      "requires": [
+        "psychology_active"
+      ],
+      "cooldown_s": 180,
+      "repeat_limit": 3,
+      "animation": "look_down",
+      "sfx": "clock_tick",
+      "physics_event": "none",
+      "camera_impulse": 0,
+      "subtitle": "",
+      "status": "requires_authorized_assets"
+    }
+  ]
+}

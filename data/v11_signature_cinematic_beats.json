@@ -1,0 +1,1177 @@
+{
+  "version": "11",
+  "description": "Additional candidate beats; never report as playable until clips, audio, physical collisions and runtime are verified",
+  "beats": [
+    {
+      "beat_id": "V11_FIRST_ROOM_AIR",
+      "scene": "room302",
+      "trigger": "enter_once",
+      "performance": "문을 열고 형사가 걸음을 잠깐 늦추며 손전등 높이를 낮춘다",
+      "sound_direction": "복도 소음이 닫히고 냉장고 모터가 들어온다",
+      "physical_result": "현관문 손잡이 실제 감쇠",
+      "camera_rule": "걷는 시점 유지, 1회 0.04 강도 이하",
+      "conditions": [
+        "door_opened"
+      ],
+      "required_assets": [
+        "door_rig",
+        "fp_arms",
+        "ambience_room",
+        "door_audio"
+      ],
+      "priority": "hero",
+      "cooldown_s": 180,
+      "per_session_limit": 1,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_BLOOD_RECOGNITION",
+      "scene": "room302",
+      "trigger": "first_view",
+      "performance": "형사가 한 번 말을 삼키고 바닥과 생활용품을 번갈아 본다",
+      "sound_direction": "짧은 호흡, 모터·실외기 소음은 유지",
+      "physical_result": "없음",
+      "camera_rule": "시야 강제 회전 없음",
+      "conditions": [
+        "blood_visible"
+      ],
+      "required_assets": [
+        "fp_breath",
+        "blood_material"
+      ],
+      "priority": "hero",
+      "cooldown_s": 180,
+      "per_session_limit": 1,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_UNMADE_BED",
+      "scene": "room302",
+      "trigger": "first_view",
+      "performance": "난장판보다 흐트러진 이불과 취침 공간이 먼저 눈에 걸린다",
+      "sound_direction": "침구 천 마찰음만",
+      "physical_result": "없음",
+      "camera_rule": "사용자 시선 우선",
+      "conditions": [
+        "bed_visible"
+      ],
+      "required_assets": [
+        "bed_highpoly",
+        "cloth_audio"
+      ],
+      "priority": "quiet",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_BLOOD_EDGE_DETAIL",
+      "scene": "room302",
+      "trigger": "approach",
+      "performance": "바닥 흔적 근접 촬영에서 재질·마른 부분·젖은 부분의 차이를 관찰한다",
+      "sound_direction": "실내음만",
+      "physical_result": "카메라/장비와 충돌 없음",
+      "camera_rule": "부드러운 포커스 전환",
+      "conditions": [
+        "look_at_trace"
+      ],
+      "required_assets": [
+        "blood_material",
+        "focus_tool"
+      ],
+      "priority": "hero",
+      "cooldown_s": 180,
+      "per_session_limit": 1,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_BED_DRAWER_RESIST",
+      "scene": "room302",
+      "trigger": "drawer_open",
+      "performance": "협탁 서랍이 처음엔 약하게 걸렸다가 부드럽게 열린다",
+      "sound_direction": "레일 마찰과 목재 접촉",
+      "physical_result": "실제 슬라이드/충돌",
+      "camera_rule": "카메라 흔들림 없음",
+      "conditions": [
+        "hand_contact"
+      ],
+      "required_assets": [
+        "bed_drawer_rig",
+        "fp_hand_IK",
+        "drawer_sfx"
+      ],
+      "priority": "micro",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_KITCHEN_CABINET_HINGE",
+      "scene": "room302",
+      "trigger": "cabinet_open",
+      "performance": "한쪽 상부장 경첩이 뻑뻑하게 움직인다",
+      "sound_direction": "경첩 고주파 마찰",
+      "physical_result": "실제 회전 제한",
+      "camera_rule": "시점 고정",
+      "conditions": [
+        "hand_contact"
+      ],
+      "required_assets": [
+        "kitchen_cabinet_rig",
+        "cabinet_audio"
+      ],
+      "priority": "micro",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_FRIDGE_LIGHT",
+      "scene": "room302",
+      "trigger": "fridge_open",
+      "performance": "문이 열리고 냉장고 안쪽 작은 등이 켜진다",
+      "sound_direction": "문 개스킷 흡착음과 팬 소음 변화",
+      "physical_result": "회전 도어",
+      "camera_rule": "카메라 자동 줌 금지",
+      "conditions": [
+        "fridge_door_open"
+      ],
+      "required_assets": [
+        "fridge_rig",
+        "fridge_audio",
+        "light_proxy"
+      ],
+      "priority": "micro",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_FRIDGE_COMPRESSOR",
+      "scene": "room302",
+      "trigger": "fridge_close",
+      "performance": "냉장고 문을 닫자 잠깐 모터가 다시 우웅거린다",
+      "sound_direction": "실내 공간감 반영",
+      "physical_result": "문 물리 접촉",
+      "camera_rule": "자연시점",
+      "conditions": [
+        "fridge_door_close"
+      ],
+      "required_assets": [
+        "fridge_rig",
+        "fridge_audio"
+      ],
+      "priority": "ambient",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_BATH_REVERB",
+      "scene": "room302",
+      "trigger": "bath_enter",
+      "performance": "화장실 문을 밀자 환풍기와 타일 잔향이 가까워진다",
+      "sound_direction": "팬 루프+현장 반향 전환",
+      "physical_result": "문 경첩",
+      "camera_rule": "일반 시점",
+      "conditions": [
+        "bath_door_open"
+      ],
+      "required_assets": [
+        "bath_door_rig",
+        "bath_audio",
+        "bath_reverb"
+      ],
+      "priority": "hero",
+      "cooldown_s": 180,
+      "per_session_limit": 1,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_WATER_DRIP",
+      "scene": "room302",
+      "trigger": "bath_sink",
+      "performance": "수도 손잡이를 돌렸을 때 마지막 물방울이 떨어진다",
+      "sound_direction": "배수구 낙수음",
+      "physical_result": "실제 물줄기 파티클",
+      "camera_rule": "주인공 조준 유지",
+      "conditions": [
+        "faucet_touched"
+      ],
+      "required_assets": [
+        "bath_faucet_rig",
+        "water_fx",
+        "drip_sfx"
+      ],
+      "priority": "micro",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_MIRROR_CABINET",
+      "scene": "room302",
+      "trigger": "bath_cabinet",
+      "performance": "거울장을 열자 거울 반사가 움직임을 따라간다",
+      "sound_direction": "작은 문 울림",
+      "physical_result": "실제 도어 회전",
+      "camera_rule": "시선 강제 이동 없음",
+      "conditions": [
+        "cabinet_open"
+      ],
+      "required_assets": [
+        "mirror_cabinet_rig",
+        "reflection_probe",
+        "hinge_sfx"
+      ],
+      "priority": "micro",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_SHOE_SCuff",
+      "scene": "room302",
+      "trigger": "footstep",
+      "performance": "형사의 덧신이 현관턱에서 짧게 미끄러진다",
+      "sound_direction": "고무·타일 마찰음",
+      "physical_result": "발접촉",
+      "camera_rule": "카메라 흔들림 없음",
+      "conditions": [
+        "on_entry_threshold"
+      ],
+      "required_assets": [
+        "fp_walk",
+        "shoe_step_sfx"
+      ],
+      "priority": "ambient",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_CUP_BASE",
+      "scene": "room302",
+      "trigger": "item_rotate",
+      "performance": "머그컵 바닥 각인의 사용 흔적을 가까이 확인한다",
+      "sound_direction": "도자기 작은 마찰",
+      "physical_result": "물건 회전 클램프",
+      "camera_rule": "뷰 포커스만",
+      "conditions": [
+        "cup_inspected"
+      ],
+      "required_assets": [
+        "cup_mesh",
+        "fp_grip_IK",
+        "ceramic_sfx"
+      ],
+      "priority": "micro",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_DELIVERY_LABEL",
+      "scene": "room302",
+      "trigger": "item_rotate",
+      "performance": "배달 봉투를 빛에 가까이 놓으면 인쇄된 글씨가 읽힌다",
+      "sound_direction": "종이 구김",
+      "physical_result": "봉투 손 접촉",
+      "camera_rule": "과장 줌 없음",
+      "conditions": [
+        "bag_inspected"
+      ],
+      "required_assets": [
+        "bag_mesh",
+        "print_texture",
+        "bag_rustle"
+      ],
+      "priority": "hero",
+      "cooldown_s": 180,
+      "per_session_limit": 1,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_SHUTTER_SUBTLE",
+      "scene": "room302",
+      "trigger": "photo_capture",
+      "performance": "촬영하는 손이 폰/카메라를 안정적으로 들고 기록한다",
+      "sound_direction": "실제 촬영 버튼 소리",
+      "physical_result": "가벼운 장비 물리",
+      "camera_rule": "제어 중임을 표시",
+      "conditions": [
+        "camera_used"
+      ],
+      "required_assets": [
+        "fp_camera_rig",
+        "shutter_sfx"
+      ],
+      "priority": "micro",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_LINEN_WEIGHT",
+      "scene": "room302",
+      "trigger": "open_bed",
+      "performance": "이불을 젖히면 아래 매트리스가 드러나고 주름이 늦게 풀린다",
+      "sound_direction": "면직물 흔들림",
+      "physical_result": "침구 저렴한 천공 파편 금지",
+      "camera_rule": "플레이어 카메라 자유",
+      "conditions": [
+        "blanket_held"
+      ],
+      "required_assets": [
+        "cloth_rig",
+        "fp_grip_IK",
+        "linen_sfx"
+      ],
+      "priority": "hero",
+      "cooldown_s": 180,
+      "per_session_limit": 1,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_WINDOW_NIGHT",
+      "scene": "room302",
+      "trigger": "window_open",
+      "performance": "창을 열자 오토바이 소리와 실외기가 더 크게 들린다",
+      "sound_direction": "실외음 자연 크로스페이드",
+      "physical_result": "창문 리그",
+      "camera_rule": "카메라 자유",
+      "conditions": [
+        "window_latch_released"
+      ],
+      "required_assets": [
+        "window_rig",
+        "exterior_audio",
+        "window_sfx"
+      ],
+      "priority": "quiet",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_NEIGHBOR_TV",
+      "scene": "room302",
+      "trigger": "ambient_safe",
+      "performance": "벽 너머 TV의 작은 대사 소리가 잠깐 들린다",
+      "sound_direction": "저역통과 필터",
+      "physical_result": "없음",
+      "camera_rule": "카메라 무반응",
+      "conditions": [
+        "player_idle"
+      ],
+      "required_assets": [
+        "neighbor_tv_audio"
+      ],
+      "priority": "quiet",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_UPSTAIRS_STEP",
+      "scene": "room302",
+      "trigger": "ambient_safe",
+      "performance": "윗집의 발걸음 두 번이 실내 정적에 섞인다",
+      "sound_direction": "잔향 있는 발소리",
+      "physical_result": "없음",
+      "camera_rule": "카메라 무반응",
+      "conditions": [
+        "player_idle"
+      ],
+      "required_assets": [
+        "upstairs_steps"
+      ],
+      "priority": "ambient",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_HALL_FOOTSTEPS",
+      "scene": "room302",
+      "trigger": "ambient_safe",
+      "performance": "복도에서 발소리가 멈췄다가 다시 멀어진다",
+      "sound_direction": "도어 너머 발소리",
+      "physical_result": "없음",
+      "camera_rule": "카메라 무반응",
+      "conditions": [
+        "player_idle"
+      ],
+      "required_assets": [
+        "hall_step_audio"
+      ],
+      "priority": "quiet",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_SENSOR_DELAY",
+      "scene": "hall",
+      "trigger": "enter_once",
+      "performance": "복도 센서등이 한 박자 늦게 켜진다",
+      "sound_direction": "형광등 스타트 소리",
+      "physical_result": "실제 광량 변화",
+      "camera_rule": "플레이어 시선 유지",
+      "conditions": [
+        "night_entry"
+      ],
+      "required_assets": [
+        "hall_light",
+        "fluorescent_audio"
+      ],
+      "priority": "hero",
+      "cooldown_s": 180,
+      "per_session_limit": 1,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_DOOR_QUIET",
+      "scene": "hall",
+      "trigger": "neighbor",
+      "performance": "문고리가 아주 짧게 돌아갔다가 멈춘다",
+      "sound_direction": "도어 래치",
+      "physical_result": "진짜 도어 리그",
+      "camera_rule": "플레이어 자유",
+      "conditions": [
+        "neighbor_door_visible"
+      ],
+      "required_assets": [
+        "neighbor_door_rig",
+        "door_latch"
+      ],
+      "priority": "micro",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_INTERCOM_STATIC",
+      "scene": "hall",
+      "trigger": "intercom",
+      "performance": "인터폰 눌림 뒤 한 박자 무음이 흐른다",
+      "sound_direction": "미세한 전기음",
+      "physical_result": "버튼 작동",
+      "camera_rule": "카메라 정지",
+      "conditions": [
+        "intercom_pressed"
+      ],
+      "required_assets": [
+        "intercom_rig",
+        "intercom_sfx"
+      ],
+      "priority": "micro",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_STAIRS_SHADOW",
+      "scene": "hall",
+      "trigger": "stair",
+      "performance": "계단에 내려오는 그림자가 잠깐 비친다",
+      "sound_direction": "계단 발소리",
+      "physical_result": "실제 인물/광원 필요",
+      "camera_rule": "시점 유지",
+      "conditions": [
+        "approved_npc_pass"
+      ],
+      "required_assets": [
+        "npc_walk",
+        "stair_lighting",
+        "steps"
+      ],
+      "priority": "quiet",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_RECORDER_ON",
+      "scene": "interview",
+      "trigger": "start",
+      "performance": "녹음기 단추를 누른 형사의 손이 테이블에서 천천히 떨어진다",
+      "sound_direction": "녹음 버튼 작은 클릭",
+      "physical_result": "레코더 버튼 실제 누름",
+      "camera_rule": "1인칭 앉은 시점",
+      "conditions": [
+        "interview_started"
+      ],
+      "required_assets": [
+        "recorder_rig",
+        "fp_seated_hands",
+        "click_sfx"
+      ],
+      "priority": "hero",
+      "cooldown_s": 180,
+      "per_session_limit": 1,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_BREATH_IN",
+      "scene": "interview",
+      "trigger": "quiet",
+      "performance": "용의자가 답변 전 고개를 숙이고 숨을 들이쉰다",
+      "sound_direction": "호흡 실감, 룸톤 유지",
+      "physical_result": "없음",
+      "camera_rule": "정면 응시 강제 없음",
+      "conditions": [
+        "suspect_answer_pending"
+      ],
+      "required_assets": [
+        "npc_breath_motion",
+        "breath_sfx"
+      ],
+      "priority": "micro",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_MISHEARD_TIME",
+      "scene": "interview",
+      "trigger": "question",
+      "performance": "용의자가 특정 시각을 다시 물으며 얼굴보다 종이를 먼저 본다",
+      "sound_direction": "목소리 뒤 종이 마찰음",
+      "physical_result": "종이 소품 작동",
+      "camera_rule": "카메라 고정",
+      "conditions": [
+        "time_question_heard"
+      ],
+      "required_assets": [
+        "npc_look_paper",
+        "paper_rustle"
+      ],
+      "priority": "dialogue",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_HAND_TWITCH",
+      "scene": "interview",
+      "trigger": "question",
+      "performance": "방향을 바꾼 질문에 손등의 작은 근육 긴장이 보인다",
+      "sound_direction": "룸톤만",
+      "physical_result": "없음",
+      "camera_rule": "줌 금지",
+      "conditions": [
+        "question_changed_topic"
+      ],
+      "required_assets": [
+        "npc_hand_rig"
+      ],
+      "priority": "micro",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_FINGER_TAP",
+      "scene": "interview",
+      "trigger": "question",
+      "performance": "용의자가 대답을 정리하는 동안 손가락으로 두 번 두드린다",
+      "sound_direction": "손가락 탁탁",
+      "physical_result": "실제 테이블 접촉",
+      "camera_rule": "카메라 무반응",
+      "conditions": [
+        "deliberation"
+      ],
+      "required_assets": [
+        "finger_tap_motion",
+        "table_tap_sfx"
+      ],
+      "priority": "micro",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_CHAIR_SHIFT",
+      "scene": "interview",
+      "trigger": "question",
+      "performance": "용의자가 자세를 고쳐 앉아 의자가 미세하게 운다",
+      "sound_direction": "의자 가죽/다리 소리",
+      "physical_result": "물리 연출과 접촉 동기",
+      "camera_rule": "카메라 무반응",
+      "conditions": [
+        "high_discomfort"
+      ],
+      "required_assets": [
+        "npc_chair_motion",
+        "chair_sfx"
+      ],
+      "priority": "micro",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_REPEATED_WORD",
+      "scene": "interview",
+      "trigger": "question",
+      "performance": "용의자가 형사의 단어 하나를 반복하며 시간을 번다",
+      "sound_direction": "짧은 말 반복",
+      "physical_result": "없음",
+      "camera_rule": "원래 구도",
+      "conditions": [
+        "suspect_strategy_counter"
+      ],
+      "required_assets": [
+        "npc_delivery_audio"
+      ],
+      "priority": "dialogue",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_EVIDENCE_SLIDE",
+      "scene": "interview",
+      "trigger": "evidence_present",
+      "performance": "형사의 손이 서류 한 장을 천천히 밀자 용의자 손이 멈춘다",
+      "sound_direction": "종이 마찰+멈추는 의자 소리",
+      "physical_result": "서류 실제 테이블 접촉",
+      "camera_rule": "컷 없이 팔 따라 소폭 이동",
+      "conditions": [
+        "presented_verified_evidence"
+      ],
+      "required_assets": [
+        "paper_mesh",
+        "fp_present_IK",
+        "npc_hand_stop",
+        "paper_slide_audio"
+      ],
+      "priority": "hero",
+      "cooldown_s": 180,
+      "per_session_limit": 1,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_CUP_STOP",
+      "scene": "interview",
+      "trigger": "evidence_present",
+      "performance": "컵을 만지던 손가락이 제출한 서류를 보고 멈춘다",
+      "sound_direction": "컵 도자기 접촉 중단",
+      "physical_result": "컵 흔들림 현실적",
+      "camera_rule": "인물 손 포커스",
+      "conditions": [
+        "evidence_seen"
+      ],
+      "required_assets": [
+        "npc_cup_touch",
+        "cup_mesh",
+        "ceramic_audio"
+      ],
+      "priority": "micro",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_PAPER_PUSHBACK",
+      "scene": "interview",
+      "trigger": "evidence_present",
+      "performance": "용의자가 서류를 읽지 않고 조용히 밀어낸다",
+      "sound_direction": "종이 소리",
+      "physical_result": "서류 물리 이동",
+      "camera_rule": "평범한 구도",
+      "conditions": [
+        "avoid_document"
+      ],
+      "required_assets": [
+        "npc_paper_push",
+        "paper_mesh",
+        "paper_audio"
+      ],
+      "priority": "hero",
+      "cooldown_s": 180,
+      "per_session_limit": 1,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_NO_INSTANT_CONFESSION",
+      "scene": "interview",
+      "trigger": "answer",
+      "performance": "불리한 자료 앞에서 용의자가 숨 고르고 일부 사실만 인정한다",
+      "sound_direction": "짧은 쉼 후 말",
+      "physical_result": "없음",
+      "camera_rule": "강제 연기 금지",
+      "conditions": [
+        "partial_admission"
+      ],
+      "required_assets": [
+        "npc_pause_motion",
+        "voice_audio"
+      ],
+      "priority": "dialogue",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_LONG_SILENCE",
+      "scene": "interview",
+      "trigger": "answer",
+      "performance": "양쪽 모두 한동안 말을 하지 않는 동안 방의 작은 환풍기 소리가 들린다",
+      "sound_direction": "팬+녹음기 잡음",
+      "physical_result": "없음",
+      "camera_rule": "프레임 정지 없음",
+      "conditions": [
+        "both_silent"
+      ],
+      "required_assets": [
+        "roomtone",
+        "breath_sfx"
+      ],
+      "priority": "hero",
+      "cooldown_s": 180,
+      "per_session_limit": 1,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_VOICE_THIN",
+      "scene": "interview",
+      "trigger": "answer",
+      "performance": "용의자의 목소리가 낮아지지만 또박또박 반문한다",
+      "sound_direction": "변화하는 톤",
+      "physical_result": "없음",
+      "camera_rule": "카메라 흔들림 없음",
+      "conditions": [
+        "suspect_counter"
+      ],
+      "required_assets": [
+        "voice_audio"
+      ],
+      "priority": "dialogue",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_PLAYER_TABLE_STRIKE",
+      "scene": "interview",
+      "trigger": "player_strike",
+      "performance": "형사 손이 실제 테이블 접촉 프레임에 부딪히고 용의자가 움찔한다",
+      "sound_direction": "녹음기 피크·테이블 충격음",
+      "physical_result": "컵·서류에 물리 충격",
+      "camera_rule": "한 번만 0.12 이내 임펄스",
+      "conditions": [
+        "pressure_tactic_approved"
+      ],
+      "required_assets": [
+        "fp_slam_clip",
+        "table_rigidbody",
+        "glass_rigidbody",
+        "mic_overload"
+      ],
+      "priority": "hero",
+      "cooldown_s": 180,
+      "per_session_limit": 1,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_SUSPECT_TABLE_STRIKE",
+      "scene": "interview",
+      "trigger": "npc_strike",
+      "performance": "용의자가 갑자기 손바닥으로 테이블을 쳤다 바로 손을 거둔다",
+      "sound_direction": "저역의 단발 충격",
+      "physical_result": "컵 물리·팔 리깅 접촉",
+      "camera_rule": "한 번만 0.12 이내 임펄스",
+      "conditions": [
+        "npc_action_approved"
+      ],
+      "required_assets": [
+        "npc_slam_clip",
+        "table_rigidbody",
+        "glass_rigidbody",
+        "table_hit_sfx"
+      ],
+      "priority": "hero",
+      "cooldown_s": 180,
+      "per_session_limit": 1,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_REMAIN_SILENT",
+      "scene": "interview",
+      "trigger": "player_wait",
+      "performance": "형사가 질문을 반복하지 않자 용의자가 시선을 들었다 내린다",
+      "sound_direction": "호흡/무음 유지",
+      "physical_result": "없음",
+      "camera_rule": "시점 자유",
+      "conditions": [
+        "player_waited"
+      ],
+      "required_assets": [
+        "npc_eye_motion",
+        "breath_sfx"
+      ],
+      "priority": "micro",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_RAISED_VOICE_AFTER",
+      "scene": "interview",
+      "trigger": "raise_voice",
+      "performance": "형사가 목소리를 올리자 용의자가 곧바로 항의하지 않고 먼저 숨을 멈춘다",
+      "sound_direction": "목소리/의자 소리",
+      "physical_result": "없음",
+      "camera_rule": "소폭 포커스",
+      "conditions": [
+        "player_raised_voice"
+      ],
+      "required_assets": [
+        "npc_discomfort_motion",
+        "voice_audio"
+      ],
+      "priority": "dialogue",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_REQUEST_COUNSEL",
+      "scene": "interview",
+      "trigger": "lawyer",
+      "performance": "용의자가 변호인 참여를 요청하자 형사 손이 녹음기를 가리킨다",
+      "sound_direction": "녹음기 버튼 눌림",
+      "physical_result": "레코더 실제 멈춤",
+      "camera_rule": "카메라 정면",
+      "conditions": [
+        "counsel_requested"
+      ],
+      "required_assets": [
+        "npc_counsel_motion",
+        "recorder_rig",
+        "button_audio"
+      ],
+      "priority": "hero",
+      "cooldown_s": 180,
+      "per_session_limit": 1,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_STAY_SEATED",
+      "scene": "interview",
+      "trigger": "exit",
+      "performance": "조사가 끝났는데 용의자가 바로 일어서지 않고 종이를 본다",
+      "sound_direction": "의자/정적",
+      "physical_result": "없음",
+      "camera_rule": "플레이어가 직접 퇴장",
+      "conditions": [
+        "interview_finished"
+      ],
+      "required_assets": [
+        "npc_linger_motion",
+        "roomtone"
+      ],
+      "priority": "quiet",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_CHAIR_PUSH",
+      "scene": "interview",
+      "trigger": "exit",
+      "performance": "용의자가 의자를 밀고 천천히 일어선다",
+      "sound_direction": "의자 바닥 긁힘",
+      "physical_result": "가구 실루엣 이동",
+      "camera_rule": "시점 고정",
+      "conditions": [
+        "interview_finished"
+      ],
+      "required_assets": [
+        "npc_stand_motion",
+        "chair_rig",
+        "chair_sfx"
+      ],
+      "priority": "hero",
+      "cooldown_s": 180,
+      "per_session_limit": 1,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_HALL_RING",
+      "scene": "interview",
+      "trigger": "unexpected",
+      "performance": "정적 뒤 조사실 밖 전화가 두 번 울렸다 끊긴다",
+      "sound_direction": "벽 건너 전화벨",
+      "physical_result": "없음",
+      "camera_rule": "카메라 반응 없음",
+      "conditions": [
+        "safe_window"
+      ],
+      "required_assets": [
+        "hall_phone_ring"
+      ],
+      "priority": "ambient",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_RECORDER_BATTERY",
+      "scene": "interview",
+      "trigger": "unexpected",
+      "performance": "녹음기 표시등이 순간 낮아지고 다시 안정된다",
+      "sound_direction": "작은 전기음",
+      "physical_result": "녹음 상태 로그와 일치",
+      "camera_rule": "카메라 무반응",
+      "conditions": [
+        "recorder_low_battery"
+      ],
+      "required_assets": [
+        "recorder_mesh",
+        "recorder_sfx"
+      ],
+      "priority": "quiet",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_PAPER_CORNER",
+      "scene": "interview",
+      "trigger": "unexpected",
+      "performance": "용의자가 서류 모서리를 접었다 다시 편다",
+      "sound_direction": "종이 마찰",
+      "physical_result": "진짜 종이 접힘 포즈",
+      "camera_rule": "클로즈업 강제 금지",
+      "conditions": [
+        "nervous_habit"
+      ],
+      "required_assets": [
+        "npc_paper_corner",
+        "paper_audio"
+      ],
+      "priority": "micro",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_CUP_CONDENSATION",
+      "scene": "interview",
+      "trigger": "unexpected",
+      "performance": "컵을 살짝 밀자 테이블에 물자국이 남는다",
+      "sound_direction": "유리/물 소리",
+      "physical_result": "응결 머티리얼과 소품 이동",
+      "camera_rule": "카메라 무반응",
+      "conditions": [
+        "cup_moved"
+      ],
+      "required_assets": [
+        "glass_condensation",
+        "cup_slide_sfx"
+      ],
+      "priority": "micro",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_NEW_CONTACT_TRACE",
+      "scene": "desk",
+      "trigger": "event_received",
+      "performance": "참고인 연락 기록이 기존 자료 옆에 새 번호로 접수된다",
+      "sound_direction": "짧은 업무용 벨",
+      "physical_result": "서류/기록 실제 갱신",
+      "camera_rule": "평상 카메라",
+      "conditions": [
+        "world_contact_logged"
+      ],
+      "required_assets": [
+        "case_ui",
+        "phone_sfx"
+      ],
+      "priority": "hero",
+      "cooldown_s": 180,
+      "per_session_limit": 1,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_TIME_LINE_UNCERTAINTY",
+      "scene": "desk",
+      "trigger": "timeline_update",
+      "performance": "서로 다른 두 시계 표시가 근접하지만 완전히 일치하지 않는다",
+      "sound_direction": "조용한 종이 넘김",
+      "physical_result": "없음",
+      "camera_rule": "UI 포커스",
+      "conditions": [
+        "compare_two_sources"
+      ],
+      "required_assets": [
+        "timeline_ui",
+        "paper_sfx"
+      ],
+      "priority": "micro",
+      "cooldown_s": 90,
+      "per_session_limit": 2,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_PRINTER_SLOW",
+      "scene": "desk",
+      "trigger": "final_report",
+      "performance": "신고 자료와 감정 기록을 다시 한 장씩 확인하고 인쇄를 기다린다",
+      "sound_direction": "프린터 기계음",
+      "physical_result": "실제 종이 이동",
+      "camera_rule": "자연 화면",
+      "conditions": [
+        "report_submitted"
+      ],
+      "required_assets": [
+        "printer_rig",
+        "printer_sfx"
+      ],
+      "priority": "hero",
+      "cooldown_s": 180,
+      "per_session_limit": 1,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_INNOCENT_AFTERSHOCK",
+      "scene": "desk",
+      "trigger": "wrong_accusation",
+      "performance": "오인 지목된 사람이 창밖이 아니라 자신의 손을 한참 내려다본다",
+      "sound_direction": "호흡/의자 작은 소리",
+      "physical_result": "없음",
+      "camera_rule": "인물 연기 우선",
+      "conditions": [
+        "wrong_accusation_resolved"
+      ],
+      "required_assets": [
+        "npc_reaction_rig",
+        "roomtone"
+      ],
+      "priority": "hero",
+      "cooldown_s": 180,
+      "per_session_limit": 1,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_NOT_ENOUGH",
+      "scene": "desk",
+      "trigger": "correct_but_weak",
+      "performance": "보고서에 입증 미충족 항목이 남고 프린터가 그대로 멈춘다",
+      "sound_direction": "컴퓨터 팬/복도 발소리",
+      "physical_result": "실제 문서 상태",
+      "camera_rule": "카메라 고정",
+      "conditions": [
+        "underproved_report"
+      ],
+      "required_assets": [
+        "report_ui",
+        "roomtone"
+      ],
+      "priority": "hero",
+      "cooldown_s": 180,
+      "per_session_limit": 1,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_NO_TRIUMPH_MUSIC",
+      "scene": "desk",
+      "trigger": "success",
+      "performance": "정상 접수됐지만 형사는 몇 초 동안 보고서 서명을 바라본다",
+      "sound_direction": "음악 대신 서류음/멀리 걸음",
+      "physical_result": "없음",
+      "camera_rule": "관찰 시점",
+      "conditions": [
+        "report_accepted"
+      ],
+      "required_assets": [
+        "report_ui",
+        "paper_sfx"
+      ],
+      "priority": "hero",
+      "cooldown_s": 180,
+      "per_session_limit": 1,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    },
+    {
+      "beat_id": "V11_SEAL_NUMBER_ERROR",
+      "scene": "desk",
+      "trigger": "procedure",
+      "performance": "증거 봉인 번호가 맞지 않아 해당 자료 사용이 보류된다",
+      "sound_direction": "펜 내려놓는 소리",
+      "physical_result": "실제 서류 소품",
+      "camera_rule": "컷 없음",
+      "conditions": [
+        "chain_mismatch"
+      ],
+      "required_assets": [
+        "report_ui",
+        "pen_audio"
+      ],
+      "priority": "hero",
+      "cooldown_s": 180,
+      "per_session_limit": 1,
+      "world_mutation": "NEVER_DIRECT_FROM_CUE",
+      "authored_unity_clip_status": "NOT_VERIFIED"
+    }
+  ]
+}

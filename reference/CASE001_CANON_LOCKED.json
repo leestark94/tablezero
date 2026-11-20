@@ -1,0 +1,483 @@
+{
+  "version": "0.4-design-canon",
+  "case_id": "001",
+  "title": "302호의 밤",
+  "setting": "가상의 경기도 소도시, 2014년 준공 4층 빌라 302호",
+  "victim": "정수연, 29세",
+  "truth_server_only": {
+    "culprit_id": "s2",
+    "cause": "이서연이 정수연과 금전 분쟁 중 폭력적 충돌을 일으켰고 사망에 이르게 함",
+    "motivation": "공동 투자금 480만원 상환과 허위 정산 자료에 대한 대립",
+    "innocent_secrets": {
+      "s1": "강도현은 별도 교제 사실을 숨김; 21:21 퇴장 후 범행 시점에 현장에 없었음",
+      "s3": "박현수는 임대차 관련 부적절한 거래를 숨기고 있어 적극 진술을 피함"
+    }
+  },
+  "truth_events": [
+    {
+      "id": "t01",
+      "at": "20:47",
+      "actor": "delivery",
+      "event": "302호 음식 배달 완료",
+      "private_to": [
+        "victim",
+        "delivery"
+      ]
+    },
+    {
+      "id": "t02",
+      "at": "21:12",
+      "actor": "s1",
+      "event": "강도현 건물 입장",
+      "private_to": [
+        "s1",
+        "victim"
+      ]
+    },
+    {
+      "id": "t03",
+      "at": "21:21",
+      "actor": "s1",
+      "event": "강도현 건물 퇴장",
+      "private_to": [
+        "s1"
+      ]
+    },
+    {
+      "id": "t04",
+      "at": "21:34",
+      "actor": "s2",
+      "event": "정수연과 이서연의 통화",
+      "private_to": [
+        "s2",
+        "victim"
+      ]
+    },
+    {
+      "id": "t05",
+      "at": "21:39",
+      "actor": "s2",
+      "event": "이서연 빌라 재방문",
+      "private_to": [
+        "s2",
+        "victim"
+      ]
+    },
+    {
+      "id": "t06",
+      "at": "21:40~21:46",
+      "actor": "s2",
+      "event": "정수연과의 충돌로 정수연 사망",
+      "private_to": [
+        "s2"
+      ]
+    },
+    {
+      "id": "t07",
+      "at": "21:49",
+      "actor": "s2",
+      "event": "이서연 현장 이탈",
+      "private_to": [
+        "s2"
+      ]
+    },
+    {
+      "id": "t08",
+      "at": "21:55",
+      "actor": "s2",
+      "event": "이서연 인근 편의점 결제",
+      "private_to": [
+        "s2",
+        "clerk"
+      ]
+    },
+    {
+      "id": "t09",
+      "at": "22:07",
+      "actor": "s3",
+      "event": "이웃이 열린 문을 보고 112 신고",
+      "private_to": [
+        "s3"
+      ]
+    }
+  ],
+  "suspects": [
+    {
+      "id": "s1",
+      "name": "강도현",
+      "role": "전 남자친구",
+      "speech_style": "충동적·성급함. 억울한 추궁에는 거친 구어체, 사실 앞에서는 직접 답함",
+      "private_fact_ids": [
+        "t02",
+        "t03"
+      ],
+      "concealment": "새 교제상대 보호",
+      "goals": [
+        "불필요한 사생활 공개 피하기",
+        "살인 혐의 벗기"
+      ],
+      "starting_claim_ids": [
+        "c_s1_departure",
+        "c_s1_no_return"
+      ],
+      "possible_motions": [
+        "look_down",
+        "lean_forward",
+        "jaw_tight",
+        "still"
+      ]
+    },
+    {
+      "id": "s2",
+      "name": "이서연",
+      "role": "피해자의 친구·직장 동료",
+      "speech_style": "협조적이고 차분하며 범위를 좁혀 답함. 몰릴수록 감정을 조절하고 일부 사실부터 인정",
+      "private_fact_ids": [
+        "t04",
+        "t05",
+        "t06",
+        "t07",
+        "t08"
+      ],
+      "concealment": "사건 당일 방문 사실과 돈 문제 숨김",
+      "goals": [
+        "법적 책임 피하기",
+        "타인과의 경제적 관계 보호"
+      ],
+      "starting_claim_ids": [
+        "c_s2_home",
+        "c_s2_no_money"
+      ],
+      "possible_motions": [
+        "still",
+        "cup_touch",
+        "hand_stop",
+        "look_down",
+        "back_in_chair"
+      ]
+    },
+    {
+      "id": "s3",
+      "name": "박현수",
+      "role": "옆집 주민",
+      "speech_style": "까칠하고 경계심 강함. 처음엔 귀찮아하며 언성 높이나 확실한 사실은 인정",
+      "private_fact_ids": [
+        "t09"
+      ],
+      "concealment": "임대 관련 사적 문제",
+      "goals": [
+        "자신의 임대 문제 확대 피하기",
+        "사건 조사에 엮이지 않기"
+      ],
+      "starting_claim_ids": [
+        "c_s3_heard_nothing"
+      ],
+      "possible_motions": [
+        "cross_arms",
+        "chair_shift",
+        "still",
+        "exhale"
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "id": "c_s1_departure",
+      "speaker": "s1",
+      "text": "21시 20분 무렵 건물을 나왔다",
+      "truth": "true",
+      "contradictions": []
+    },
+    {
+      "id": "c_s1_no_return",
+      "speaker": "s1",
+      "text": "그 뒤로 다시 방문하지 않았다",
+      "truth": "true",
+      "contradictions": []
+    },
+    {
+      "id": "c_s2_home",
+      "speaker": "s2",
+      "text": "21시부터 22시까지 집에 있었다",
+      "truth": "false",
+      "contradictions": [
+        "e08",
+        "e09"
+      ]
+    },
+    {
+      "id": "c_s2_no_money",
+      "speaker": "s2",
+      "text": "피해자와 해결하지 못한 금전 문제가 없다",
+      "truth": "false",
+      "contradictions": [
+        "e10"
+      ]
+    },
+    {
+      "id": "c_s2_no_visit",
+      "speaker": "s2",
+      "text": "그날 302호를 방문한 적 없다",
+      "truth": "false",
+      "contradictions": [
+        "e07",
+        "e09"
+      ]
+    },
+    {
+      "id": "c_s3_heard_nothing",
+      "speaker": "s3",
+      "text": "소음을 듣지 못했다",
+      "truth": "false",
+      "contradictions": [
+        "e05"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "e01",
+      "name": "출입구 CCTV",
+      "found": "빌라 관리실·초기 제공",
+      "fact_ids": [
+        "t02",
+        "t03"
+      ],
+      "cost": 0,
+      "access": "obtained_at_start",
+      "detail": "강도현 21:12 입장·21:21 퇴장, 사각지대 존재",
+      "strength": "medium",
+      "limitations": "다른 출입 통로나 실내 모습은 확인 불가"
+    },
+    {
+      "id": "e02",
+      "name": "피해자 휴대전화 통화목록",
+      "found": "현장 휴대전화, 적법한 분석 절차",
+      "fact_ids": [
+        "t04"
+      ],
+      "cost": 1,
+      "access": "forensic_request",
+      "detail": "21:34 비저장 번호와 통화, 통화 상대 확인 전",
+      "strength": "medium",
+      "limitations": "발신·수신만으로 범행 입증 불가"
+    },
+    {
+      "id": "e03",
+      "name": "공동현관 접근기록",
+      "found": "관리인 협조·공용 출입 시스템",
+      "fact_ids": [
+        "t05"
+      ],
+      "cost": 1,
+      "access": "request_record",
+      "detail": "21:39 방문객 코드 사용 흔적",
+      "strength": "low",
+      "limitations": "코드 사용자를 특정하지 못함"
+    },
+    {
+      "id": "e04",
+      "name": "음식 배달 기록",
+      "found": "현장 봉투·배달업체 자료",
+      "fact_ids": [
+        "t01"
+      ],
+      "cost": 0,
+      "access": "scene_collect",
+      "detail": "20:47 배달 완료, 봉투 개봉 흔적",
+      "strength": "low",
+      "limitations": "단독으로 사망 시점 추정 불가"
+    },
+    {
+      "id": "e05",
+      "name": "복도 소리 기록",
+      "found": "이웃이 제공한 합법적 녹음·시각 검증",
+      "fact_ids": [
+        "t06"
+      ],
+      "cost": 1,
+      "access": "witness_interview",
+      "detail": "21:40경 언쟁과 충격음, 목소리 신원 미확인",
+      "strength": "medium",
+      "limitations": "음성으로 인물 식별 불가, 기기 시간 오차 검증 필요"
+    },
+    {
+      "id": "e06",
+      "name": "머그컵 표면 감정",
+      "found": "국과수 감정회신",
+      "fact_ids": [],
+      "cost": 2,
+      "access": "forensic_request",
+      "detail": "피해자와 이서연의 흔적 검출",
+      "strength": "medium",
+      "limitations": "지문·생체 흔적만으로 남겨진 시기 판단 불가"
+    },
+    {
+      "id": "e07",
+      "name": "21:39 복도 카메라 프레임",
+      "found": "건물 CCTV 추가 확보",
+      "fact_ids": [
+        "t05"
+      ],
+      "cost": 1,
+      "access": "request_record",
+      "detail": "체형과 외투가 유사한 방문자, 얼굴 식별 불가",
+      "strength": "medium",
+      "limitations": "동일인 자동 확정 금지"
+    },
+    {
+      "id": "e08",
+      "name": "21:55 편의점 결제·영상",
+      "found": "적법한 자료 제공·대조",
+      "fact_ids": [
+        "t08"
+      ],
+      "cost": 1,
+      "access": "request_record",
+      "detail": "이서연 명의 카드와 영상 속 인물이 인근에서 확인됨",
+      "strength": "high",
+      "limitations": "그 이전 302호에 있었다는 직접 증거는 아님"
+    },
+    {
+      "id": "e09",
+      "name": "통화 상대 확인 및 위치 대조",
+      "found": "통신자료 법적 절차 및 진술 대조",
+      "fact_ids": [
+        "t04"
+      ],
+      "cost": 2,
+      "access": "legal_request",
+      "detail": "21:34 통화 상대가 이서연임을 확인",
+      "strength": "high",
+      "limitations": "전화했다는 사실만 확인"
+    },
+    {
+      "id": "e10",
+      "name": "공동 투자 정산 이력",
+      "found": "관계자 자발적 제출 또는 적법 확보",
+      "fact_ids": [],
+      "cost": 1,
+      "access": "financial_inquiry",
+      "detail": "정수연과 이서연 사이 480만원 분쟁 존재",
+      "strength": "high",
+      "limitations": "동기는 범행 사실과 구분"
+    },
+    {
+      "id": "e11",
+      "name": "재감정된 착의 물증",
+      "found": "법적 절차를 따른 압수·감정 결과",
+      "fact_ids": [
+        "t06"
+      ],
+      "cost": 3,
+      "access": "warrant_after_sufficient_cause",
+      "detail": "이서연 관련 물증에서 피해자와 연관된 흔적 확인",
+      "strength": "high",
+      "limitations": "출처·이력·오염 가능성 검토 및 다른 증거와 교차 검증 필요"
+    }
+  ],
+  "locations": [
+    {
+      "id": "room302",
+      "name": "302호",
+      "is_3d": true
+    },
+    {
+      "id": "hall",
+      "name": "빌라 복도·계단",
+      "is_3d": true
+    },
+    {
+      "id": "interview",
+      "name": "조사실 TABLE//ZERO",
+      "is_3d": true
+    },
+    {
+      "id": "market",
+      "name": "편의점",
+      "is_3d": false,
+      "presentation": "CCTV/영수증 UI"
+    }
+  ],
+  "case_result_logic": {
+    "identity": "s2",
+    "must_prove": [
+      "presence_or_timing",
+      "motive",
+      "physical_link",
+      "exclude_alternative"
+    ],
+    "presence_or_timing_evidence_sets": [
+      [
+        "e07",
+        "e08"
+      ],
+      [
+        "e03",
+        "e08",
+        "e09"
+      ]
+    ],
+    "motive_evidence_sets": [
+      [
+        "e10"
+      ]
+    ],
+    "physical_link_evidence_sets": [
+      [
+        "e06",
+        "e11"
+      ]
+    ],
+    "exclude_alternative_evidence_sets": [
+      [
+        "e01"
+      ]
+    ],
+    "note": "체크박스 개수 대신 독립적인 입증 축을 검증한다. 실제 형사 재판의 유무죄 판정이 아닌 게임 내부의 보고서 충족 조건이다."
+  },
+  "autonomy": {
+    "allowed_actions": [
+      "stay_quiet",
+      "request_counsel",
+      "prepare_statement",
+      "request_interview",
+      "cancel_optional_meeting",
+      "contact_acquaintance"
+    ],
+    "communication_edges": [
+      {
+        "from": "s2",
+        "to": "s3",
+        "known_from_start": true,
+        "reason": "같은 빌라 인근에서 안면이 있는 사이"
+      }
+    ],
+    "action_windows": {
+      "contact_acquaintance": {
+        "min_case_clock": "22:20",
+        "requires_not_in_custody": true
+      },
+      "cancel_optional_meeting": {
+        "requires_open_meeting": true
+      },
+      "request_counsel": {
+        "always": true
+      }
+    }
+  },
+  "production_rules": {
+    "initial_action_budget": 12,
+    "major_action_costs": {
+      "secure_record": 1,
+      "lab_request": 2,
+      "legal_request": 2,
+      "new_interview_session": 1,
+      "review_existing_evidence": 0,
+      "ask_followup_during_interview": 0,
+      "present_already_held_evidence": 0
+    },
+    "final_accusations": 1,
+    "ai_refusal_or_timeout": "explicit_error_no_world_state_mutation"
+  }
+}

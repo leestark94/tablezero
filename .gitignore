@@ -1,0 +1,27 @@
+# Unity
+/TableZero.Unity/[Ll]ibrary/
+/TableZero.Unity/[Tt]emp/
+/TableZero.Unity/[Oo]bj/
+/TableZero.Unity/[Bb]uild/
+/TableZero.Unity/[Bb]uilds/
+/TableZero.Unity/[Ll]ogs/
+/TableZero.Unity/[Uu]ser[Ss]ettings/
+/TableZero.Unity/*.csproj
+/TableZero.Unity/*.sln
+/TableZero.Unity/*.slnx
+/TableZero.Unity/.vs/
+/TableZero.Unity/.idea/
+/TableZero.Unity/Assets/_Recovery*
+/Builds/
+# Python
+__pycache__/
+*.pyc
+.venv/
+# Secrets / local
+.env
+*.env
+secrets/
+server/runtime_state/
+# Blender temp
+*.blend1
+*.blend2
