@@ -1,0 +1,1 @@
+variant=static_probes frames=2922 avg_fps=97.4 avg_ms=10.27 low1_fps=54.1 low01_fps=22.1 max_ms=57.6 res=1920x1080 gpu=NVIDIA GeForce RTX 2070 SUPER mem_mb=3

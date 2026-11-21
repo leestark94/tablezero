@@ -382,7 +382,7 @@ namespace TableZero.EditorTools
                 var so = new SerializedObject(rp);
                 void Set(string p, int v) { var x = so.FindProperty(p); if (x != null) x.intValue = v; }
                 void SetF(string p, float v) { var x = so.FindProperty(p); if (x != null) x.floatValue = v; }
-                Set("m_MSAA", 4); Set("m_AdditionalLightsShadowmapResolution", 4096); Set("m_MainLightShadowmapResolution", 2048);
+                Set("m_MSAA", 1);   // TAA on the camera; MSAA+TAA conflict made URP silently drop TAA Set("m_AdditionalLightsShadowmapResolution", 4096); Set("m_MainLightShadowmapResolution", 2048);
                 SetF("m_ShadowDistance", 18f); Set("m_AdditionalLightsPerObjectLimit", 8); Set("m_SoftShadowQuality", 3);
                 so.ApplyModifiedPropertiesWithoutUndo();
             }

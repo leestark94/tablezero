@@ -1,0 +1,1 @@
+variant= frames=1663 avg_fps=55.4 avg_ms=18.05 low1_fps=28.0 low01_fps=24.1 max_ms=41.5 res=1920x1080 gpu=NVIDIA GeForce RTX 2070 SUPER mem_mb=3

@@ -80,6 +80,11 @@ class CaseFlowTests(unittest.TestCase):
         self.assertFalse(r2['duplicate'])
         self.assertTrue(r3['duplicate'])
 
+    def test_api_empty_evidence_id_means_none(self):
+        import inspect, server.api as api
+        src = inspect.getsource(api)
+        self.assertIn("value.get('evidence_id') or None", src)
+
     def test_proper_procedure_substantiated(self):
         self.c.transition('room302')
         me = near(self.c, 'kitchen_mug')

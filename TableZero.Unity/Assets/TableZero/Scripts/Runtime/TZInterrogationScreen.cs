@@ -78,7 +78,7 @@ namespace TableZero
             root.Clear(); root.style.flexGrow = 1;
             if (koreanFont) root.style.unityFontDefinition = FontDefinition.FromSDFFont(koreanFont);
             BuildStage(); BuildTopBar(); BuildLeft(); BuildRight(); BuildBottom(); BuildPicker(); BuildEvidencePanel();
-            toast = L("", 16, Ink); toast.style.position = Position.Absolute; toast.style.top = 80; toast.style.alignSelf = Align.Center;
+            toast = L("", 16, Ink); toast.style.position = Position.Absolute; toast.style.top = 132; toast.style.alignSelf = Align.Center;
             toast.style.left = Length.Percent(30); toast.style.right = Length.Percent(30); toast.style.unityTextAlign = TextAnchor.MiddleCenter;
             toast.style.backgroundColor = new Color(0, 0, 0, 0.6f); Pad(toast, 8); toast.style.opacity = 0; root.Add(toast);
             SetChrome(false, true);
@@ -152,9 +152,9 @@ namespace TableZero
 
         void BuildLeft()
         {
-            var col = new VisualElement(); leftCol = col; Abs(col, 88, float.NaN, float.NaN, 24); col.style.width = 360;
+            var col = new VisualElement(); leftCol = col; Abs(col, 88, float.NaN, float.NaN, 24); col.style.width = 384;
             var card = Box(); card.style.flexDirection = FlexDirection.Row;
-            portrait = new VisualElement(); portrait.style.width = 112; portrait.style.height = 140; portrait.style.marginRight = 16;
+            portrait = new VisualElement(); portrait.style.width = 96; portrait.style.height = 124; portrait.style.marginRight = 14;
             portrait.style.backgroundSize = new BackgroundSize(BackgroundSizeType.Cover); Radius(portrait, 4);
             card.Add(portrait);
             var info = new VisualElement(); info.style.flexGrow = 1;
@@ -312,7 +312,7 @@ namespace TableZero
 
         IEnumerator AskCo(string q, string evidence)
         {
-            Say("형사", q); yield return new WaitForSecondsRealtime(0.6f);
+            Say("형사", q); RecordTurn(cur.id, "형사", q); yield return new WaitForSecondsRealtime(0.6f);
             Say(cur.name, ""); thinking.style.display = DisplayStyle.Flex;
             var body = JsonUtility.ToJson(new AskReq { question = q, action_id = TZServer.NewActionId(), input_mode = "typed", evidence_id = evidence });
             AskResp resp = null; string raw = "";
@@ -326,7 +326,7 @@ namespace TableZero
             }
             asked++; if (evidence != null) presented++;
             secondsLeft = resp.data.seconds_left; RefreshState();
-            TypeLine(cur.name, resp.data.suspect_text);
+            TypeLine(cur.name, resp.data.suspect_text); RecordTurn(cur.id, cur.name, resp.data.suspect_text);
             if (!string.IsNullOrEmpty(resp.data.motion_proposal) && MotionKo.TryGetValue(resp.data.motion_proposal, out var m)) AddMemo(m);
             if (secondsLeft <= 0) { metaStatus.text = "면담 시간 종료"; Toast("면담 시간이 끝났습니다"); }
         }
@@ -442,8 +442,8 @@ namespace TableZero
         static Label Meta(VisualElement parent, string key)
         {
             var r = new VisualElement(); r.style.flexDirection = FlexDirection.Row; r.style.marginBottom = 4;
-            var k = L(key, 14, Dim); k.style.width = 44; r.Add(k);
-            var v = L("", 14, Ink); v.style.whiteSpace = WhiteSpace.Normal; v.style.flexShrink = 1; r.Add(v);
+            var k = L(key, 14, Dim); k.style.width = 40; r.Add(k);
+            var v = L("", 13, Ink); v.style.whiteSpace = WhiteSpace.Normal; v.style.flexShrink = 1; r.Add(v);
             parent.Add(r); return v;
         }
         static (Label, Label) Row(VisualElement parent, string key)

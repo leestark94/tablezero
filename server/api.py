@@ -91,7 +91,7 @@ class LocalBridgeHandler(BaseHTTPRequestHandler):
                 mode=value.get('input_mode','typed')
                 receipt=self.interview_service.ask(value.get('question',''),
                     input_mode=mode,action_id=action_id,
-                    presented_evidence=value.get('evidence_id'),
+                    presented_evidence=value.get('evidence_id') or None,   # Unity JsonUtility sends "" for an unset string
                     transcript_confirmed=value.get('transcript_confirmed',True) is True)
                 result={k:getattr(receipt,k) for k in receipt.__dataclass_fields__}
 

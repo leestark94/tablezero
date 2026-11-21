@@ -1,0 +1,1 @@
+variant=static_probes+flashlight_shadows_only+smaa frames=5297 avg_fps=176.6 avg_ms=5.66 low1_fps=105.7 low01_fps=56.5 max_ms=36.3 res=1920x1080 gpu=NVIDIA GeForce RTX 2070 SUPER mem_mb=3

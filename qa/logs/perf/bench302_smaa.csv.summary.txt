@@ -1,0 +1,1 @@
+variant=smaa frames=2937 avg_fps=97.9 avg_ms=10.22 low1_fps=66.3 low01_fps=62.4 max_ms=16.0 res=1920x1080 gpu=NVIDIA GeForce RTX 2070 SUPER mem_mb=3

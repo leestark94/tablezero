@@ -1,0 +1,1 @@
+variant=flashlight_shadows_only frames=3326 avg_fps=110.9 avg_ms=9.02 low1_fps=51.6 low01_fps=15.1 max_ms=85.4 res=1920x1080 gpu=NVIDIA GeForce RTX 2070 SUPER mem_mb=3
