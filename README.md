@@ -1,4 +1,5 @@
 > **이어서 작업하는 경우 여기부터:** [`docs/status/다음AI_인계지시서.md`](docs/status/다음AI_인계지시서.md) (V14 3D 심문실 기준 최신 인계 — 클론·LFS·설치·현재 상태·남은 작업)
+> 새 계정에 붙여 넣을 프롬프트: [`docs/status/HANDOFF_PROMPT.md`](docs/status/HANDOFF_PROMPT.md)
 > 작업 브랜치: `dev/v11-integration` · 클론 후 `git lfs install && git lfs pull`
 > 아래 내용은 V11 인계 당시의 원문이다.
 

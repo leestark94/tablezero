@@ -1,5 +1,7 @@
 # 다음 AI 인계지시서 (Claude Code / Codex 공통) — 2026-11-21 V14 기준
 
+> 새 세션 시작용 붙여넣기 프롬프트와 세션 종료 시 인계 순환 규칙: [`HANDOFF_PROMPT.md`](HANDOFF_PROMPT.md)
+
 ## 0. 새 계정·새 PC에서 시작하기
 ```powershell
 git clone https://github.com/leestark94/tablezero.git TABLE_ZERO
