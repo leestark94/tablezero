@@ -1,3 +1,7 @@
+> **이어서 작업하는 경우 여기부터:** [`docs/status/다음AI_인계지시서.md`](docs/status/다음AI_인계지시서.md) (V14 3D 심문실 기준 최신 인계 — 클론·LFS·설치·현재 상태·남은 작업)
+> 작업 브랜치: `dev/v11-integration` · 클론 후 `git lfs install && git lfs pull`
+> 아래 내용은 V11 인계 당시의 원문이다.
+
 # TABLE//ZERO — V11 FINAL CREATIVE + CODE HANDOFF
 
 **2026-11-21 기준 / Unity 실제 실행·실사 에셋 미검증 / CASE 001 스토리 진실 보존**
