@@ -27,8 +27,8 @@ namespace TableZero.EditorTools
         static string RepoRoot => Directory.GetParent(Application.dataPath).Parent.FullName;
 
         // material name -> (texture set, uv scale, tint, smoothness, metallic)
-        struct MatSpec { public string tex; public float uv; public Color tint; public float smooth; public float metal; public bool transparent; public float emission; public float normal; }
-        static MatSpec S(string tex, float uv, Color c, float smooth, float metal = 0, bool tr = false, float em = 0, float nrm = 1) =>
+        internal struct MatSpec { public string tex; public float uv; public Color tint; public float smooth; public float metal; public bool transparent; public float emission; public float normal; }
+        internal static MatSpec S(string tex, float uv, Color c, float smooth, float metal = 0, bool tr = false, float em = 0, float nrm = 1) =>
             new MatSpec { tex = tex, uv = uv, tint = c, smooth = smooth, metal = metal, transparent = tr, emission = em, normal = nrm };
         static Color C(float r, float g, float b, float a = 1) => new Color(r, g, b, a);
 
@@ -202,60 +202,7 @@ namespace TableZero.EditorTools
                     Color c = src && src.HasProperty("_Color") ? src.GetColor("_Color") : Color.gray;
                     s = S(null, 1, c, 0.35f);
                 }
-                mat.SetColor("_BaseColor", s.tint);
-                mat.SetFloat("_Smoothness", s.smooth);
-                mat.SetFloat("_Metallic", s.metal);
-                mat.SetFloat("_EnvironmentReflections", name.Contains("Glass") ? 0 : 1);
-                if (name.Contains("Glass")) mat.EnableKeyword("_ENVIRONMENTREFLECTIONS_OFF"); else mat.DisableKeyword("_ENVIRONMENTREFLECTIONS_OFF");
-                mat.SetFloat("_SpecularHighlights", name.Contains("Glass") ? 0 : 1);
-                if (name.Contains("Glass")) mat.EnableKeyword("_SPECULARHIGHLIGHTS_OFF"); else mat.DisableKeyword("_SPECULARHIGHLIGHTS_OFF");
-                if (s.tex != null)
-                {
-                    var diff = LoadTex(s.tex, "diff", false);
-                    var nor = LoadTex(s.tex, "nor_gl", true);
-                    var ao = LoadTex(s.tex, "ao", false);
-                    var mg = PackSmoothness(s.tex, s.metal);
-                    if (diff) mat.SetTexture("_BaseMap", diff);
-                    if (nor) { mat.SetTexture("_BumpMap", nor); mat.SetFloat("_BumpScale", s.normal); mat.EnableKeyword("_NORMALMAP"); }
-                    if (ao) { mat.SetTexture("_OcclusionMap", ao); mat.SetFloat("_OcclusionStrength", 0.8f); mat.EnableKeyword("_OCCLUSIONMAP"); }
-                    if (mg) { mat.SetTexture("_MetallicGlossMap", mg); mat.SetFloat("_Smoothness", 1f); mat.SetFloat("_SmoothnessTextureChannel", 0); mat.EnableKeyword("_METALLICSPECGLOSSMAP"); }
-                    mat.SetTextureScale("_BaseMap", Vector2.one * s.uv);
-                }
-                else
-                {
-                    mat.SetTexture("_BaseMap", null); mat.SetTexture("_BumpMap", null); mat.SetTexture("_MetallicGlossMap", null);
-                    mat.DisableKeyword("_NORMALMAP"); mat.DisableKeyword("_METALLICSPECGLOSSMAP");
-                }
-                if (s.transparent || s.tint.a < 0.999f)
-                {
-                    mat.SetFloat("_Surface", 1); mat.SetFloat("_Blend", 0);
-                    mat.SetOverrideTag("RenderType", "Transparent");
-                    mat.SetFloat("_SrcBlend", (float)BlendMode.SrcAlpha); mat.SetFloat("_DstBlend", (float)BlendMode.OneMinusSrcAlpha);
-                    mat.SetFloat("_SrcBlendAlpha", (float)BlendMode.One); mat.SetFloat("_DstBlendAlpha", (float)BlendMode.OneMinusSrcAlpha);
-                    mat.SetFloat("_ZWrite", 0); mat.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
-                    mat.renderQueue = (int)RenderQueue.Transparent;
-                }
-                else
-                {
-                    mat.SetFloat("_Surface", 0); mat.SetOverrideTag("RenderType", "Opaque");
-                    mat.SetFloat("_SrcBlend", (float)BlendMode.One); mat.SetFloat("_DstBlend", (float)BlendMode.Zero);
-                    mat.SetFloat("_ZWrite", 1); mat.DisableKeyword("_SURFACE_TYPE_TRANSPARENT");
-                    mat.renderQueue = -1;
-                }
-                mat.SetFloat("_Cull", name == "M_PrintDoc" || name == "M_FoodLid" ? 0f : 2f);
-                if (s.emission > 0)
-                {
-                    mat.EnableKeyword("_EMISSION");
-                    mat.SetColor("_EmissionColor", s.tint * s.emission);
-                    mat.SetTexture("_EmissionMap", s.tex != null ? mat.GetTexture("_BaseMap") : null);
-                    mat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
-                }
-                if (name == "M_LEDPanel")
-                {
-                    mat.EnableKeyword("_EMISSION");
-                    mat.SetColor("_EmissionColor", new Color(1f, 0.96f, 0.9f) * 0.0f);
-                    mat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
-                }
+                ApplySpec(mat, name, s);
                 EditorUtility.SetDirty(mat);
                 all[name] = mat;
             }
@@ -263,7 +210,66 @@ namespace TableZero.EditorTools
             return all;
         }
 
-        static Texture2D LoadTex(string set, string map, bool normal)
+        /// <summary>Applies a material spec to a URP/Lit material (shared with the interrogation-room builder).</summary>
+        internal static void ApplySpec(Material mat, string name, MatSpec s)
+        {
+            mat.SetColor("_BaseColor", s.tint);
+            mat.SetFloat("_Smoothness", s.smooth);
+            mat.SetFloat("_Metallic", s.metal);
+            mat.SetFloat("_EnvironmentReflections", name.Contains("Glass") ? 0 : 1);
+            if (name.Contains("Glass")) mat.EnableKeyword("_ENVIRONMENTREFLECTIONS_OFF"); else mat.DisableKeyword("_ENVIRONMENTREFLECTIONS_OFF");
+            mat.SetFloat("_SpecularHighlights", name.Contains("Glass") ? 0 : 1);
+            if (name.Contains("Glass")) mat.EnableKeyword("_SPECULARHIGHLIGHTS_OFF"); else mat.DisableKeyword("_SPECULARHIGHLIGHTS_OFF");
+            if (s.tex != null)
+            {
+                var diff = LoadTex(s.tex, "diff", false);
+                var nor = LoadTex(s.tex, "nor_gl", true);
+                var ao = LoadTex(s.tex, "ao", false);
+                var mg = PackSmoothness(s.tex, s.metal);
+                if (diff) mat.SetTexture("_BaseMap", diff);
+                if (nor) { mat.SetTexture("_BumpMap", nor); mat.SetFloat("_BumpScale", s.normal); mat.EnableKeyword("_NORMALMAP"); }
+                if (ao) { mat.SetTexture("_OcclusionMap", ao); mat.SetFloat("_OcclusionStrength", 0.8f); mat.EnableKeyword("_OCCLUSIONMAP"); }
+                if (mg) { mat.SetTexture("_MetallicGlossMap", mg); mat.SetFloat("_Smoothness", 1f); mat.SetFloat("_SmoothnessTextureChannel", 0); mat.EnableKeyword("_METALLICSPECGLOSSMAP"); }
+                mat.SetTextureScale("_BaseMap", Vector2.one * s.uv);
+        }
+        else
+        {
+            mat.SetTexture("_BaseMap", null); mat.SetTexture("_BumpMap", null); mat.SetTexture("_MetallicGlossMap", null);
+            mat.DisableKeyword("_NORMALMAP"); mat.DisableKeyword("_METALLICSPECGLOSSMAP");
+        }
+        if (s.transparent || s.tint.a < 0.999f)
+        {
+            mat.SetFloat("_Surface", 1); mat.SetFloat("_Blend", 0);
+            mat.SetOverrideTag("RenderType", "Transparent");
+            mat.SetFloat("_SrcBlend", (float)BlendMode.SrcAlpha); mat.SetFloat("_DstBlend", (float)BlendMode.OneMinusSrcAlpha);
+            mat.SetFloat("_SrcBlendAlpha", (float)BlendMode.One); mat.SetFloat("_DstBlendAlpha", (float)BlendMode.OneMinusSrcAlpha);
+            mat.SetFloat("_ZWrite", 0); mat.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+            mat.renderQueue = (int)RenderQueue.Transparent;
+        }
+        else
+        {
+            mat.SetFloat("_Surface", 0); mat.SetOverrideTag("RenderType", "Opaque");
+            mat.SetFloat("_SrcBlend", (float)BlendMode.One); mat.SetFloat("_DstBlend", (float)BlendMode.Zero);
+            mat.SetFloat("_ZWrite", 1); mat.DisableKeyword("_SURFACE_TYPE_TRANSPARENT");
+            mat.renderQueue = -1;
+        }
+        mat.SetFloat("_Cull", name == "M_PrintDoc" || name == "M_FoodLid" ? 0f : 2f);
+        if (s.emission > 0)
+        {
+            mat.EnableKeyword("_EMISSION");
+            mat.SetColor("_EmissionColor", s.tint * s.emission);
+            mat.SetTexture("_EmissionMap", s.tex != null ? mat.GetTexture("_BaseMap") : null);
+            mat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
+        }
+        if (name == "M_LEDPanel")
+        {
+            mat.EnableKeyword("_EMISSION");
+            mat.SetColor("_EmissionColor", new Color(1f, 0.96f, 0.9f) * 0.0f);
+            mat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
+        }
+        }
+
+        internal static Texture2D LoadTex(string set, string map, bool normal)
         {
             if (set == "gen_silkwallpaper") TZRoom302Dressing.EnsureSilkWallpaper(Path.Combine(Directory.GetParent(Application.dataPath).FullName, TexDir, set), set);
             else if (TZProcTextures.Handles(set)) TZProcTextures.Ensure(Path.Combine(Directory.GetParent(Application.dataPath).FullName, TexDir, set), set);
@@ -341,7 +347,7 @@ namespace TableZero.EditorTools
         }
 
         /// <summary>URP needs smoothness in the alpha of a metallic map: pack (1 - roughness).</summary>
-        static Texture2D PackSmoothness(string set, float metal)
+        internal static Texture2D PackSmoothness(string set, float metal)
         {
             string outPath = $"{TexDir}/{set}/{set}_metalsmooth_2k.png";
             string full = Path.Combine(Directory.GetParent(Application.dataPath).FullName, outPath);

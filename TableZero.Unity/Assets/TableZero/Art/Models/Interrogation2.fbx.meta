@@ -1,0 +1,291 @@
+fileFormatVersion: 2
+guid: 6c7e097264abfa74bbeb70e63576e335
+ModelImporter:
+  serializedVersion: 24600
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRAcoustic
+    second: {fileID: 2100000, guid: 7ab350fd7426c1a47929c37dacffe829, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRAlu
+    second: {fileID: 2100000, guid: f4764238ba54ff342ae686d527b60340, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRBlind
+    second: {fileID: 2100000, guid: 4232677e7f49dd14b9a1f2d897c35903, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRBulb
+    second: {fileID: 2100000, guid: 197be93040e1fab4e85b3e3e373d94df, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRCabinetGrey
+    second: {fileID: 2100000, guid: 3a032994095f8d6409f685ee2913f009, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRCameraBody
+    second: {fileID: 2100000, guid: 9f5a8c6cdea4cdb45842791c9f3b0d60, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRCeilGrid
+    second: {fileID: 2100000, guid: b3f98d82e39b34e44ba7ee464b3bd07e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRCeilTile
+    second: {fileID: 2100000, guid: 40bb80a61cc0b16428883ebab889fc00, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRChairFabric
+    second: {fileID: 2100000, guid: cac30447fb4b5b24caa2a1f0f5044f84, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRChrome
+    second: {fileID: 2100000, guid: 6315059942248bb47bf60aa21d0704c2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRCord
+    second: {fileID: 2100000, guid: 088f11d53de808840b595cb071dd5eb5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRDoor
+    second: {fileID: 2100000, guid: 0158f642f66bb7347a85aeace8ae5057, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRFloor
+    second: {fileID: 2100000, guid: 1ef5cd2fca239a045929d7cad2314d75, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRGlass
+    second: {fileID: 2100000, guid: cf83f15800e1f4240a6e6217767ad214, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRGunmetal
+    second: {fileID: 2100000, guid: f97b9248441f0be4f95ab7aad189c8d2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRInk
+    second: {fileID: 2100000, guid: c90b2a28cfefb5c44bcdc730139f5754, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRLCD
+    second: {fileID: 2100000, guid: 9a3049e3429152b48b637b2773a01513, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRLampInner
+    second: {fileID: 2100000, guid: abbd3663ff2ec9e46a9c81badd755d62, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRLampShade
+    second: {fileID: 2100000, guid: 2c8050e4081b1b940bbffae4b12019af, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRLedRed
+    second: {fileID: 2100000, guid: 1334cc8658d6c6945ae2550be854dc90, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRLensGlass
+    second: {fileID: 2100000, guid: c998b979eeeec9c40a696e91f7c7eaa1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRManila
+    second: {fileID: 2100000, guid: 3c074dca631a21546bc778755dae7313, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRNightCity
+    second: {fileID: 2100000, guid: 776dbbaed0920c6418f7f94258a357fe, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRPaper
+    second: {fileID: 2100000, guid: abebd513693698a409d431505953e8aa, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRPaperCup
+    second: {fileID: 2100000, guid: 1e9257bc09f6f1647b9efba47ef65db0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRPlate
+    second: {fileID: 2100000, guid: 2b88fe4f582b2e840886083084ebe77d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRRubber
+    second: {fileID: 2100000, guid: 4dfd45cfb1cc2cf468219e083c2bd553, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRRule
+    second: {fileID: 2100000, guid: b9ce2024b4a71f046bd392d4ac3d7855, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRSeam
+    second: {fileID: 2100000, guid: d4d255fee404a7b4ba2c8f48e1cac641, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRStampRed
+    second: {fileID: 2100000, guid: 3a98023dc029bcb4eabf797c9109e13f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRSteelBlack
+    second: {fileID: 2100000, guid: 0d1400b2353d0114fa83f0d73fcf6bd6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRTableEdge
+    second: {fileID: 2100000, guid: 3afc70a201d158b41bbfc53e734e0560, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRTableTop
+    second: {fileID: 2100000, guid: e8002344f4f17944a95d33cea67147a8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRWainscot
+    second: {fileID: 2100000, guid: a4ab4de3bff1aee46822e8c51e8439ac, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_IRWater
+    second: {fileID: 2100000, guid: c9671211020a4ec4a9367baf3db628b6, type: 2}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+    searchTexturesGlobally: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    preBakeConvexCollisionMesh: 0
+    preBakeTriangleCollisionMesh: 0
+    importPhysicalCameras: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 0
+    importLights: 0
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    generateMeshLods: 0
+    meshLodGenerationFlags: 0
+    maximumMeshLod: -1
+    importUVs: -1
+    importVertexColors: 1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+    calculateBlendshapeNormalsDeltaFromImportedNormals: 0
+  referencedClips: []
+  importAnimation: 0
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

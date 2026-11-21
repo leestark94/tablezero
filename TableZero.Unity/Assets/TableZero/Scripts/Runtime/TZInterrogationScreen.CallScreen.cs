@@ -26,6 +26,7 @@ namespace TableZero
                               PaperRule = new Color(0.22f, 0.19f, 0.16f, 0.30f), StampRed = new Color(0.62f, 0.09f, 0.09f, 0.9f),
                               Marker = new Color(1f, 0.87f, 0.40f, 0.40f), OkInk = new Color(0.10f, 0.33f, 0.18f);
 
+        bool in3D;
         VisualElement ledgerLayer, paperEl, paperShadow, rowsBox, dossier, feedLabel, callCta, ctaBar, blackout, bgB, deskShade, recBadge;
         ScrollView dossierScroll;
         Label feedRoom, feedTime, recDot, ctaTitle, ctaSub, entryCaption, entrySub, recLabel;
@@ -332,7 +333,8 @@ namespace TableZero
         // ------------------------------------------------------------------ transitions
         void SetChrome(bool show, bool instant)
         {
-            foreach (var e in new[] { topBar, leftCol, rightCol, dock })
+            foreach (var e in new[] { leftCol, rightCol }) if (e != null) e.style.display = DisplayStyle.None;   // on demand only (Tab / R)
+            foreach (var e in new[] { topBar, dock })
             {
                 if (e == null) continue;
                 if (instant) { e.style.display = show ? DisplayStyle.Flex : DisplayStyle.None; e.style.opacity = show ? 1 : 0; }
@@ -365,6 +367,22 @@ namespace TableZero
             sfx.PlayOneShot(TZProcAudio.Door(), 0.7f);
             yield return new WaitForSecondsRealtime(0.5f);
             entryCaption.text = ""; entrySub.text = "";
+            var r3d = TZInterrogationRoom3D.Instance;
+            if (r3d && r3d.CanShow(s.id))
+            {   // real 3D room: the photo layer goes away, the detective camera walks in and sits down
+                in3D = true;
+                bg.style.backgroundImage = null; bgB.style.opacity = 0; stageEl.style.backgroundColor = Color.clear;
+                flicker.style.opacity = 0; vignette.style.opacity = 0;
+                r3d.Show(s.id);
+                var sit = StartCoroutine(r3d.SitDown(2.1f));
+                t = 0;
+                while (t < 1.2f) { t += Time.unscaledDeltaTime; blackout.style.opacity = 0.92f * (1 - Mathf.SmoothStep(0, 1, t / 1.2f)); yield return null; }
+                blackout.style.opacity = 0;
+                yield return sit;
+            }
+            else
+            {
+            in3D = false;
             bg.style.backgroundImage = s.feed ? s.feed : s.background; bgB.style.opacity = 0;
             bgZoom = 1.12f; bgShiftY = 26f;
             t = 0; const float D = 1.6f;
@@ -376,6 +394,7 @@ namespace TableZero
                 yield return null;
             }
             blackout.style.opacity = 0; bgZoom = 1f; bgShiftY = 0;
+            }
             room.volume = 0.16f;
             sfx.PlayOneShot(TZProcAudio.Recorder(), 0.6f);
             recBadge.style.opacity = 1; recLabel.text = $"영상 녹화 중 · {s.room}";
@@ -387,6 +406,11 @@ namespace TableZero
         void OnInterviewEnded(Suspect ended)
         {
             activeOnServer = null;
+            if (in3D)
+            {
+                in3D = false; TZInterrogationRoom3D.Instance?.Hide();
+                stageEl.style.backgroundColor = Color.black; vignette.style.opacity = 1;
+            }
             if (ledgerLayer == null) { if (legacyPicker) ShowPicker(true); return; }
             room.volume = 0.22f;
             ledgerLayer.style.display = DisplayStyle.Flex;

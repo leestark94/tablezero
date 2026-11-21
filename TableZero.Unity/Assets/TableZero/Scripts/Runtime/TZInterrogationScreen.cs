@@ -57,9 +57,9 @@ namespace TableZero
         };
 
         // ---------------------------------------------------------------- UI
-        VisualElement root, bg, flicker, grainEl, vignette, picker, evidencePanel, memoList, thinking, topBar, leftCol, rightCol, dock;
+        VisualElement root, stageEl, bg, flicker, grainEl, vignette, picker, evidencePanel, memoList, thinking, topBar, leftCol, rightCol, dock;
         float bgZoom = 1f, bgShiftY = 0f;
-        Label nameLbl, metaJob, metaRel, metaStatus, clockLbl, recLbl, subName, subText, timeVal, qVal, eVal, toast;
+        Label roomLbl, nameLbl, metaJob, metaRel, metaStatus, clockLbl, recLbl, subName, subText, timeVal, qVal, eVal, toast;
         VisualElement timeBar, portrait, subtitleBox;
         TextField input;
         Suspect cur;
@@ -105,14 +105,21 @@ namespace TableZero
             }
             if (thinking != null && thinking.style.display == DisplayStyle.Flex)
                 thinking.style.opacity = 0.45f + 0.45f * Mathf.Abs(Mathf.Sin(Time.time * 2.4f));
-            if (input != null && input.focusController?.focusedElement == input && UnityEngine.InputSystem.Keyboard.current != null &&
-                UnityEngine.InputSystem.Keyboard.current.enterKey.wasPressedThisFrame) Send();
+            var kb = UnityEngine.InputSystem.Keyboard.current;
+            if (input != null && input.focusController?.focusedElement == input && kb != null && kb.enterKey.wasPressedThisFrame) Send();
+            if (started && kb != null && (input == null || input.focusController?.focusedElement != input))
+            {
+                if (kb.tabKey.wasPressedThisFrame) TogglePanel(leftCol);
+                if (kb.rKey.wasPressedThisFrame) TogglePanel(rightCol);
+                if (kb.eKey.wasPressedThisFrame) OpenEvidence();
+                if (kb.escapeKey.wasPressedThisFrame) EndInterview();
+            }
         }
 
         // ---------------------------------------------------------------- build
         void BuildStage()
         {
-            var stage = new VisualElement(); Abs(stage, 0, 0, 0, 0); stage.style.overflow = Overflow.Hidden; stage.style.backgroundColor = Color.black;
+            var stage = new VisualElement(); Abs(stage, 0, 0, 0, 0); stageEl = stage; stage.style.overflow = Overflow.Hidden; stage.style.backgroundColor = Color.black;
             bg = new VisualElement(); Abs(bg, 0, 0, 0, 0);
             bg.style.backgroundSize = new BackgroundSize(BackgroundSizeType.Cover);
             stage.Add(bg);
@@ -129,19 +136,14 @@ namespace TableZero
 
         void BuildTopBar()
         {
-            var bar = new VisualElement(); topBar = bar; Abs(bar, 0, 0, float.NaN, 0); bar.style.height = 64; bar.style.flexDirection = FlexDirection.Row;
-            bar.style.alignItems = Align.Center; bar.style.backgroundColor = new Color(0.03f, 0.03f, 0.035f, 0.92f);
+            var bar = new VisualElement(); topBar = bar; Abs(bar, 0, 0, float.NaN, 0); bar.style.height = 56; bar.style.flexDirection = FlexDirection.Row;
+            bar.style.alignItems = Align.Center; bar.style.backgroundColor = new Color(0.02f, 0.02f, 0.025f, 0.55f);
             bar.style.borderBottomWidth = 1; bar.style.borderBottomColor = Line; bar.style.paddingLeft = 28; bar.style.paddingRight = 24;
             var logo = new VisualElement(); logo.style.width = 300;
             var l1 = L("TABLE//ZERO", 22, Ink); l1.style.letterSpacing = 6; l1.style.unityFontStyleAndWeight = FontStyle.Bold;
             logo.Add(l1); logo.Add(L("CASE 001 — 정수연 살인사건", 13, Dim)); bar.Add(logo);
             var tabs = new VisualElement(); tabs.style.flexDirection = FlexDirection.Row; tabs.style.flexGrow = 1; tabs.style.justifyContent = Justify.Center;
-            foreach (var (t, on) in new[] { ("심문", true), ("현장조사", false), ("증거분석", false), ("인물관계도", false), ("사건 타임라인", false), ("수사보고", false) })
-            {
-                var b = L(t, 16, on ? Ink : Dim); b.style.paddingLeft = 22; b.style.paddingRight = 22; b.style.height = 64; b.style.unityTextAlign = TextAnchor.MiddleCenter;
-                if (on) { b.style.backgroundColor = new Color(0.45f, 0.06f, 0.08f, 0.55f); b.style.borderBottomWidth = 3; b.style.borderBottomColor = Red; }
-                tabs.Add(b);
-            }
+            roomLbl = L("", 15, Dim); roomLbl.style.unityTextAlign = TextAnchor.MiddleCenter; tabs.Add(roomLbl);
             bar.Add(tabs);
             var right = new VisualElement(); right.style.flexDirection = FlexDirection.Row; right.style.alignItems = Align.Center;
             clockLbl = L("2024. 03. 16 (토)", 15, Ink); clockLbl.style.marginRight = 28; right.Add(clockLbl);
@@ -193,7 +195,7 @@ namespace TableZero
 
         void BuildBottom()
         {
-            subtitleBox = new VisualElement(); Abs(subtitleBox, float.NaN, Length.Percent(24), 214, Length.Percent(31)); subtitleBox.style.flexDirection = FlexDirection.Row;
+            subtitleBox = new VisualElement(); Abs(subtitleBox, float.NaN, Length.Percent(22), 132, Length.Percent(27)); subtitleBox.style.flexDirection = FlexDirection.Row;
             subtitleBox.style.alignItems = Align.FlexStart; subtitleBox.style.opacity = 0;
             var bar = new VisualElement(); bar.style.width = 2; bar.style.height = 54; bar.style.backgroundColor = Red; bar.style.marginRight = 16; subtitleBox.Add(bar);
             subName = L("", 22, new Color(1f, 0.35f, 0.38f)); subName.style.width = 92; subName.style.unityFontStyleAndWeight = FontStyle.Bold; subtitleBox.Add(subName);
@@ -203,30 +205,67 @@ namespace TableZero
             thinking = L("· · ·", 26, Ink); thinking.style.display = DisplayStyle.None; subtitleBox.Add(thinking);
             root.Add(subtitleBox);
 
-            dock = new VisualElement(); Abs(dock, float.NaN, 24, 24, 24); dock.style.backgroundColor = new Color(0.04f, 0.04f, 0.045f, 0.9f);
+            dock = new VisualElement(); Abs(dock, float.NaN, Length.Percent(19), 28, Length.Percent(19)); dock.style.backgroundColor = new Color(0.03f, 0.03f, 0.035f, 0.72f);
             Radius(dock, 8); dock.style.borderTopWidth = dock.style.borderBottomWidth = dock.style.borderLeftWidth = dock.style.borderRightWidth = 1;
-            dock.style.borderTopColor = dock.style.borderBottomColor = dock.style.borderLeftColor = dock.style.borderRightColor = Line; Pad(dock, 16);
+            dock.style.borderTopColor = dock.style.borderBottomColor = dock.style.borderLeftColor = dock.style.borderRightColor = Line; Pad(dock, 10);
             var row = new VisualElement(); row.style.flexDirection = FlexDirection.Row; row.style.alignItems = Align.Center;
-            var mic = new VisualElement(); mic.style.width = 250; mic.style.height = 64; Radius(mic, 6); mic.style.backgroundColor = new Color(0.30f, 0.05f, 0.07f, 0.8f);
-            mic.style.justifyContent = Justify.Center; mic.style.paddingLeft = 20; mic.style.marginRight = 16;
-            mic.Add(L("직접 질문하기", 19, Ink)); mic.Add(L("텍스트 입력 (음성은 준비 중)", 13, Dim)); row.Add(mic);
-            input = new TextField { maxLength = 300 }; input.style.flexGrow = 1; input.style.height = 64; input.style.fontSize = 18;
-            input.textEdition.placeholder = "질문할 내용을 입력하세요..."; input.textEdition.hidePlaceholderOnFocus = true;
+            var mic = new VisualElement(); mic.style.width = 52; mic.style.height = 52; Radius(mic, 26); mic.style.backgroundColor = new Color(1, 1, 1, 0.06f);
+            mic.style.justifyContent = Justify.Center; mic.style.alignItems = Align.Center; mic.style.marginRight = 10;
+            mic.tooltip = "음성 질문 — 준비 중"; mic.Add(L("마이크", 11, Dim)); row.Add(mic);
+            input = new TextField { maxLength = 300 }; input.style.flexGrow = 1; input.style.height = 52; input.style.fontSize = 18;
+            var inner = input.Q(className: TextField.inputUssClassName);
+            if (inner != null)
+            {
+                inner.style.backgroundColor = new Color(0.08f, 0.08f, 0.09f, 0.85f); inner.style.color = Ink; Radius(inner, 6);
+                inner.style.borderTopWidth = inner.style.borderBottomWidth = inner.style.borderLeftWidth = inner.style.borderRightWidth = 1;
+                inner.style.borderTopColor = inner.style.borderBottomColor = inner.style.borderLeftColor = inner.style.borderRightColor = new Color(1, 1, 1, 0.14f);
+                inner.style.paddingLeft = 14;
+            }
+            input.textEdition.placeholder = "질문을 입력하거나 마이크로 말하세요 (음성 준비 중)"; input.textEdition.hidePlaceholderOnFocus = true;
             row.Add(input);
-            var send = new Button(Send) { text = "보내기" }; send.style.width = 110; send.style.height = 64; send.style.marginLeft = 12; send.style.fontSize = 17;
+            var send = new Button(Send) { text = "보내기" }; send.style.width = 96; send.style.height = 52; send.style.marginLeft = 12; send.style.fontSize = 17;
             send.style.backgroundColor = Red; send.style.color = Color.white; Radius(send, 6); row.Add(send);
             dock.Add(row);
-            var chips = new VisualElement(); chips.style.flexDirection = FlexDirection.Row; chips.style.marginTop = 12; chips.style.alignItems = Align.Center;
-            chips.Add(L("추천 질문", 16, Ink)); chips.ElementAt(0).style.width = 120;
+            var tools = new VisualElement(); tools.style.flexDirection = FlexDirection.Row; tools.style.marginTop = 8; tools.style.alignItems = Align.Center;
+            var chips = new VisualElement(); chips.style.flexDirection = FlexDirection.Row; chips.style.marginTop = 8; chips.style.alignItems = Align.Center; chips.style.display = DisplayStyle.None;
+            ToolBtn(tools, "인물 기록", "Tab", () => TogglePanel(leftCol));
+            ToolBtn(tools, "증거 제시", "E", OpenEvidence);
+            ToolBtn(tools, "심문 행동", "R", () => TogglePanel(rightCol));
+            ToolBtn(tools, "추천 질문", "Q", () => chips.style.display = chips.style.display == DisplayStyle.None ? DisplayStyle.Flex : DisplayStyle.None);
+            var sp = new VisualElement(); sp.style.flexGrow = 1; tools.Add(sp);
+            ToolBtn(tools, "면담 종료", "Esc", EndInterview);
+            dock.Add(tools);
             foreach (var s in Suggested)
             {
                 var key = s;
                 var c = new Button(() => { input.value = SuggestedQ[key]; input.Focus(); }) { text = s };
                 c.style.flexGrow = 1; c.style.height = 40; c.style.fontSize = 15; c.style.color = Ink; c.style.backgroundColor = new Color(1, 1, 1, 0.05f);
-                Radius(c, 4); c.style.marginLeft = 8; chips.Add(c);
+                Radius(c, 4); c.style.marginRight = 8; chips.Add(c);
             }
             dock.Add(chips);
             root.Add(dock);
+        }
+
+        void ToolBtn(VisualElement parent, string text, string key, Action act)
+        {
+            var b = new Button(act); b.style.flexDirection = FlexDirection.Row; b.style.alignItems = Align.Center; b.style.height = 30;
+            b.style.backgroundColor = Color.clear; b.style.borderTopWidth = b.style.borderBottomWidth = b.style.borderLeftWidth = b.style.borderRightWidth = 0;
+            b.style.marginRight = 6; b.style.paddingLeft = 8; b.style.paddingRight = 8;
+            b.Add(L(text, 14, Dim));
+            var k = L(key, 11, Dim); k.style.marginLeft = 6; k.style.paddingLeft = 5; k.style.paddingRight = 5;
+            k.style.borderTopWidth = k.style.borderBottomWidth = k.style.borderLeftWidth = k.style.borderRightWidth = 1;
+            k.style.borderTopColor = k.style.borderBottomColor = k.style.borderLeftColor = k.style.borderRightColor = new Color(1, 1, 1, 0.18f); Radius(k, 3); b.Add(k);
+            b.RegisterCallback<MouseEnterEvent>(_ => b.style.backgroundColor = new Color(1, 1, 1, 0.06f));
+            b.RegisterCallback<MouseLeaveEvent>(_ => b.style.backgroundColor = Color.clear);
+            parent.Add(b);
+        }
+
+        /// <summary>Side panels are closed during questioning; they open on demand and never stay over the suspect.</summary>
+        void TogglePanel(VisualElement e)
+        {
+            if (e == null) return;
+            bool show = e.style.display == DisplayStyle.None;
+            e.style.display = show ? DisplayStyle.Flex : DisplayStyle.None; e.style.opacity = 1;
         }
 
         void BuildPicker()
@@ -291,6 +330,7 @@ namespace TableZero
             if (!ok) { Toast("면담을 시작하지 못했습니다: " + err); yield break; }
             cur = s; asked = 0; presented = 0; secondsLeft = interviewSeconds; started = true; recStart = Time.unscaledTime;
             bg.style.backgroundImage = s.feed ? s.feed : s.background; portrait.style.backgroundImage = s.portrait;
+            roomLbl.text = $"{s.room}  ·  {s.name} ({s.age})";
             nameLbl.text = $"{s.name} ({s.age})"; metaJob.text = s.job; metaRel.text = s.relation; metaStatus.text = "면담 진행 중";
             memoList.Clear(); memoList.Add(L("심문 중 관찰된 행동이 여기에 기록됩니다", 13, Dim));
             RefreshState(); ShowPicker(false);

@@ -26,6 +26,8 @@ namespace TableZero.EditorTools
             var cam = camGo.AddComponent<Camera>(); cam.clearFlags = CameraClearFlags.SolidColor; cam.backgroundColor = Color.black;
             camGo.AddComponent<UniversalAdditionalCameraData>();
             camGo.AddComponent<AudioListener>();
+            camGo.name = "DetectiveCamera";
+            TZInterrogationRoomBuilder.AddRoom(cam);
             new GameObject("TZServer").AddComponent<TZServer>();
 
             var ui = new GameObject("InterrogationUI");
