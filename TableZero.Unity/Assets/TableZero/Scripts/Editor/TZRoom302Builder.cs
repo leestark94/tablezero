@@ -34,7 +34,7 @@ namespace TableZero.EditorTools
 
         static readonly Dictionary<string, MatSpec> Specs = new Dictionary<string, MatSpec>
         {
-            {"M_WallPaper", S("white_plaster_02", 0.6f, C(0.93f,0.91f,0.86f), 0.12f, 0, false, 0, 0.35f)},
+            {"M_WallPaper", S("gen_silkwallpaper", 1f / 1.06f, C(1f,1f,1f), 1f, 0, false, 0, 0.6f)},
             {"M_Floor", S("laminate_floor_02", 0.55f, C(1.0f,0.88f,0.72f), 0.58f)},
             {"M_EntranceTile", S("gen_entrancetile_300", 1f / 1.2f, C(1f,1f,1f), 1f)},
             {"M_BathTile", S("gen_walltile_300x600", 1f / 1.2f, C(1f,1f,1f), 1f)},
@@ -114,6 +114,8 @@ namespace TableZero.EditorTools
             var lights = SetupLighting(objs, props);
             SetupPlayerAndUI(objs);
             AssignSwitches(props, lights);
+            TZRoom302Dressing.AddGrime();
+            TZRoom302Dressing.AddLightProbes();
             Directory.CreateDirectory(Path.Combine(Directory.GetParent(Application.dataPath).FullName, Root, "Scenes"));
             AssetDatabase.Refresh();
             EditorSceneManager.SaveScene(scene, ScenePath);
@@ -235,7 +237,8 @@ namespace TableZero.EditorTools
 
         static Texture2D LoadTex(string set, string map, bool normal)
         {
-            if (set.StartsWith("gen_")) EnsureGeneratedTiles(set);
+            if (set == "gen_silkwallpaper") TZRoom302Dressing.EnsureSilkWallpaper(Path.Combine(Directory.GetParent(Application.dataPath).FullName, TexDir, set), set);
+            else if (set.StartsWith("gen_")) EnsureGeneratedTiles(set);
             string path = $"{TexDir}/{set}/{set}_{map}_2k.jpg";
             if (!File.Exists(Path.Combine(Directory.GetParent(Application.dataPath).FullName, path))) path = path.Replace(".jpg", ".png");
             if (!File.Exists(Path.Combine(Directory.GetParent(Application.dataPath).FullName, path))) return null;
@@ -565,7 +568,7 @@ namespace TableZero.EditorTools
             var bl = B(objs, "xprop_bath_light");
             L["bath"] = MkLight("L_Bath", LightType.Point, bl.center + Vector3.down * 0.12f, new Color(0.95f, 0.97f, 1f), 2.4f, 3.5f, lroot);
             var hs = B(objs, "hall_sensor");
-            L["hall"] = MkLight("L_HallSensor", LightType.Point, hs.center + Vector3.down * 0.15f, new Color(1f, 0.80f, 0.55f), 2.8f, 6f, lroot);
+            L["hall"] = MkLight("L_HallSensor", LightType.Point, hs.center + Vector3.down * 0.15f, new Color(1f, 0.80f, 0.55f), 1.7f, 6f, lroot);
             var fr = B(objs, "fix_fridge_body");
             L["fridge"] = MkLight("L_FridgeInside", LightType.Point, new Vector3(fr.center.x, fr.min.y + 0.8f, fr.center.z), new Color(0.92f, 0.96f, 1f), 0.9f, 1.0f, lroot, 90, false);
             var ent = B(objs, "entrance_mat");
@@ -674,7 +677,7 @@ namespace TableZero.EditorTools
             var cam = camGo.AddComponent<Camera>(); cam.clearFlags = CameraClearFlags.SolidColor; cam.backgroundColor = Color.black; cam.nearClipPlane = 0.03f; cam.farClipPlane = 60; cam.fieldOfView = 62; cam.allowHDR = true; cam.allowMSAA = true;
             var ucd = camGo.AddComponent<UniversalAdditionalCameraData>(); ucd.renderPostProcessing = true; ucd.antialiasing = AntialiasingMode.TemporalAntiAliasing;
             camGo.AddComponent<AudioListener>();
-            var flash = MkLight("Flashlight", LightType.Spot, camGo.transform.position + camGo.transform.right * 0.18f - camGo.transform.up * 0.2f, new Color(1f, 0.96f, 0.9f), 14f, 11f, camGo.transform, 46);
+            var flash = MkLight("Flashlight", LightType.Spot, camGo.transform.position + camGo.transform.right * 0.18f - camGo.transform.up * 0.2f, new Color(1f, 0.96f, 0.9f), 8f, 10f, camGo.transform, 50);
             flash.transform.localRotation = Quaternion.Euler(1.5f, -2f, 0);
             flash.innerSpotAngle = 18;
             var pc = player.AddComponent<TZPlayerController>(); pc.cam = cam; pc.flashlight = flash;

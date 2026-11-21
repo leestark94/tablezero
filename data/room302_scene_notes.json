@@ -17,7 +17,7 @@
     "living_food_bag": "배달 봉투에 영수증이 스테이플러로 붙어 있다. 떡볶이 1, 순대 1. 배달 완료 20:47",
     "living_food_container1": "떡볶이가 절반쯤 남았다. 젓가락은 한 벌만 쓴 흔적이 있다",
     "living_food_container2": "순대 용기는 뚜껑도 열지 않았다",
-    "living_chair": "좌식 의자가 옆으로 넘어져 있다. 등받이 경첩이 꺾여 있다",
+    "living_chair": "좌식 의자가 탁자에서 밀려나 비스듬히 돌아가 있다. 등받이 경첩 한쪽이 휘었다",
     "living_floor_blood": "탁자 모서리 바로 아래 바닥에 피가 고였다가 마른 자국이 있다. 가장자리가 짙다",
     "living_footprint": "현관 방향으로 반쯤 찍힌 신발 자국이 있다. 구급대원 것일 수도 있다",
     "living_broken_glass": "물컵이 깨진 파편이 흩어져 있다. 물기는 거의 말랐다",
@@ -51,42 +51,411 @@
     "hall_intercom": "공동현관 인터폰이다. 방문객 비밀번호를 누르는 패드가 있다"
   },
   "extra_props": [
-    {"prop_id": "xprop_box_dohyun", "zone": "entrance", "label_ko": "‘도현 짐’ 상자", "interaction_type": "inspect", "observation_ko": "매직으로 ‘도현 짐’이라고 적힌 상자다. 옷가지 몇 벌과 빈 충전기 상자가 들어 있다. 충전기는 없다"},
-    {"prop_id": "xprop_employee_badge", "zone": "entrance", "label_ko": "회사 사원증", "interaction_type": "inspect", "observation_ko": "화장품 회사 마케팅팀 사원증이다. 정수연"},
-    {"prop_id": "xprop_delivery_receipt", "zone": "living", "label_ko": "배달 영수증", "interaction_type": "inspect", "observation_ko": "배달완료 20:47. 떡볶이 1, 순대 1. 요청사항 ‘문 앞에 두고 벨 눌러주세요’"},
-    {"prop_id": "xprop_settlement_title", "zone": "living", "label_ko": "정산 출력물 제목", "interaction_type": "inspect", "observation_ko": "담다공방 3분기 정산"},
-    {"prop_id": "xprop_scattered_papers", "zone": "living", "label_ko": "흩어진 서류", "interaction_type": "inspect", "observation_ko": "탁자에서 떨어진 듯한 정산 출력물이 바닥에 흩어져 있다. 한 장이 반으로 구겨졌다"},
-    {"prop_id": "xprop_table_edge_stain", "zone": "living", "label_ko": "탁자 모서리 얼룩", "interaction_type": "inspect", "observation_ko": "탁자 모서리에 검붉은 얼룩이 묻어 있다. 높이가 앉은 사람 머리쯤이다"},
-    {"prop_id": "xprop_blood_smear", "zone": "living", "label_ko": "끌린 자국", "interaction_type": "inspect", "observation_ko": "고인 핏자국에서 방 가운데 쪽으로 끌린 자국이 이어진다. 구급대가 처치하려고 옮긴 자리일 수 있다"},
-    {"prop_id": "xprop_ems_debris", "zone": "living", "label_ko": "구급 처치 흔적", "interaction_type": "inspect", "observation_ko": "제세동기 패드 비닐, 뜯긴 포장지, 파란 니트릴 장갑 한 짝. 119가 심폐소생술을 한 자리다"},
-    {"prop_id": "xprop_floor_cushion", "zone": "living", "label_ko": "방석", "interaction_type": "inspect", "observation_ko": "탁자 앞 방석이 하나 더 꺼내져 있다. 누군가 맞은편에 앉았던 것 같다"},
-    {"prop_id": "xprop_wall_calendar", "zone": "living", "label_ko": "벽 달력", "interaction_type": "inspect", "observation_ko": "날짜 몇 칸에 빨간 펜으로 ‘정산 마감!!’이라고 적혀 있다"},
-    {"prop_id": "xprop_stock_boxes", "zone": "living", "label_ko": "재고 상자", "interaction_type": "inspect", "observation_ko": "향초와 소품이 든 상자들이다. 송장에 ‘보내는 분: 담다공방’"},
-    {"prop_id": "xprop_drying_rack", "zone": "living", "label_ko": "빨래건조대", "interaction_type": "inspect", "observation_ko": "빨래가 널린 채 다 말라 있다. 어제쯤 넌 것 같다"},
-    {"prop_id": "xprop_water_bundle", "zone": "kitchen", "label_ko": "생수 묶음", "interaction_type": "inspect", "observation_ko": "2리터 생수 묶음에서 두 병이 빠져 있다"},
-    {"prop_id": "xprop_washing_machine", "zone": "kitchen", "label_ko": "드럼세탁기", "interaction_type": "inspect", "observation_ko": "싱크대 아래 빌트인 세탁기다. 안은 비어 있다"},
-    {"prop_id": "xprop_washer_door", "zone": "kitchen", "label_ko": "세탁기 문", "interaction_type": "inspect", "observation_ko": "세탁기 문이 닫혀 있다"},
-    {"prop_id": "xprop_stove_knobs", "zone": "kitchen", "label_ko": "가스레인지 손잡이", "interaction_type": "inspect", "observation_ko": "가스 밸브는 잠겨 있다"},
-    {"prop_id": "xprop_wallpad", "zone": "entrance", "label_ko": "월패드", "interaction_type": "inspect", "observation_ko": "세대 인터폰이다. 방문자 영상 저장 기능은 꺼져 있다"},
-    {"prop_id": "xprop_breaker_panel", "zone": "entrance", "label_ko": "분전반", "interaction_type": "inspect", "observation_ko": "차단기는 모두 올라가 있다"},
-    {"prop_id": "xprop_heat_detector", "zone": "living", "label_ko": "열감지기", "interaction_type": "inspect", "observation_ko": "천장 열감지기. 작동 표시등이 깜빡인다"},
-    {"prop_id": "xprop_aircon_unit", "zone": "living", "label_ko": "벽걸이 에어컨", "interaction_type": "inspect", "observation_ko": "에어컨은 꺼져 있다"},
-    {"prop_id": "xprop_cosmetics", "zone": "sleep", "label_ko": "화장품", "interaction_type": "inspect", "observation_ko": "서랍장 위에 화장품이 줄 맞춰 놓여 있다. 흐트러진 것은 없다"},
-    {"prop_id": "xprop_underbed_livingbox", "zone": "sleep", "label_ko": "침대 밑 리빙박스", "interaction_type": "inspect", "observation_ko": "계절 옷이 든 리빙박스다. 먼지가 고르게 앉아 있다"},
-    {"prop_id": "xprop_electric_blanket", "zone": "sleep", "label_ko": "전기장판", "interaction_type": "inspect", "observation_ko": "전기장판 전원은 꺼져 있지만 아직 미지근하다"},
-    {"prop_id": "xprop_recycle_bag", "zone": "entrance", "label_ko": "분리수거 봉투", "interaction_type": "inspect", "observation_ko": "투명 봉투에 페트병과 캔이 들어 있다"},
-    {"prop_id": "xprop_bath_slippers", "zone": "bath", "label_ko": "욕실화", "interaction_type": "inspect", "observation_ko": "욕실화가 말라 있다"},
-    {"prop_id": "xprop_police_tape", "zone": "hall", "label_ko": "폴리스라인", "interaction_type": "inspect", "observation_ko": "지구대가 쳐 둔 출입통제선이다"},
-    {"prop_id": "xprop_ppe_box", "zone": "hall", "label_ko": "장갑·덧신 상자", "interaction_type": "inspect", "observation_ko": "니트릴 장갑과 덧신이 든 상자다. 현장에 들어가기 전에 챙겨야 한다"},
-    {"prop_id": "xprop_hall_302_plate", "zone": "hall", "label_ko": "302호 표찰", "interaction_type": "inspect", "observation_ko": "302"},
-    {"prop_id": "xprop_entrance_lock_outside", "zone": "entrance", "label_ko": "도어락 바깥면", "interaction_type": "inspect", "observation_ko": "비밀번호 패드에 지문 자국이 번들거린다"},
-    {"prop_id": "xprop_window_fixed_sash", "zone": "living", "label_ko": "창문 고정창", "interaction_type": "inspect", "observation_ko": "바깥은 건물 사이 골목이다"},
-    {"prop_id": "xprop_wardrobe_rod", "zone": "sleep", "label_ko": "옷장 봉", "interaction_type": "inspect", "observation_ko": "옷걸이가 한쪽으로 몰려 있다"},
-    {"prop_id": "xprop_entrance_floor_trim_side", "zone": "entrance", "label_ko": "현관 경계턱", "interaction_type": "inspect", "observation_ko": "경계턱에 흙먼지가 조금 묻어 있다"},
-    {"prop_id": "xprop_shower_riser", "zone": "bath", "label_ko": "샤워 슬라이드바", "interaction_type": "inspect", "observation_ko": "샤워기 거치대다"},
-    {"prop_id": "xprop_shower_hose", "zone": "bath", "label_ko": "샤워 호스", "interaction_type": "inspect", "observation_ko": "호스가 말라 있다"},
-    {"prop_id": "xprop_towel_bar", "zone": "bath", "label_ko": "수건걸이", "interaction_type": "inspect", "observation_ko": "수건 두 장이 걸려 있다"},
-    {"prop_id": "xprop_bath_light", "zone": "bath", "label_ko": "욕실등", "interaction_type": "inspect", "observation_ko": "욕실 천장등이다"},
-    {"prop_id": "xprop_bath_vent_grille", "zone": "bath", "label_ko": "환풍구", "interaction_type": "inspect", "observation_ko": "환풍구 그릴에 먼지가 껴 있다"}
+    {
+      "prop_id": "xprop_box_dohyun",
+      "zone": "entrance",
+      "label_ko": "‘도현 짐’ 상자",
+      "interaction_type": "inspect",
+      "observation_ko": "매직으로 ‘도현 짐’이라고 적힌 상자다. 옷가지 몇 벌과 빈 충전기 상자가 들어 있다. 충전기는 없다"
+    },
+    {
+      "prop_id": "xprop_employee_badge",
+      "zone": "entrance",
+      "label_ko": "회사 사원증",
+      "interaction_type": "inspect",
+      "observation_ko": "화장품 회사 마케팅팀 사원증이다. 정수연"
+    },
+    {
+      "prop_id": "xprop_delivery_receipt",
+      "zone": "living",
+      "label_ko": "배달 영수증",
+      "interaction_type": "inspect",
+      "observation_ko": "배달완료 20:47. 떡볶이 1, 순대 1. 요청사항 ‘문 앞에 두고 벨 눌러주세요’"
+    },
+    {
+      "prop_id": "xprop_settlement_title",
+      "zone": "living",
+      "label_ko": "정산 출력물 제목",
+      "interaction_type": "inspect",
+      "observation_ko": "담다공방 3분기 정산"
+    },
+    {
+      "prop_id": "xprop_scattered_papers",
+      "zone": "living",
+      "label_ko": "흩어진 서류",
+      "interaction_type": "inspect",
+      "observation_ko": "탁자에서 떨어진 듯한 정산 출력물이 바닥에 흩어져 있다. 한 장이 반으로 구겨졌다"
+    },
+    {
+      "prop_id": "xprop_table_edge_stain",
+      "zone": "living",
+      "label_ko": "탁자 모서리 얼룩",
+      "interaction_type": "inspect",
+      "observation_ko": "탁자 모서리에 검붉은 얼룩이 묻어 있다. 높이가 앉은 사람 머리쯤이다"
+    },
+    {
+      "prop_id": "xprop_blood_smear",
+      "zone": "living",
+      "label_ko": "끌린 자국",
+      "interaction_type": "inspect",
+      "observation_ko": "고인 핏자국에서 방 가운데 쪽으로 끌린 자국이 이어진다. 구급대가 처치하려고 옮긴 자리일 수 있다"
+    },
+    {
+      "prop_id": "xprop_ems_debris",
+      "zone": "living",
+      "label_ko": "구급 처치 흔적",
+      "interaction_type": "inspect",
+      "observation_ko": "제세동기 패드 비닐, 뜯긴 포장지, 파란 니트릴 장갑 한 짝. 119가 심폐소생술을 한 자리다"
+    },
+    {
+      "prop_id": "xprop_floor_cushion",
+      "zone": "living",
+      "label_ko": "방석",
+      "interaction_type": "inspect",
+      "observation_ko": "탁자 앞 방석이 하나 더 꺼내져 있다. 누군가 맞은편에 앉았던 것 같다"
+    },
+    {
+      "prop_id": "xprop_wall_calendar",
+      "zone": "living",
+      "label_ko": "벽 달력",
+      "interaction_type": "inspect",
+      "observation_ko": "날짜 몇 칸에 빨간 펜으로 ‘정산 마감!!’이라고 적혀 있다"
+    },
+    {
+      "prop_id": "xprop_stock_boxes",
+      "zone": "living",
+      "label_ko": "재고 상자",
+      "interaction_type": "inspect",
+      "observation_ko": "향초와 소품이 든 상자들이다. 송장에 ‘보내는 분: 담다공방’"
+    },
+    {
+      "prop_id": "xprop_drying_rack",
+      "zone": "living",
+      "label_ko": "빨래건조대",
+      "interaction_type": "inspect",
+      "observation_ko": "빨래가 널린 채 다 말라 있다. 어제쯤 넌 것 같다"
+    },
+    {
+      "prop_id": "xprop_water_bundle",
+      "zone": "kitchen",
+      "label_ko": "생수 묶음",
+      "interaction_type": "inspect",
+      "observation_ko": "2리터 생수 묶음에서 두 병이 빠져 있다"
+    },
+    {
+      "prop_id": "xprop_washing_machine",
+      "zone": "kitchen",
+      "label_ko": "드럼세탁기",
+      "interaction_type": "inspect",
+      "observation_ko": "싱크대 아래 빌트인 세탁기다. 안은 비어 있다"
+    },
+    {
+      "prop_id": "xprop_washer_door",
+      "zone": "kitchen",
+      "label_ko": "세탁기 문",
+      "interaction_type": "inspect",
+      "observation_ko": "세탁기 문이 닫혀 있다"
+    },
+    {
+      "prop_id": "xprop_stove_knobs",
+      "zone": "kitchen",
+      "label_ko": "가스레인지 손잡이",
+      "interaction_type": "inspect",
+      "observation_ko": "가스 밸브는 잠겨 있다"
+    },
+    {
+      "prop_id": "xprop_wallpad",
+      "zone": "entrance",
+      "label_ko": "월패드",
+      "interaction_type": "inspect",
+      "observation_ko": "세대 인터폰이다. 방문자 영상 저장 기능은 꺼져 있다"
+    },
+    {
+      "prop_id": "xprop_breaker_panel",
+      "zone": "entrance",
+      "label_ko": "분전반",
+      "interaction_type": "inspect",
+      "observation_ko": "차단기는 모두 올라가 있다"
+    },
+    {
+      "prop_id": "xprop_heat_detector",
+      "zone": "living",
+      "label_ko": "열감지기",
+      "interaction_type": "inspect",
+      "observation_ko": "천장 열감지기. 작동 표시등이 깜빡인다"
+    },
+    {
+      "prop_id": "xprop_aircon_unit",
+      "zone": "living",
+      "label_ko": "벽걸이 에어컨",
+      "interaction_type": "inspect",
+      "observation_ko": "에어컨은 꺼져 있다"
+    },
+    {
+      "prop_id": "xprop_cosmetics",
+      "zone": "sleep",
+      "label_ko": "화장품",
+      "interaction_type": "inspect",
+      "observation_ko": "서랍장 위에 화장품이 줄 맞춰 놓여 있다. 흐트러진 것은 없다"
+    },
+    {
+      "prop_id": "xprop_underbed_livingbox",
+      "zone": "sleep",
+      "label_ko": "침대 밑 리빙박스",
+      "interaction_type": "inspect",
+      "observation_ko": "계절 옷이 든 리빙박스다. 먼지가 고르게 앉아 있다"
+    },
+    {
+      "prop_id": "xprop_electric_blanket",
+      "zone": "sleep",
+      "label_ko": "전기장판",
+      "interaction_type": "inspect",
+      "observation_ko": "전기장판 전원은 꺼져 있지만 아직 미지근하다"
+    },
+    {
+      "prop_id": "xprop_recycle_bag",
+      "zone": "entrance",
+      "label_ko": "분리수거 봉투",
+      "interaction_type": "inspect",
+      "observation_ko": "투명 봉투에 페트병과 캔이 들어 있다"
+    },
+    {
+      "prop_id": "xprop_bath_slippers",
+      "zone": "bath",
+      "label_ko": "욕실화",
+      "interaction_type": "inspect",
+      "observation_ko": "욕실화가 말라 있다"
+    },
+    {
+      "prop_id": "xprop_police_tape",
+      "zone": "hall",
+      "label_ko": "폴리스라인",
+      "interaction_type": "inspect",
+      "observation_ko": "지구대가 쳐 둔 출입통제선이다"
+    },
+    {
+      "prop_id": "xprop_ppe_box",
+      "zone": "hall",
+      "label_ko": "장갑·덧신 상자",
+      "interaction_type": "inspect",
+      "observation_ko": "니트릴 장갑과 덧신이 든 상자다. 현장에 들어가기 전에 챙겨야 한다"
+    },
+    {
+      "prop_id": "xprop_hall_302_plate",
+      "zone": "hall",
+      "label_ko": "302호 표찰",
+      "interaction_type": "inspect",
+      "observation_ko": "302"
+    },
+    {
+      "prop_id": "xprop_entrance_lock_outside",
+      "zone": "entrance",
+      "label_ko": "도어락 바깥면",
+      "interaction_type": "inspect",
+      "observation_ko": "비밀번호 패드에 지문 자국이 번들거린다"
+    },
+    {
+      "prop_id": "xprop_window_fixed_sash",
+      "zone": "living",
+      "label_ko": "창문 고정창",
+      "interaction_type": "inspect",
+      "observation_ko": "바깥은 건물 사이 골목이다"
+    },
+    {
+      "prop_id": "xprop_wardrobe_rod",
+      "zone": "sleep",
+      "label_ko": "옷장 봉",
+      "interaction_type": "inspect",
+      "observation_ko": "옷걸이가 한쪽으로 몰려 있다"
+    },
+    {
+      "prop_id": "xprop_entrance_floor_trim_side",
+      "zone": "entrance",
+      "label_ko": "현관 경계턱",
+      "interaction_type": "inspect",
+      "observation_ko": "경계턱에 흙먼지가 조금 묻어 있다"
+    },
+    {
+      "prop_id": "xprop_shower_riser",
+      "zone": "bath",
+      "label_ko": "샤워 슬라이드바",
+      "interaction_type": "inspect",
+      "observation_ko": "샤워기 거치대다"
+    },
+    {
+      "prop_id": "xprop_shower_hose",
+      "zone": "bath",
+      "label_ko": "샤워 호스",
+      "interaction_type": "inspect",
+      "observation_ko": "호스가 말라 있다"
+    },
+    {
+      "prop_id": "xprop_towel_bar",
+      "zone": "bath",
+      "label_ko": "수건걸이",
+      "interaction_type": "inspect",
+      "observation_ko": "수건 두 장이 걸려 있다"
+    },
+    {
+      "prop_id": "xprop_bath_light",
+      "zone": "bath",
+      "label_ko": "욕실등",
+      "interaction_type": "inspect",
+      "observation_ko": "욕실 천장등이다"
+    },
+    {
+      "prop_id": "xprop_bath_vent_grille",
+      "zone": "bath",
+      "label_ko": "환풍구",
+      "interaction_type": "inspect",
+      "observation_ko": "환풍구 그릴에 먼지가 껴 있다"
+    },
+    {
+      "prop_id": "xprop_rice_cooker",
+      "zone": "kitchen",
+      "label_ko": "전기밥솥",
+      "interaction_type": "inspect",
+      "observation_ko": "보온 표시등이 켜져 있다. 안에 밥이 한 공기쯤 남았다"
+    },
+    {
+      "prop_id": "xprop_kettle",
+      "zone": "kitchen",
+      "label_ko": "전기포트",
+      "interaction_type": "inspect",
+      "observation_ko": "물이 반쯤 남았고 식어 있다"
+    },
+    {
+      "prop_id": "xprop_spoon_holder",
+      "zone": "kitchen",
+      "label_ko": "수저통",
+      "interaction_type": "inspect",
+      "observation_ko": "숟가락과 젓가락이 꽂혀 있다. 물기는 말랐다"
+    },
+    {
+      "prop_id": "xprop_rubber_gloves",
+      "zone": "kitchen",
+      "label_ko": "고무장갑",
+      "interaction_type": "inspect",
+      "observation_ko": "분홍 고무장갑이 싱크대 가장자리에 걸쳐져 있다. 말라 있다"
+    },
+    {
+      "prop_id": "xprop_condiments",
+      "zone": "kitchen",
+      "label_ko": "양념병",
+      "interaction_type": "inspect",
+      "observation_ko": "간장, 식용유, 참기름"
+    },
+    {
+      "prop_id": "xprop_detergent",
+      "zone": "bath",
+      "label_ko": "세탁세제",
+      "interaction_type": "inspect",
+      "observation_ko": "세탁세제 통이 거의 비었다"
+    },
+    {
+      "prop_id": "xprop_dipper",
+      "zone": "bath",
+      "label_ko": "바가지",
+      "interaction_type": "inspect",
+      "observation_ko": "바가지가 엎어져 있다. 물기는 없다"
+    },
+    {
+      "prop_id": "xprop_tissue_box",
+      "zone": "sleep",
+      "label_ko": "각티슈",
+      "interaction_type": "inspect",
+      "observation_ko": "티슈 한 장이 반쯤 뽑혀 나와 있다"
+    },
+    {
+      "prop_id": "xprop_fire_extinguisher",
+      "zone": "hall",
+      "label_ko": "소화기",
+      "interaction_type": "inspect",
+      "observation_ko": "복도 소화기. 압력계 바늘은 정상 범위다"
+    },
+    {
+      "prop_id": "xprop_meter_box",
+      "zone": "hall",
+      "label_ko": "계량기함",
+      "interaction_type": "inspect",
+      "observation_ko": "세대별 수도·가스 계량기함이다"
+    },
+    {
+      "prop_id": "xprop_door_flyers",
+      "zone": "entrance",
+      "label_ko": "문에 붙은 전단지",
+      "interaction_type": "inspect",
+      "observation_ko": "치킨집 전단지와 ‘가스점검’ 스티커가 문에 붙어 있다"
+    },
+    {
+      "prop_id": "xprop_contents_upper1",
+      "zone": "kitchen",
+      "label_ko": "그릇들",
+      "interaction_type": "inspect",
+      "observation_ko": "밥그릇과 국그릇, 접시가 가지런히 쌓여 있다. 컵 하나가 비어 있는 자리가 있다"
+    },
+    {
+      "prop_id": "xprop_contents_upper2",
+      "zone": "kitchen",
+      "label_ko": "상부장 식료품",
+      "interaction_type": "inspect",
+      "observation_ko": "즉석밥 네 개, 참치캔 세 개, 라면 묶음"
+    },
+    {
+      "prop_id": "xprop_contents_undersink",
+      "zone": "kitchen",
+      "label_ko": "싱크대 하부장 안",
+      "interaction_type": "inspect",
+      "observation_ko": "배수관과 세제, 수세미 묶음. 누수 흔적은 없다"
+    },
+    {
+      "prop_id": "xprop_contents_drawer_utensils",
+      "zone": "kitchen",
+      "label_ko": "수저 서랍",
+      "interaction_type": "inspect",
+      "observation_ko": "수저 정리함에 숟가락과 젓가락, 가위가 들어 있다"
+    },
+    {
+      "prop_id": "xprop_contents_drawer_misc",
+      "zone": "kitchen",
+      "label_ko": "잡동사니 서랍",
+      "interaction_type": "inspect",
+      "observation_ko": "비닐랩과 접어 둔 비닐봉지"
+    },
+    {
+      "prop_id": "xprop_contents_sleep_drawer_top",
+      "zone": "sleep",
+      "label_ko": "서랍 속 옷",
+      "interaction_type": "inspect",
+      "observation_ko": "속옷과 양말이 개켜져 있다"
+    },
+    {
+      "prop_id": "xprop_contents_sleep_drawer_mid",
+      "zone": "sleep",
+      "label_ko": "서랍 속 옷",
+      "interaction_type": "inspect",
+      "observation_ko": "티셔츠가 색깔별로 개켜져 있다"
+    },
+    {
+      "prop_id": "xprop_contents_sleep_drawer_bottom",
+      "zone": "sleep",
+      "label_ko": "서랍 속 옷",
+      "interaction_type": "inspect",
+      "observation_ko": "겨울 니트가 들어 있다"
+    },
+    {
+      "prop_id": "xprop_contents_table_drawer",
+      "zone": "living",
+      "label_ko": "탁자 서랍 안",
+      "interaction_type": "inspect",
+      "observation_ko": "편의점 영수증 두 장과 고무줄. 날짜는 지난주다"
+    },
+    {
+      "prop_id": "xprop_contents_bath_cabinet",
+      "zone": "bath",
+      "label_ko": "세면대 하부장 안",
+      "interaction_type": "inspect",
+      "observation_ko": "두루마리 휴지와 욕실 세정제"
+    }
   ]
 }

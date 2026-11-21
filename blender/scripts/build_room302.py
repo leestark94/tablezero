@@ -61,6 +61,8 @@ M = {
  'cosm': mat('M_CosmeticPink', (0.85, 0.65, 0.68, 1), 0.3), 'living_box': mat('M_LivingBox', (0.85, 0.86, 0.88, 0.7), 0.35),
 }
 tzprops.M.update(M)
+import tzprops2
+tzprops2.M.update(M)
 R90 = math.radians(90)
 
 def W(name, mn, mx, m=None, col='Room302'):
@@ -268,12 +270,21 @@ def kitchen():
     lathe('kitchen_dish_soap', [(0, 0), (0.03, 0), (0.032, 0.15), (0.012, 0.17), (0.012, 0.2), (0, 0.2)], M['green'], 24, location=(0.08, 2.0, 0.86))
     boxes('kitchen_sponge', [((0.12, 1.98, 0.86), (0.19, 2.07, 0.885), 0), ((0.12, 1.98, 0.885), (0.19, 2.07, 0.892), 1)],
           [mat('M_SpongeYellow', (0.85, 0.7, 0.2, 1), 0.95), M['green']], bevel=0.004)
-    lathe('kitchen_pot', [(0, 0), (0.10, 0), (0.105, 0.005), (0.105, 0.12), (0.1, 0.12), (0.098, 0.006), (0, 0.006)],
-          M['steel'], 40, location=(0.30, 2.87, 0.89))
+    pot = lathe('tmp_pot', [(0, 0), (0.10, 0), (0.105, 0.005), (0.105, 0.12), (0.1, 0.12), (0.098, 0.006), (0, 0.006)],
+                M['steel'], 40, location=(0.30, 2.87, 0.89))
+    potlid = lathe('tmp_potlid', [(0, 0.135), (0.108, 0.122), (0.11, 0.118), (0.0, 0.118)], [M['glass']], 40, location=(0.30, 2.87, 0.89))
+    knob = lathe('tmp_potknob', [(0, 0.135), (0.018, 0.135), (0.014, 0.155), (0, 0.158)], [M['pb']], 16, location=(0.30, 2.87, 0.89))
+    h1 = boxes('tmp_poth1', [((0.18, 2.86, 0.99), (0.20, 2.88, 1.0)), ((0.40, 2.86, 0.99), (0.42, 2.88, 1.0))], M['pb'], bevel=0.004)
+    join('kitchen_pot', [pot, potlid, knob, h1], origin=(0.30, 2.87, 0.89))
     lathe('kitchen_pan', [(0, 0), (0.11, 0), (0.13, 0.04), (0.125, 0.042), (0.105, 0.006), (0, 0.006)], M['pb'], 40,
           location=(0.30, 3.15, 0.89))
-    noodle('kitchen_instant_noodle1', (0.47, 3.48, 0.86))
-    noodle('kitchen_instant_noodle2', (0.47, 3.62, 0.86))
+    noodle('kitchen_instant_noodle1', (0.22, 4.02, 1.73))
+    noodle('kitchen_instant_noodle2', (0.22, 4.16, 1.73))
+    tzprops2.rice_cooker('xprop_rice_cooker', (0.30, 3.53, 0.86), rot=0.0)
+    tzprops2.kettle('xprop_kettle', (0.26, 1.86, 0.86), rot=0.4)
+    tzprops2.spoon_holder('xprop_spoon_holder', (0.48, 3.70, 0.86))
+    tzprops2.rubber_gloves('xprop_rubber_gloves', (0.56, 2.33, 0.862))
+    tzprops2.condiments('xprop_condiments', (0.06, 3.36, 0.86))
     lathe('kitchen_bin', [(0, 0), (0.12, 0), (0.13, 0.36), (0.0, 0.36)], M['pg'], 32, location=(0.30, 3.52, 0.10))
     lathe('kitchen_bin_liner', [(0.125, 0.29), (0.135, 0.37), (0.125, 0.38)], M['bagw'], 32, location=(0.30, 3.52, 0.10))
     fridge()
@@ -339,7 +350,7 @@ def living():
                            ((tx1 - 0.07, ty0 + 0.04, 0.0), (tx1 - 0.04, ty0 + 0.07, 0.30)), ((tx0 + 0.04, ty1 - 0.07, 0.0), (tx0 + 0.07, ty1 - 0.04, 0.30)),
                            ((tx1 - 0.07, ty1 - 0.07, 0.0), (tx1 - 0.04, ty1 - 0.04, 0.30))], M['oak'], bevel=0.004)
     drawer_y('living_table_drawer', (1.55, ty0 + 0.02, 0.245), (1.85, ty0 + 0.30, 0.298), M['oak'], M['oak'])
-    floor_chair('living_chair', (2.30, 4.05, 0.0))
+    tzprops2.floor_chair('living_chair', (2.32, 4.10, 0.0), rot_z=0.55)
     box('xprop_floor_cushion', (1.48, 2.86, 0.0), (1.90, 3.24, 0.06), M['cushion'], bevel=0.025, seg=3)
     plastic_bag('living_food_bag', (1.45, 3.45, 0.33), (0.26, 0.18, 0.20), M['bagw'], knot=True)
     rc = boxes('tmp_rcp', [((1.36, 3.355, 0.40), (1.44, 3.356, 0.52))], M['paper'], bevel=0.0)
@@ -438,6 +449,7 @@ def living():
                                   ((2.6, 5.5, 0.0), (2.62, 5.9, 0.5)), ((2.98, 5.5, 0.0), (3.0, 5.9, 0.5)),
                                   ((2.6, 5.88, 0.0), (3.0, 5.9, 0.5))], M['oak'], bevel=0.003)
     drawer_y('sleep_bedside_drawer', (2.62, 5.5, 0.30), (2.98, 5.88, 0.46), M['oak'], M['oak'])
+    tzprops2.tissue_box('xprop_tissue_box', (2.80, 5.70, 0.50), rot=0.25)
     tube('sleep_bedside_phone', [(2.70, 5.62, 0.345), (2.8, 5.66, 0.343), (2.9, 5.6, 0.343)], 0.003, M['pw'])
     wardrobe()
     chest()
@@ -523,28 +535,49 @@ def bed():
     pad = box('tmp_epad', (x0 + 0.10, y0 + 0.30, 0.506), (x1 - 0.10, y1 - 0.55, 0.510), mat('M_HeatingPad', (0.75, 0.62, 0.55, 1), 0.9), bevel=0.004)
     cord = tube('tmp_epcord', [(x0 + 0.1, y0 + 0.4, 0.51), (x0 - 0.02, y0 + 0.45, 0.45), (x0 - 0.04, y0 + 0.6, 0.05)], 0.003, M['pw'])
     join('xprop_electric_blanket', [pad, cord], origin=((x0 + x1) / 2, y0 + 1.0, 0.506))
+    # duvet: real cloth simulation dropped onto mattress/sheet/frame (natural folds, drape over the sides)
+    rnd = random.Random(17)
     bm = bmesh.new()
-    nx, ny = 26, 40
-    grid = [[bm.verts.new((x0 - 0.05 + (x1 - x0 + 0.1) * i / nx, y0 - 0.05 + 1.40 * j / ny, 0.0)) for i in range(nx + 1)] for j in range(ny + 1)]
+    nx, ny = 34, 40
+    X0, X1, Y0, Y1 = x0 - 0.06, x1 + 0.05, y0 + 0.06, y0 + 1.45
+    grid = [[bm.verts.new((X0 + (X1 - X0) * i / nx, Y0 + (Y1 - Y0) * j / ny,
+                          0.585 + 0.012 * math.sin(i * 0.45 + j * 0.25) * math.sin(j * 0.17 + 1.0) + rnd.uniform(0, 0.004)))
+             for i in range(nx + 1)] for j in range(ny + 1)]
     for j in range(ny):
         for i in range(nx):
             bm.faces.new((grid[j][i], grid[j][i + 1], grid[j + 1][i + 1], grid[j + 1][i]))
-    for j in range(ny + 1):
-        for i in range(nx + 1):
-            v = grid[j][i]
-            u, w = i / nx, j / ny
-            edge = min(u, 1 - u)
-            z = 0.565 + 0.022 * math.sin(w * 13 + u * 4) + 0.012 * math.sin(u * 23) * (1 - w)
-            if edge < 0.08:
-                z -= (0.08 - edge) / 0.08 * 0.22
-                v.co.x += (-0.03 if u < 0.5 else 0.03) * (0.08 - edge) / 0.08
-            if w > 0.80:
-                z += 0.08 * math.sin((w - 0.80) / 0.20 * math.pi)
-            v.co.z = z
-    o = mesh_obj('sleep_blanket', bm, M['linen'], origin=((x0 + x1) / 2, y0 + 0.7, 0.5), smooth=True)
-    sm = o.modifiers.new('s', 'SOLIDIFY'); sm.thickness = 0.03
+    o = mesh_obj('tmp_duvet', bm, M['linen'], origin=(0, 0, 0), smooth=True)
+    colliders = [bpy.data.objects[n] for n in ('fix_mattress', 'sleep_sheet', 'sleep_bed', 'xprop_electric_blanket')]
+    for c in colliders:
+        cm = c.modifiers.new('col', 'COLLISION')
+        c.collision.cloth_friction = 40.0
+        c.collision.thickness_outer = 0.006
+    cl = o.modifiers.new('cloth', 'CLOTH')
+    st = cl.settings
+    st.quality = 10; st.mass = 0.6; st.tension_stiffness = 25; st.compression_stiffness = 25
+    st.shear_stiffness = 10; st.bending_stiffness = 6.0; st.air_damping = 4
+    cl.collision_settings.distance_min = 0.012
+    sc = bpy.context.scene
+    sc.frame_start, sc.frame_end = 1, 45
+    cl.point_cache.frame_start, cl.point_cache.frame_end = 1, 45
+    cl.collision_settings.friction = 20
+    for f in range(1, 46):
+        sc.frame_set(f)
+    dg = bpy.context.evaluated_depsgraph_get()
+    me = bpy.data.meshes.new_from_object(o.evaluated_get(dg))
+    o.modifiers.clear()
+    old = o.data; o.data = me; bpy.data.meshes.remove(old)
+    sc.frame_set(1)
+    for c in colliders:
+        for m_ in list(c.modifiers):
+            if m_.type == 'COLLISION':
+                c.modifiers.remove(m_)
+    sm = o.modifiers.new('s', 'SOLIDIFY'); sm.thickness = 0.028; sm.offset = 1
     ss = o.modifiers.new('sub', 'SUBSURF'); ss.levels = 1
     bake(o)
+    o.name = 'sleep_blanket'
+    set_origin(o, ((x0 + x1) / 2, y0 + 0.7, 0.5))
+    shade_smooth_auto(o, 70)
     pillow('sleep_pillow1', (x0 + 0.42, y1 - 0.26, 0.56))
     pillow('sleep_pillow2', (x1 - 0.30, y1 - 0.62, 0.55))
 
@@ -589,19 +622,13 @@ def bathroom():
           [M['doorwhite'], M['chrome'], M['pg']], origin=(2.15, 1.795, 0.012), bevel=0.004)
     switch_plate('bath_light_switch', (2.1, 0.92, 1.2), facing='-x')
     switch_plate('bath_vent_fan', (2.1, 0.82, 1.2), facing='-x')
-    tx, ty = 3.78, 0.50
-    bowl = lathe('fix_toilet_bowl', [(0, 0.0), (0.095, 0.0), (0.10, 0.06), (0.125, 0.16), (0.165, 0.30), (0.185, 0.37), (0.19, 0.40),
-                                     (0.178, 0.408), (0.145, 0.398), (0.11, 0.33), (0.06, 0.24), (0, 0.23)], [M['porc']], 56, location=(tx, ty, -0.045))
-    bowl.data.transform(Matrix.Diagonal((1.32, 1, 1, 1)))
-    shade_smooth_auto(bowl, 60)
-    boxes('fix_toilet_tank', [((3.98, ty - 0.21, 0.34), (4.18, ty + 0.21, 0.78))], [M['porc']], bevel=0.025, seg=3)
-    seat = lathe('bath_toilet_seat', [(0.13, 0.0), (0.19, 0.0), (0.195, 0.012), (0.185, 0.022), (0.135, 0.022), (0.125, 0.01)],
-                 [M['pw']], 48, location=(tx, ty, 0.355))
-    lid = lathe('bath_toilet_lid', [(0.0, 0.03), (0.195, 0.03), (0.2, 0.022), (0.19, 0.045), (0.0, 0.05)], [M['pw']], 48, location=(tx, ty, 0.355))
-    for o in (seat, lid):
-        o.data.transform(Matrix.Diagonal((1.3, 1, 1, 1)))
-        set_origin(o, (3.98, ty, 0.375))
-    boxes('bath_flush_handle', [((3.97, ty + 0.12, 0.70), (3.98, ty + 0.17, 0.72))], M['chrome'], bevel=0.003)
+    tx, ty = 3.74, 0.50
+    parts = tzprops2.toilet('fix_toilet', (tx, ty, -0.045), facing=-1)
+    join('fix_toilet_bowl', parts, origin=(tx, ty, -0.045))
+    boxes('fix_toilet_tank', [((3.98, ty - 0.20, 0.36), (4.18, ty + 0.20, 0.76), 0), ((3.975, ty - 0.21, 0.76), (4.185, ty + 0.21, 0.785), 0)],
+          [M['porc']], bevel=0.02, seg=3)
+    tzprops2.toilet_seat_and_lid('bath_toilet_seat', 'bath_toilet_lid', (tx, ty, -0.045), hinge_x=3.93, facing=-1)
+    boxes('bath_flush_handle', [((4.05, ty - 0.03, 0.785), (4.11, ty + 0.03, 0.792))], M['chrome'], bevel=0.003)
     tube('bath_toilet_brush', [(4.1, 0.10, -0.04), (4.1, 0.10, 0.38)], 0.015, M['pw'])
     tp = lathe('bath_toilet_paper', [(0, -0.05), (0.055, -0.05), (0.055, 0.05), (0, 0.05)], M['paper'], 24, location=(0, 0, 0))
     tp.data.transform(Matrix.Rotation(R90, 4, 'Y')); tp.location = (4.12, 0.92, 0.70)
@@ -636,6 +663,8 @@ def bathroom():
     box('bath_towel1', (2.32, 1.945, 0.95), (2.50, 1.99, 1.37), mat('M_TowelGray', (0.55, 0.56, 0.58, 1), 1.0), bevel=0.012, seg=2)
     box('bath_towel2', (2.52, 1.945, 1.0), (2.72, 1.99, 1.37), mat('M_TowelBeige', (0.78, 0.72, 0.62, 1), 1.0), bevel=0.012, seg=2)
     lathe('bath_laundry_bin', [(0, 0), (0.14, 0), (0.15, 0.4), (0.14, 0.4), (0.13, 0.02), (0, 0.02)], [M['pw']], 24, location=(4.0, 1.75, -0.045))
+    tzprops2.dipper('xprop_dipper', (2.42, 0.32, -0.045))
+    tzprops2.detergent('xprop_detergent', (4.05, 1.25, -0.045), rot=0.3)
     box('bath_floor_mat', (2.25, 1.15, -0.045), (2.70, 1.60, -0.035), mat('M_BathMat', (0.45, 0.55, 0.6, 1), 1.0), bevel=0.004)
     shoe('xprop_bath_slippers', (2.40, 0.95, -0.045), 0.26, mat('M_BathSlipper', (0.35, 0.55, 0.62, 1), 0.5), M['rubber'], rot=0.2, slipper=True)
     boxes('bath_window', [((WX + 0.02, 1.31, 1.61), (WX + 0.06, 1.69, 1.64), 0), ((WX + 0.02, 1.31, 1.96), (WX + 0.06, 1.69, 1.99), 0),
@@ -666,6 +695,19 @@ def hallway():
     boxes('hall_mailbox', [((-1.58, -1.2, ST + 0.9), (-1.48, -0.6, ST + 1.3))], M['alu'], bevel=0.004, collection=C)
     boxes('hall_intercom', [((-1.58, -0.5, ST + 1.3), (-1.555, -0.36, ST + 1.52), 0), ((-1.556, -0.48, ST + 1.42), (-1.553, -0.38, ST + 1.5), 1)],
           [M['pw'], M['screen']], bevel=0.004, collection=C)
+    # 빌라 복도 생활감: 소화기, 계량기함, 문에 붙은 전단지·스티커
+    ext = [tzprops2.loft('tmp_fe', [(0, 0.07, 0.07, 0, 0), (0.42, 0.07, 0.07, 0, 0), (0.47, 0.04, 0.04, 0, 0), (0.50, 0.02, 0.02, 0, 0)],
+                         [M['red']], steps=24, cap_top=True, location=(-1.45, -1.62, ST)),
+           tube('tmp_feh', [(-1.45, -1.62, ST + 0.50), (-1.45, -1.55, ST + 0.55), (-1.45, -1.50, ST + 0.40)], 0.008, M['pb'])]
+    join('xprop_fire_extinguisher', ext, origin=(-1.45, -1.62, ST))
+    boxes('xprop_meter_box', [((2.6, -0.16, ST + 1.5), (3.2, -0.10, ST + 2.0), 0), ((2.62, -0.161, ST + 1.75), (3.18, -0.16, ST + 1.98), 1)],
+          [M['pg'], M['glass']], bevel=0.004, collection=C)
+    flyer = [box('tmp_fl1', (0.55, -0.1015, ST + 1.35), (0.75, -0.1005, ST + 1.62), mat('M_FlyerYellow', (0.95, 0.85, 0.35, 1), 0.7), bevel=0),
+             label('tmp_fl1t', '치킨\n1588', 0.05, (0.65, -0.1018, ST + 1.50), (R90, 0, 0), M['inkred'], 0.0002, C),
+             box('tmp_st1', (0.82, -0.1012, ST + 1.75), (0.90, -0.1005, ST + 1.80), mat('M_StickerWhite', (0.95, 0.95, 0.93, 1), 0.6), bevel=0),
+             label('tmp_st1t', '가스점검', 0.012, (0.86, -0.1015, ST + 1.775), (R90, 0, 0), M['ink'], 0.0002, C)]
+    j = join('xprop_door_flyers', flyer, origin=(0.7, -0.101, ST + 1.5), collection=C)
+    parent(j, bpy.data.objects['entrance_door'])
     plate = box('tmp_plate', (0.40, -0.161, ST + 2.12), (0.60, -0.15, ST + 2.2), M['brass'], bevel=0.002, collection=C)
     ptx = label('tmp_302', '302', 0.045, (0.50, -0.1615, ST + 2.16), (R90, 0, 0), M['ink'], collection=C)
     join('xprop_hall_302_plate', [plate, ptx], origin=(0.5, -0.155, ST + 2.12), collection=C)
@@ -694,7 +736,59 @@ def hallway():
            label('tmp_ppetxt', '니트릴 장갑 · 덧신', 0.016, (1.32, -0.481, ST + 0.05), (R90, 0, 0), M['ink'], 0.0003, C)]
     join('xprop_ppe_box', ppe, origin=(1.32, -0.34, ST), collection=C)
 
-architecture(); entrance(); kitchen(); living(); bathroom(); hallway()
+# ======================= CONTAINER CONTENTS (no empty interiors) =======================
+def contents():
+    L = tzprops2.loft
+    def bowl(tag, x, y, z, r=0.06, h=0.055, m=None):
+        return L(tag, [(0, r * 0.55, r * 0.55, 0, 0), (0.008, r * 0.6, r * 0.6, 0, 0), (h, r, r, 0, 0), (h, r * 0.95, r * 0.95, 0, 0), (0.01, r * 0.5, r * 0.5, 0, 0)],
+                 [m or M['porc']], steps=28, location=(x, y, z))
+    p = []
+    for i in range(3):
+        p.append(bowl(f'tmp_bb{i}', 0.17, 1.50, 1.47 + i * 0.03, 0.055))
+        p.append(bowl(f'tmp_sb{i}', 0.17, 1.66, 1.47 + i * 0.035, 0.07))
+    for i in range(6):
+        p.append(L(f'tmp_pl{i}', [(0, 0.08, 0.08, 0, 0), (0.012, 0.11, 0.11, 0, 0), (0.014, 0.10, 0.10, 0, 0)], [M['porc']], steps=28, cap_bottom=True,
+                   location=(0.17, 1.86, 1.47 + i * 0.016)))
+    for i, yy in enumerate((1.50, 1.62, 1.74)):
+        p.append(lathe(f'tmp_cup{i}', [(0, 0), (0.035, 0), (0.038, 0.09), (0.035, 0.09), (0.032, 0.006), (0, 0.006)], [M['porc'] if i else M['blue']], 24,
+                       location=(0.17, yy, 1.815)))
+    join('xprop_contents_upper1', p, origin=(0.17, 1.7, 1.47))
+    p = []
+    for i in range(4):
+        p.append(boxes(f'tmp_hb{i}', [((0.07, 2.08, 1.47 + i * 0.035), (0.20, 2.20, 1.50 + i * 0.035))], [mat('M_InstantRice', (0.95, 0.93, 0.90, 1), 0.5)], bevel=0.006))
+    for i in range(3):
+        p.append(L(f'tmp_tc{i}', [(0, 0.042, 0.042, 0, 0), (0.035, 0.042, 0.042, 0, 0)], [mat('M_TunaCan', (0.75, 0.62, 0.20, 1), 0.4, 1.0)], steps=24,
+                   cap_top=True, location=(0.24, 2.10 + i * 0.09, 1.47)))
+    p.append(boxes('tmp_ram', [((0.06, 2.35, 1.815), (0.30, 2.60, 1.93))], [mat('M_RamyeonPack', (0.80, 0.15, 0.10, 1), 0.5)], bevel=0.02, seg=2))
+    join('xprop_contents_upper2', p, origin=(0.17, 2.3, 1.47))
+    p = [tube('tmp_trap', [(0.29, 2.27, 0.64), (0.29, 2.27, 0.48), (0.29, 2.32, 0.40), (0.29, 2.38, 0.46), (0.12, 2.38, 0.47), (0.02, 2.38, 0.47)], 0.02, M['pg']),
+         tzprops2.detergent('tmp_ud', (0.45, 2.00, 0.12), rot=1.2),
+         boxes('tmp_sp', [((0.40, 2.50, 0.12), (0.52, 2.62, 0.18))], [mat('M_SpongeYellow', (0.85, 0.7, 0.2, 1), 0.95)], bevel=0.005)]
+    join('xprop_contents_undersink', p, origin=(0.3, 2.28, 0.12))
+    p = [boxes('tmp_org', [((0.08, 1.40, 0.62), (0.54, 1.82, 0.625)), ((0.08, 1.54, 0.62), (0.54, 1.545, 0.67)), ((0.08, 1.68, 0.62), (0.54, 1.685, 0.67))], M['pg'], bevel=0.0)]
+    for i in range(5):
+        p.append(boxes(f'tmp_spn{i}', [((0.12, 1.43 + i * 0.022, 0.626), (0.30, 1.44 + i * 0.022, 0.632))], M['steel'], bevel=0.002))
+        p.append(boxes(f'tmp_chp{i}', [((0.12, 1.58 + i * 0.016, 0.626), (0.34, 1.585 + i * 0.016, 0.631))], M['steel'], bevel=0.001))
+    p.append(boxes('tmp_scis', [((0.14, 1.72, 0.626), (0.30, 1.76, 0.634))], [M['pb']], bevel=0.003))
+    c = join('xprop_contents_drawer_utensils', p, origin=(0.3, 1.6, 0.62)); parent(c, bpy.data.objects['kitchen_drawer_utensils'])
+    w = L('tmp_wrap', [(0, 0.03, 0.03, 0, 0), (0.30, 0.03, 0.03, 0, 0)], [mat('M_WrapBox', (0.85, 0.25, 0.2, 1), 0.5)], steps=6, cap_top=True)
+    w.data.transform(Matrix.Rotation(math.radians(90), 4, 'Y')); w.location = (0.12, 1.47, 0.20)
+    p = [w, boxes('tmp_bags', [((0.10, 1.62, 0.17), (0.40, 1.80, 0.23))], [M['bagw']], bevel=0.02, seg=2)]
+    c = join('xprop_contents_drawer_misc', p, origin=(0.3, 1.6, 0.17)); parent(c, bpy.data.objects['kitchen_drawer_misc'])
+    for nm, z0 in (('sleep_drawer_top', 0.56), ('sleep_drawer_mid', 0.325), ('sleep_drawer_bottom', 0.09)):
+        p = []
+        for i, (x, mm) in enumerate([(0.30, 'clothA'), (0.48, 'clothB'), (0.64, 'clothC')]):
+            for k in range(2 if nm != 'sleep_drawer_bottom' else 3):
+                p.append(box(f'tmp_fold{i}{k}', (x - 0.07, 5.62, z0 + k * 0.035), (x + 0.07, 5.86, z0 + k * 0.035 + 0.03), M[mm], bevel=0.008, seg=2))
+        c = join('xprop_contents_' + nm, p, origin=(0.5, 5.74, z0)); parent(c, bpy.data.objects[nm])
+    p = [box('tmp_rc1', (1.60, 3.36, 0.28), (1.68, 3.46, 0.2805), M['paper'], bevel=0), box('tmp_rc2', (1.70, 3.40, 0.28), (1.80, 3.48, 0.2805), M['paper'], bevel=0),
+         L('tmp_band', [(0, 0.02, 0.02, 0, 0), (0.003, 0.02, 0.02, 0, 0)], [mat('M_RubberBand', (0.7, 0.45, 0.25, 1), 0.6)], steps=16, cap_bottom=False, location=(1.75, 3.52, 0.281))]
+    c = join('xprop_contents_table_drawer', p, origin=(1.7, 3.45, 0.28)); parent(c, bpy.data.objects['living_table_drawer'])
+    p = [lathe(f'tmp_tr{i}', [(0, -0.05), (0.055, -0.05), (0.055, 0.05), (0, 0.05)], M['paper'], 20, location=(3.12 + i * 0.12, 1.85, 0.16)) for i in range(2)]
+    p.append(lathe('tmp_cln', [(0, 0), (0.04, 0), (0.04, 0.22), (0.015, 0.26), (0, 0.26)], M['blue'], 16, location=(3.33, 1.78, 0.11)))
+    join('xprop_contents_bath_cabinet', p, origin=(3.2, 1.83, 0.11))
+
+architecture(); entrance(); kitchen(); living(); bathroom(); hallway(); contents()
 
 args = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
 fbx = args[0] if args else os.path.join(os.path.dirname(__file__), '..', 'out', 'Room302.fbx')

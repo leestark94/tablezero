@@ -127,12 +127,13 @@ class LocalBridgeHandler(BaseHTTPRequestHandler):
 
 def serve(host='127.0.0.1',port=8765):
     if host!='127.0.0.1':raise RuntimeError('LOCAL DEV ONLY: external bind forbidden')
+    port=int(os.environ.get('TABLEZERO_PORT',port))
     token=os.environ.get('TABLEZERO_LOCAL_DEV_TOKEN','')
     if len(token)<24:raise RuntimeError('Set TABLEZERO_LOCAL_DEV_TOKEN (min 24 chars)')
     LocalBridgeHandler.local_token=token
     LocalBridgeHandler.controller=EpisodeController(provider=choose_provider_from_env())
     LocalBridgeHandler.interview_service=InterviewService(LocalBridgeHandler.controller)
-    print('TABLE//ZERO localhost bridge; NOT production; endpoints require dev token')
+    print(f'TABLE//ZERO localhost bridge on {host}:{port}; NOT production; endpoints require dev token',flush=True)
     server=ThreadingHTTPServer((host,port),LocalBridgeHandler)
     server.serve_forever()
 

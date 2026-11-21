@@ -36,3 +36,6 @@ Shot "10_bathroom"       2.45  1.55  0.0  -52  22 @("bath_light_switch:Activate"
 Shot "11_chest_drawer"   0.55  4.90  0.0   177 35 @("sleep_drawer_top:Open") "" 2
 Shot "12_ceiling_on"     0.90  2.20  0.0  -150 15 @("living_wall_switch:Activate") "" 2
 
+Shot "13_upper_cabinet"  1.05  2.00  0.0   90 -10 @("kitchen_overhead_cabinet1:Open","kitchen_overhead_cabinet2:Open") "" 2
+Shot "14_drawer_open"    1.00  1.60  0.0   90  50 @("kitchen_drawer_utensils:Open") "" 2
+Shot "15_undersink"      1.05  2.30  0.0   90  48 @("kitchen_under_sink_left:Open","kitchen_under_sink_right:Open") "" 2

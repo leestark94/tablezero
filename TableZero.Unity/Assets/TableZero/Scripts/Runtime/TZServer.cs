@@ -52,8 +52,8 @@ namespace TableZero
 
         IEnumerator Start()
         {
-            yield return Ping();
-            if (!Online && autoLaunchInDev && (Application.isEditor || Debug.isDebugBuild)) yield return Launch();
+            if (autoLaunchInDev && (Application.isEditor || Debug.isDebugBuild)) yield return Launch();
+            else yield return Ping();
         }
 
         IEnumerator Ping()
@@ -68,10 +68,20 @@ namespace TableZero
             }
         }
 
+        static int FreePort()
+        {
+            var l = new System.Net.Sockets.TcpListener(System.Net.IPAddress.Loopback, 0);
+            l.Start(); int p = ((System.Net.IPEndPoint)l.LocalEndpoint).Port; l.Stop();
+            return p;
+        }
+
         IEnumerator Launch()
         {
             if (busyLaunch) yield break;
             busyLaunch = true;
+            // own port per session: a stale dev server elsewhere can never answer for this one
+            int port = FreePort();
+            baseUrl = "http://127.0.0.1:" + port;
             string py = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                                      "Programs", "Python", "Python312", "python.exe");
             if (!File.Exists(py)) py = "python";
@@ -89,6 +99,7 @@ namespace TableZero
                 psi.EnvironmentVariables["TABLEZERO_OLLAMA_THREADS"] = Mathf.Max(2, SystemInfo.processorCount / 2).ToString();
                 psi.EnvironmentVariables["TABLEZERO_ALLOW_UNAPPROVED_ART"] = "1";
                 psi.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";
+                psi.EnvironmentVariables["TABLEZERO_PORT"] = port.ToString();
                 proc = Process.Start(psi);
                 proc.OutputDataReceived += (s, e) => { if (!string.IsNullOrEmpty(e.Data)) Debug.Log("[server] " + e.Data); };
                 proc.ErrorDataReceived += (s, e) => { if (!string.IsNullOrEmpty(e.Data)) Debug.LogWarning("[server] " + e.Data); };
@@ -140,9 +151,20 @@ namespace TableZero
             }
         }
 
-        void OnApplicationQuit()
+        void OnApplicationQuit() => StopServer();
+        void OnDestroy() => StopServer();
+
+        /// <summary>Kill the whole tree (python may spawn children); never leave a dev server behind.</summary>
+        void StopServer()
         {
-            try { if (proc != null && !proc.HasExited) proc.Kill(); } catch { }
+            try
+            {
+                if (proc == null || proc.HasExited) return;
+                var k = new ProcessStartInfo("taskkill", $"/PID {proc.Id} /T /F") { UseShellExecute = false, CreateNoWindow = true };
+                Process.Start(k)?.WaitForExit(3000);
+            }
+            catch { }
+            proc = null;
         }
 
         public static string NewActionId() => Guid.NewGuid().ToString("N");

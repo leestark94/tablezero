@@ -122,6 +122,16 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: M_DetergentBlue
+    second: {fileID: 2100000, guid: 30236e460333d4847923cbbdac443ba3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_DipperPink
+    second: {fileID: 2100000, guid: a9f5b24dea24bf14c846d574fb339869, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: M_DoorSteel
     second: {fileID: 2100000, guid: 42ddbec2c83147742a7ecebd3f4ba29d, type: 2}
   - first:
@@ -169,6 +179,11 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: M_FloorChairFabric
     second: {fileID: 2100000, guid: f9511809cb7288444be9ac881a2ba7d5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_FlyerYellow
+    second: {fileID: 2100000, guid: 3e565179d3e19ba42a8762b49d7ee8a7, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -227,6 +242,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: M_InstantRice
+    second: {fileID: 2100000, guid: c42b45f9575b57648b74f982938c22ec, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: M_LEDPanel
     second: {fileID: 2100000, guid: a50e8fc01aaf8354a8a03090a013e66c, type: 2}
   - first:
@@ -279,6 +299,11 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: M_NotepadYellow
     second: {fileID: 2100000, guid: 0e3d39287235f1f40947387edc895cfc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_OilBottle
+    second: {fileID: 2100000, guid: fabfead0ed9ca494bb674dbd4b2739ab, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -342,6 +367,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: M_RamyeonPack
+    second: {fileID: 2100000, guid: a03b202276e7b144c88a6dc0efda4120, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: M_ReleaseFilm
     second: {fileID: 2100000, guid: d66ef6f6aef18b44e9caff2b69495962, type: 2}
   - first:
@@ -352,13 +382,33 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: M_RiceCookerLid
+    second: {fileID: 2100000, guid: e277f28ff4a85b8419ee1d0c64782af9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: M_Rubber
     second: {fileID: 2100000, guid: fea79d081d0a6ae4abfa450a017bb53b, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: M_RubberBand
+    second: {fileID: 2100000, guid: 6eda112ac149e414b8d631d006283c87, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_RubberGlovePink
+    second: {fileID: 2100000, guid: 33e8dd6b933ecf048a0079325fdec178, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: M_ScreenOff
     second: {fileID: 2100000, guid: 7febe6ca8be8d974485a667210cfc0eb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_SesameBottle
+    second: {fileID: 2100000, guid: ced938782d4790c43a080fbcb2b08fc0, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -369,6 +419,11 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: M_Soap
     second: {fileID: 2100000, guid: 7a57c58014d96ff45a6dd6920cf8eb39, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_SoyBottle
+    second: {fileID: 2100000, guid: 7bfa165907a5f434893c47362499109c, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -387,6 +442,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: M_StickerWhite
+    second: {fileID: 2100000, guid: f88510c3424ec6646851a33c0d686cda, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: M_StorageBox
     second: {fileID: 2100000, guid: 3beb6b0c2ab0db34ca70a88ebf1f40fc, type: 2}
   - first:
@@ -394,6 +454,16 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: M_SuitcaseNavy
     second: {fileID: 2100000, guid: 0172156f8620e4a479828cfb19b787ca, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_TissueBox
+    second: {fileID: 2100000, guid: c91d345f260c0584aa273d84d874aa70, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_ToiletWater
+    second: {fileID: 2100000, guid: 429b161ca223c7e4685b45181b8f6d5a, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -409,6 +479,11 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: M_TrashBagVolume
     second: {fileID: 2100000, guid: b1855c1d5b4aa324a902dc26a18b278d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_TunaCan
+    second: {fileID: 2100000, guid: aee8d87ee9dbef641b539f4a1dbf9cd5, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -439,6 +514,11 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: M_WoodTrim
     second: {fileID: 2100000, guid: c7a68c96a04631049b64bdf2c88e8ce9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_WrapBox
+    second: {fileID: 2100000, guid: 91108782b8aebe8498f2dcc2744080a6, type: 2}
   materials:
     materialImportMode: 2
     materialName: 1
