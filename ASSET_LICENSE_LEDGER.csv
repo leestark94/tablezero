@@ -57,3 +57,9 @@ TableZero.Unity/Assets/TableZero/Art/Textures/PolyHaven/brown_brick_02/brown_bri
 TableZero.Unity/Assets/TableZero/Art/Textures/PolyHaven/brown_brick_02/brown_brick_02_nor_gl_2k.jpg,https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_brick_02/brown_brick_02_nor_gl_2k.jpg,CC0 1.0 (Poly Haven),"출처 표기 불필요, 상업 사용 가능 (https://polyhaven.com/license)",창밖 맞은편 적벽돌 빌라 외벽,2026-11-21
 TableZero.Unity/Assets/TableZero/Art/Textures/PolyHaven/brown_brick_02/brown_brick_02_rough_2k.jpg,https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_brick_02/brown_brick_02_rough_2k.jpg,CC0 1.0 (Poly Haven),"출처 표기 불필요, 상업 사용 가능 (https://polyhaven.com/license)",창밖 맞은편 적벽돌 빌라 외벽,2026-11-21
 TableZero.Unity/Assets/TableZero/Art/Textures/PolyHaven/brown_brick_02/brown_brick_02_ao_2k.jpg,https://dl.polyhaven.org/file/ph-assets/Textures/jpg/2k/brown_brick_02/brown_brick_02_ao_2k.jpg,CC0 1.0 (Poly Haven),"출처 표기 불필요, 상업 사용 가능 (https://polyhaven.com/license)",창밖 맞은편 적벽돌 빌라 외벽,2026-11-21
+TableZero.Unity/Assets/TableZero/Art/Textures/PolyHaven/gen_bloodpool/,(자체 생성 TZProcTextures.cs),자체 제작,"제3자 권리 없음",302호 고인 혈흔,2026-11-21
+TableZero.Unity/Assets/TableZero/Art/Textures/PolyHaven/gen_bloodsmear/,(자체 생성 TZProcTextures.cs),자체 제작,"제3자 권리 없음",302호 끌린 혈흔,2026-11-21
+TableZero.Unity/Assets/TableZero/Art/Textures/PolyHaven/gen_bloodspatter/,(자체 생성 TZProcTextures.cs),자체 제작,"제3자 권리 없음",302호 혈흔 방울/흘러내림,2026-11-21
+TableZero.Unity/Assets/TableZero/Art/Textures/PolyHaven/gen_shoeprint/,(자체 생성 TZProcTextures.cs),자체 제작,"제3자 권리 없음",302호 신발 자국,2026-11-21
+TableZero.Unity/Assets/TableZero/Art/Textures/PolyHaven/gen_printdoc/,(자체 생성 TZProcTextures.cs),자체 제작,"제3자 권리 없음",정산 출력물 인쇄면,2026-11-21
+TableZero.Unity/Assets/TableZero/Art/Textures/PolyHaven/gen_nightwin/,(자체 생성 TZProcTextures.cs),자체 제작,"제3자 권리 없음",창밖 이웃 창문,2026-11-21

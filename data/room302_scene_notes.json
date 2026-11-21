@@ -14,7 +14,7 @@
     "kitchen_fridge_door": "냉장고 안은 혼자 사는 사람 살림 그대로다. 생수와 반찬통, 우유",
     "kitchen_bin": "음식물 쓰레기는 거의 없다. 배달 음식은 아직 식탁 위에 있다",
     "living_table": "좌식 탁자 위에 배달 음식과 서류가 뒤섞여 있다. 모서리 쪽에 검붉은 얼룩이 묻었다",
-    "living_food_bag": "배달 봉투에 영수증이 스테이플러로 붙어 있다. 떡볶이 1, 순대 1. 배달 완료 20:47",
+    "living_food_bag": "열어 둔 배달 봉투에 영수증이 스테이플러로 붙어 있다. 떡볶이 1, 순대 1. 배달 완료 20:47",
     "living_food_container1": "떡볶이가 절반쯤 남았다. 젓가락은 한 벌만 쓴 흔적이 있다",
     "living_food_container2": "순대 용기는 뚜껑도 열지 않았다",
     "living_chair": "좌식 의자가 탁자에서 밀려나 비스듬히 돌아가 있다. 등받이 경첩 한쪽이 휘었다",
@@ -336,7 +336,7 @@
       "zone": "kitchen",
       "label_ko": "고무장갑",
       "interaction_type": "inspect",
-      "observation_ko": "분홍 고무장갑이 싱크대 가장자리에 걸쳐져 있다. 말라 있다"
+      "observation_ko": "분홍 고무장갑 두 짝이 싱크대 옆 조리대에 벗어 둔 채 놓여 있다. 말라 있다"
     },
     {
       "prop_id": "xprop_condiments",
@@ -456,6 +456,55 @@
       "label_ko": "세면대 하부장 안",
       "interaction_type": "inspect",
       "observation_ko": "두루마리 휴지와 욕실 세정제"
+    },
+    {
+      "prop_id": "xprop_tteok_lid",
+      "zone": "living",
+      "label_ko": "떡볶이 용기 뚜껑",
+      "interaction_type": "inspect",
+      "observation_ko": "뒤집어 놓은 투명 뚜껑. 안쪽에 양념이 묻어 있다"
+    },
+    {
+      "prop_id": "xprop_danmuji",
+      "zone": "living",
+      "label_ko": "단무지",
+      "interaction_type": "inspect",
+      "observation_ko": "뚜껑을 딴 단무지 한 통. 거의 그대로 남았다"
+    },
+    {
+      "prop_id": "xprop_chopsticks_used",
+      "zone": "living",
+      "label_ko": "나무젓가락",
+      "interaction_type": "inspect",
+      "observation_ko": "끝에 양념이 묻은 나무젓가락 한 벌"
+    },
+    {
+      "prop_id": "xprop_chopsticks_unused",
+      "zone": "living",
+      "label_ko": "나무젓가락(미개봉)",
+      "interaction_type": "inspect",
+      "observation_ko": "종이 포장을 뜯지 않은 나무젓가락 한 벌"
+    },
+    {
+      "prop_id": "xprop_blood_drops",
+      "zone": "living",
+      "label_ko": "바닥의 작은 얼룩들",
+      "interaction_type": "inspect",
+      "observation_ko": "탁자 모서리 주변 바닥에 검붉은 작은 방울 자국이 흩어져 있다"
+    },
+    {
+      "prop_id": "xprop_hoodie",
+      "zone": "sleep",
+      "label_ko": "후드티",
+      "interaction_type": "inspect",
+      "observation_ko": "연회색 후드티가 침대 가장자리에 걸쳐져 있다. 소매가 안으로 접혀 있다"
+    },
+    {
+      "prop_id": "xprop_crumpled_tissues",
+      "zone": "sleep",
+      "label_ko": "구겨진 휴지",
+      "interaction_type": "inspect",
+      "observation_ko": "침대 옆 바닥에 구겨진 휴지 몇 장"
     }
   ]
 }

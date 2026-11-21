@@ -40,8 +40,32 @@ namespace TableZero.EditorTools
             {"M_BathTile", S("gen_walltile_300x600", 1f / 1.2f, C(1f,1f,1f), 1f)},
             {"M_BathFloor", S("gen_floortile_200", 1f, C(1f,1f,1f), 1f)},
             {"M_ExteriorBrick", S("brown_brick_02", 0.45f, C(0.75f,0.70f,0.68f), 0.08f)},
-            {"M_WindowLitWarm", S(null, 1, C(1f,0.80f,0.55f), 0.3f, 0, false, 2.2f)},
-            {"M_WindowDark", S(null, 1, C(0.02f,0.025f,0.035f), 0.9f)},
+            {"M_WindowLitWarm", S("gen_nightwin", 1, C(1f,1f,1f), 0.3f, 0, false, 1.6f)},
+            {"M_WindowDark", S("gen_nightwin", 1, C(1f,1f,1f), 0.9f, 0, false, 0.6f)},
+            // v4 crime-scene marks (procedural, TZProcTextures) — transparent cards over the floor/table
+            {"M_BloodPool", S("gen_bloodpool", 1, C(1f,1f,1f,1f), 1f, 0, true)},
+            {"M_BloodSpatter", S("gen_bloodspatter", 1, C(1f,1f,1f,1f), 1f, 0, true)},
+            {"M_ShoePrint", S("gen_shoeprint", 1, C(1f,1f,1f,1f), 1f, 0, true)},
+            {"M_PrintDoc", S("gen_printdoc", 1, C(1f,1f,1f), 0.18f)},
+            // v4 delivery food + soft goods
+            {"M_FoodSauce", S(null, 1, C(0.50f,0.07f,0.03f), 0.78f)},
+            {"M_RiceCakeSauced", S(null, 1, C(0.82f,0.40f,0.26f), 0.62f)},
+            {"M_FishCake", S(null, 1, C(0.70f,0.45f,0.26f), 0.45f)},
+            {"M_Scallion", S(null, 1, C(0.30f,0.50f,0.16f), 0.5f)},
+            {"M_SundaeCasing", S(null, 1, C(0.12f,0.06f,0.07f), 0.55f)},
+            {"M_SundaeCut", S(null, 1, C(0.36f,0.24f,0.26f), 0.35f)},
+            {"M_Liver", S(null, 1, C(0.25f,0.13f,0.08f), 0.3f)},
+            {"M_SaltPack", S(null, 1, C(0.90f,0.89f,0.86f), 0.4f)},
+            {"M_FoodLid", S(null, 1, C(0.88f,0.90f,0.90f,0.28f), 0.9f, 0, true)},
+            {"M_Danmuji", S(null, 1, C(0.92f,0.78f,0.20f), 0.55f)},
+            {"M_WoodStick", S(null, 1, C(0.80f,0.70f,0.50f), 0.2f)},
+            {"M_CanRed", S(null, 1, C(0.55f,0.04f,0.04f), 0.72f, 0.6f)},
+            {"M_MarkerYellow", S(null, 1, C(0.95f,0.74f,0.05f), 0.45f)},
+            {"M_HoodieOatmeal", S("cotton_jersey", 4f, C(0.60f,0.61f,0.63f), 0.04f)},
+            {"M_Tissue", S(null, 1, C(0.93f,0.93f,0.92f), 0.05f)},
+            {"M_TowelGray", S("cotton_jersey", 5f, C(0.55f,0.57f,0.60f), 0.03f)},
+            {"M_TowelBeige", S("cotton_jersey", 5f, C(0.80f,0.74f,0.64f), 0.03f)},
+            {"M_RubberGlovePink", S(null, 1, C(0.80f,0.30f,0.40f), 0.62f)},
             {"M_HallConcrete", S("concrete_wall_001", 0.45f, C(0.85f,0.84f,0.80f), 0.10f)},
             {"M_HallPlaster", S("plastered_wall", 0.45f, C(0.90f,0.88f,0.82f), 0.12f)},
             {"M_StairTerrazzo", S("worn_tile_floor", 1.0f, C(0.70f,0.68f,0.65f), 0.35f)},
@@ -63,7 +87,7 @@ namespace TableZero.EditorTools
             {"M_PlasticBlack", S(null, 1, C(0.025f,0.025f,0.03f), 0.6f)},
             {"M_PlasticGray", S(null, 1, C(0.42f,0.43f,0.44f), 0.45f)},
             {"M_Porcelain", S(null, 1, C(0.93f,0.93f,0.92f), 0.9f)},
-            {"M_Glass", S(null, 1, C(0.75f,0.82f,0.85f,0.22f), 0.95f, 0, true)},
+            {"M_Glass", S(null, 1, C(0.30f,0.34f,0.38f,0.10f), 0.95f, 0, true)},
             {"M_FrostedGlass", S(null, 1, C(0.85f,0.88f,0.9f,0.65f), 0.45f, 0, true)},
             {"M_Mirror", S(null, 1, C(0.9f,0.9f,0.9f), 0.98f, 1)},
             {"M_Rubber", S(null, 1, C(0.04f,0.04f,0.04f), 0.15f)},
@@ -87,7 +111,7 @@ namespace TableZero.EditorTools
             {"M_LaundryB", S("cotton_jersey", 4f, C(0.95f,0.94f,0.90f), 0.05f)},
             {"M_LaundryC", S("cotton_jersey", 4f, C(0.62f,0.24f,0.26f), 0.05f)},
             {"M_CoatWool", S("rough_linen", 3f, C(0.20f,0.20f,0.22f), 0.03f)},
-            {"M_BloodSmear", S(null, 1, C(0.20f,0.025f,0.02f,0.78f), 0.5f)},
+            {"M_BloodSmear", S("gen_bloodsmear", 1, C(1f,1f,1f,1f), 1f, 0, true)},
             {"M_FootprintBlood", S(null, 1, C(0.20f,0.04f,0.03f,0.55f), 0.3f)},
             {"M_ReleaseFilm", S(null, 1, C(0.92f,0.93f,0.95f,0.8f), 0.85f)},
             {"M_LivingBox", S(null, 1, C(0.88f,0.89f,0.92f,0.62f), 0.7f)},
@@ -114,6 +138,7 @@ namespace TableZero.EditorTools
             var lights = SetupLighting(objs, props);
             SetupPlayerAndUI(objs);
             AssignSwitches(props, lights);
+            SetupMarkerKit(objs);
             TZRoom302Dressing.AddGrime();
             TZRoom302Dressing.AddLightProbes();
             Directory.CreateDirectory(Path.Combine(Directory.GetParent(Application.dataPath).FullName, Root, "Scenes"));
@@ -182,7 +207,8 @@ namespace TableZero.EditorTools
                 mat.SetFloat("_Metallic", s.metal);
                 mat.SetFloat("_EnvironmentReflections", name.Contains("Glass") ? 0 : 1);
                 if (name.Contains("Glass")) mat.EnableKeyword("_ENVIRONMENTREFLECTIONS_OFF"); else mat.DisableKeyword("_ENVIRONMENTREFLECTIONS_OFF");
-                mat.SetFloat("_SpecularHighlights", 1);
+                mat.SetFloat("_SpecularHighlights", name.Contains("Glass") ? 0 : 1);
+                if (name.Contains("Glass")) mat.EnableKeyword("_SPECULARHIGHLIGHTS_OFF"); else mat.DisableKeyword("_SPECULARHIGHLIGHTS_OFF");
                 if (s.tex != null)
                 {
                     var diff = LoadTex(s.tex, "diff", false);
@@ -216,10 +242,12 @@ namespace TableZero.EditorTools
                     mat.SetFloat("_ZWrite", 1); mat.DisableKeyword("_SURFACE_TYPE_TRANSPARENT");
                     mat.renderQueue = -1;
                 }
+                mat.SetFloat("_Cull", name == "M_PrintDoc" || name == "M_FoodLid" ? 0f : 2f);
                 if (s.emission > 0)
                 {
                     mat.EnableKeyword("_EMISSION");
                     mat.SetColor("_EmissionColor", s.tint * s.emission);
+                    mat.SetTexture("_EmissionMap", s.tex != null ? mat.GetTexture("_BaseMap") : null);
                     mat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
                 }
                 if (name == "M_LEDPanel")
@@ -238,6 +266,7 @@ namespace TableZero.EditorTools
         static Texture2D LoadTex(string set, string map, bool normal)
         {
             if (set == "gen_silkwallpaper") TZRoom302Dressing.EnsureSilkWallpaper(Path.Combine(Directory.GetParent(Application.dataPath).FullName, TexDir, set), set);
+            else if (TZProcTextures.Handles(set)) TZProcTextures.Ensure(Path.Combine(Directory.GetParent(Application.dataPath).FullName, TexDir, set), set);
             else if (set.StartsWith("gen_")) EnsureGeneratedTiles(set);
             string path = $"{TexDir}/{set}/{set}_{map}_2k.jpg";
             if (!File.Exists(Path.Combine(Directory.GetParent(Application.dataPath).FullName, path))) path = path.Replace(".jpg", ".png");
@@ -250,6 +279,9 @@ namespace TableZero.EditorTools
                 if (!normal && map != "diff" && ti.sRGBTexture) { ti.sRGBTexture = false; dirty = true; }
                 if (ti.maxTextureSize != 2048) { ti.maxTextureSize = 2048; dirty = true; }
                 if (ti.anisoLevel != 8) { ti.anisoLevel = 8; dirty = true; }
+                bool card = set.StartsWith("gen_blood") || set == "gen_shoeprint" || set == "gen_printdoc" || set == "gen_nightwin";
+                if (card && ti.wrapMode != TextureWrapMode.Clamp) { ti.wrapMode = TextureWrapMode.Clamp; dirty = true; }
+                if (card && map == "diff" && !ti.alphaIsTransparency) { ti.alphaIsTransparency = true; dirty = true; }
                 if (dirty) ti.SaveAndReimport();
             }
             return AssetDatabase.LoadAssetAtPath<Texture2D>(path);
@@ -263,9 +295,9 @@ namespace TableZero.EditorTools
             if (File.Exists(Path.Combine(dir, set + "_diff_2k.png"))) return;
             Directory.CreateDirectory(dir);
             float coverM; float tw, th, grout; Color baseC, groutC; float var; float tileSmooth;
-            if (set.Contains("walltile")) { coverM = 1.2f; tw = 0.3f; th = 0.6f; grout = 0.003f; baseC = new Color(0.90f, 0.89f, 0.86f); groutC = new Color(0.70f, 0.69f, 0.66f); var = 0.018f; tileSmooth = 0.86f; }
+            if (set.Contains("walltile")) { coverM = 1.2f; tw = 0.3f; th = 0.6f; grout = 0.003f; baseC = new Color(0.90f, 0.89f, 0.86f); groutC = new Color(0.56f, 0.54f, 0.50f); var = 0.018f; tileSmooth = 0.86f; }
             else if (set.Contains("entrancetile")) { coverM = 1.2f; tw = 0.3f; th = 0.3f; grout = 0.004f; baseC = new Color(0.42f, 0.40f, 0.37f); groutC = new Color(0.25f, 0.24f, 0.22f); var = 0.05f; tileSmooth = 0.45f; }
-            else { coverM = 1.0f; tw = 0.2f; th = 0.2f; grout = 0.004f; baseC = new Color(0.56f, 0.57f, 0.57f); groutC = new Color(0.30f, 0.30f, 0.29f); var = 0.04f; tileSmooth = 0.35f; }
+            else { coverM = 1.0f; tw = 0.2f; th = 0.2f; grout = 0.004f; baseC = new Color(0.56f, 0.57f, 0.57f); groutC = new Color(0.22f, 0.21f, 0.19f); var = 0.04f; tileSmooth = 0.35f; }
             int N = 2048;
             var albedo = new Color32[N * N]; var height = new float[N * N]; var ms = new Color32[N * N];
             var rnd = new System.Random(set.GetHashCode());
@@ -395,6 +427,7 @@ namespace TableZero.EditorTools
             {
                 var go = kv.Value;
                 var mf = go.GetComponent<MeshFilter>(); if (!mf) continue;
+                if (kv.Key.StartsWith("kit_")) continue;
                 bool arch = kv.Key.StartsWith("arch_") || kv.Key.StartsWith("fix_");
                 var mc = TZB.GetOrAdd<MeshCollider>(go);
                 mc.sharedMesh = mf.sharedMesh;
@@ -407,7 +440,8 @@ namespace TableZero.EditorTools
                 if (r) { r.shadowCastingMode = ShadowCastingMode.On; r.receiveShadows = true; }
             }
             // thin decals should not cast shadows or block rays oddly
-            foreach (var n in new[] { "living_floor_blood", "living_footprint", "living_broken_glass" })
+            foreach (var n in new[] { "living_floor_blood", "living_footprint", "living_broken_glass", "xprop_blood_smear", "xprop_blood_drops",
+                                      "xprop_table_edge_stain", "xprop_scattered_papers" })
                 if (objs.TryGetValue(n, out var g)) { var r = g.GetComponent<MeshRenderer>(); if (r) r.shadowCastingMode = ShadowCastingMode.Off; }
         }
 
@@ -544,9 +578,9 @@ namespace TableZero.EditorTools
             var L = new Dictionary<string, Light>();
             var lroot = new GameObject("Lighting").transform;
             RenderSettings.ambientMode = AmbientMode.Trilight;
-            RenderSettings.ambientSkyColor = new Color(0.020f, 0.024f, 0.032f);
-            RenderSettings.ambientEquatorColor = new Color(0.014f, 0.014f, 0.016f);
-            RenderSettings.ambientGroundColor = new Color(0.008f, 0.007f, 0.006f);
+            RenderSettings.ambientSkyColor = new Color(0.014f, 0.019f, 0.030f);
+            RenderSettings.ambientEquatorColor = new Color(0.009f, 0.010f, 0.014f);
+            RenderSettings.ambientGroundColor = new Color(0.005f, 0.005f, 0.005f);
             RenderSettings.skybox = null;
             RenderSettings.reflectionIntensity = 0.6f;
             RenderSettings.fog = false;
@@ -566,7 +600,7 @@ namespace TableZero.EditorTools
             L["hood"] = MkLight("L_HoodLamp", LightType.Spot, new Vector3(hood.center.x, hood.min.y - 0.02f, hood.center.z), new Color(1f, 0.82f, 0.6f), 2.2f, 2.2f, lroot, 120);
             L["hood"].transform.rotation = Quaternion.LookRotation(Vector3.down);
             var bl = B(objs, "xprop_bath_light");
-            L["bath"] = MkLight("L_Bath", LightType.Point, bl.center + Vector3.down * 0.12f, new Color(0.95f, 0.97f, 1f), 2.4f, 3.5f, lroot);
+            L["bath"] = MkLight("L_Bath", LightType.Point, bl.center + Vector3.down * 0.12f, new Color(0.92f, 0.95f, 1f), 1.5f, 3.2f, lroot);
             var hs = B(objs, "hall_sensor");
             L["hall"] = MkLight("L_HallSensor", LightType.Point, hs.center + Vector3.down * 0.15f, new Color(1f, 0.80f, 0.55f), 1.7f, 6f, lroot);
             var fr = B(objs, "fix_fridge_body");
@@ -577,19 +611,19 @@ namespace TableZero.EditorTools
             var win = B(objs, "living_window");
             var roomC = B(objs, "arch_floor_main").center;
             Vector3 outDir = (new Vector3(win.center.x, 0, win.center.z) - new Vector3(roomC.x, 0, roomC.z)).normalized;
-            L["street"] = MkLight("L_StreetThroughWindow", LightType.Spot, win.center + outDir * 2.6f + Vector3.up * 2.2f, new Color(0.62f, 0.70f, 0.92f), 2.2f, 12f, lroot, 34);
+            L["street"] = MkLight("L_StreetThroughWindow", LightType.Spot, win.center + outDir * 2.6f + Vector3.up * 2.2f, new Color(0.55f, 0.66f, 0.95f), 2.6f, 12f, lroot, 34);
             L["street"].transform.LookAt(win.center + Vector3.down * 1.3f - outDir * 1.5f);
             L["fridge"].enabled = false;
             if (props.TryGetValue("kitchen_fridge_door", out var fd) && fd.motion) fd.motion.lightsWhenOpen = new[] { L["fridge"] };
 
             // reflection probes
             var rp = new GameObject("ReflectionProbe_Room").AddComponent<ReflectionProbe>();
-            rp.transform.position = roomC + Vector3.up * 1.3f; rp.size = new Vector3(3.7f, 2.4f, 5.5f); rp.boxProjection = true;
-            rp.mode = ReflectionProbeMode.Realtime; rp.refreshMode = ReflectionProbeRefreshMode.OnAwake; rp.resolution = 256;
+            rp.transform.position = roomC + Vector3.up * 1.2f; rp.size = new Vector3(4.6f, 2.7f, 6.4f); rp.boxProjection = true; rp.blendDistance = 0.4f;
+            rp.mode = ReflectionProbeMode.Realtime; rp.refreshMode = ReflectionProbeRefreshMode.EveryFrame; rp.timeSlicingMode = ReflectionProbeTimeSlicingMode.IndividualFaces; rp.resolution = 256;
             var bathC = B(objs, "arch_floor_bath").center;
             var rp2 = new GameObject("ReflectionProbe_Bath").AddComponent<ReflectionProbe>();
-            rp2.transform.position = bathC + Vector3.up * 1.2f; rp2.size = new Vector3(1.7f, 2.3f, 1.9f); rp2.boxProjection = true;
-            rp2.mode = ReflectionProbeMode.Realtime; rp2.refreshMode = ReflectionProbeRefreshMode.OnAwake; rp2.resolution = 256;
+            rp2.transform.position = bathC + Vector3.up * 1.15f; rp2.size = new Vector3(2.2f, 2.5f, 2.3f); rp2.boxProjection = true; rp2.blendDistance = 0.2f; rp2.importance = 2;
+            rp2.mode = ReflectionProbeMode.Realtime; rp2.refreshMode = ReflectionProbeRefreshMode.EveryFrame; rp2.timeSlicingMode = ReflectionProbeTimeSlicingMode.IndividualFaces; rp2.resolution = 256;
 
             // post processing
             var vol = new GameObject("PostVolume").AddComponent<Volume>(); vol.isGlobal = true;
@@ -600,16 +634,35 @@ namespace TableZero.EditorTools
             foreach (var c in prof.components.ToList()) { prof.Remove(c.GetType()); }
             foreach (var sub in AssetDatabase.LoadAllAssetsAtPath(pp)) if (sub != prof) Object.DestroyImmediate(sub, true);
             var tm = prof.Add<Tonemapping>(true); tm.mode.Override(TonemappingMode.ACES);
-            var ca = prof.Add<ColorAdjustments>(true); ca.postExposure.Override(0.35f); ca.contrast.Override(14f); ca.saturation.Override(-18f);
-            var wb = prof.Add<WhiteBalance>(true); wb.temperature.Override(-6f); wb.tint.Override(2f);
+            var ca = prof.Add<ColorAdjustments>(true); ca.postExposure.Override(0.05f); ca.contrast.Override(18f); ca.saturation.Override(-14f);
+            var wb = prof.Add<WhiteBalance>(true); wb.temperature.Override(-12f); wb.tint.Override(2f);
             var bl2 = prof.Add<Bloom>(true); bl2.threshold.Override(1.1f); bl2.intensity.Override(0.25f); bl2.scatter.Override(0.6f);
-            var vg = prof.Add<Vignette>(true); vg.intensity.Override(0.24f); vg.smoothness.Override(0.45f);
+            var vg = prof.Add<Vignette>(true); vg.intensity.Override(0.30f); vg.smoothness.Override(0.45f);
             var fg = prof.Add<FilmGrain>(true); fg.type.Override(FilmGrainLookup.Thin1); fg.intensity.Override(0.18f); fg.response.Override(0.85f);
-            var smh = prof.Add<ShadowsMidtonesHighlights>(true); smh.shadows.Override(new Vector4(0.96f, 0.98f, 1.06f, 0f));
+            var smh = prof.Add<ShadowsMidtonesHighlights>(true); smh.shadows.Override(new Vector4(0.92f, 0.97f, 1.12f, -0.04f));
+            smh.highlights.Override(new Vector4(1.03f, 1.0f, 0.96f, 0f));
             foreach (var c in prof.components) AssetDatabase.AddObjectToAsset(c, prof);
             EditorUtility.SetDirty(prof); AssetDatabase.SaveAssets();
             vol.sharedProfile = prof;
             return L;
+        }
+
+        // ------------------------------------------------------------------ evidence markers
+        /// <summary>kit_marker_NN tents from the FBX become hidden templates; TZEvidenceMarkers clones one beside each
+        /// object the detective photographs (number = server-issued marker_no).</summary>
+        static void SetupMarkerKit(Dictionary<string, GameObject> objs)
+        {
+            var kitRoot = new GameObject("EvidenceMarkerKit");
+            var list = objs.Where(kv => kv.Key.StartsWith("kit_marker_")).OrderBy(kv => kv.Key).Select(kv => kv.Value).ToList();
+            foreach (var g in list)
+            {
+                g.transform.SetParent(kitRoot.transform, true);
+                g.transform.position = Vector3.zero;
+                foreach (var c in g.GetComponents<Collider>()) Object.DestroyImmediate(c);
+            }
+            kitRoot.SetActive(false);
+            var mk = new GameObject("EvidenceMarkers").AddComponent<TZEvidenceMarkers>();
+            mk.kit = list.ToArray();
         }
 
         // ------------------------------------------------------------------ switches / water
@@ -762,7 +815,8 @@ namespace TableZero.EditorTools
             {
                 if (!kv.Value.GetComponent<Renderer>()) continue;
                 string cls = manifest.ContainsKey(kv.Key) ? "MANIFEST_PROP" : kv.Key.StartsWith("xprop_") ? "EXTRA_PROP" :
-                             kv.Key.StartsWith("arch_") ? "ARCHITECTURE" : kv.Key.StartsWith("fix_") ? "FIXED_FURNITURE" : "UNREGISTERED";
+                             kv.Key.StartsWith("arch_") ? "ARCHITECTURE" : kv.Key.StartsWith("fix_") ? "FIXED_FURNITURE" :
+                             kv.Key.StartsWith("kit_") ? "MARKER_KIT" : "UNREGISTERED";
                 var p = kv.Value.GetComponent<TZInspectableProp>();
                 var m = kv.Value.GetComponent<TZPropMotion>();
                 sb.Append($"{kv.Key}\t{cls}\t{(p ? p.kind.ToString() : "-")}\t{(m ? m.kind.ToString() : "-")}\t{(p ? p.artStatus : "-")}\n");

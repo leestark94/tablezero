@@ -39,3 +39,20 @@ Shot "12_ceiling_on"     0.90  2.20  0.0  -150 15 @("living_wall_switch:Activate
 Shot "13_upper_cabinet"  1.05  2.00  0.0   90 -10 @("kitchen_overhead_cabinet1:Open","kitchen_overhead_cabinet2:Open") "" 2
 Shot "14_drawer_open"    1.00  1.60  0.0   90  50 @("kitchen_drawer_utensils:Open") "" 2
 Shot "15_undersink"      1.05  2.30  0.0   90  48 @("kitchen_under_sink_left:Open","kitchen_under_sink_right:Open") "" 2
+
+# v4: food/blood close-ups, soft goods, night window, and evidence markers placed by real photographs
+function Photo([string]$id) {
+    Eval "var d=UnityEngine.Object.FindAnyObjectByType<TableZero.TZInteractionDirector>(); var p=UnityEngine.GameObject.Find(""$id"").GetComponent<TableZero.TZInspectableProp>(); typeof(TableZero.TZInteractionDirector).GetMethod(""Procedure"",System.Reflection.BindingFlags.NonPublic|System.Reflection.BindingFlags.Instance).Invoke(d,new object[]{p,""photograph""}); return ""photo"";" | Out-Null
+    Start-Sleep -Milliseconds 1500
+}
+Shot "16_table_food"     1.95  3.00  0.0  156 48
+Shot "17_floor_blood"    2.90  3.20  0.0  139 40
+Shot "19_gloves_sink"    1.00  2.27  0.0   90 48
+Shot "20_hoodie_bed"     2.20  4.10  0.0 -120 30
+Shot "21_window_night"   1.90  4.40  0.0  180 -4
+if ($Only.Count -eq 0 -or $Only -contains "18_markers") {
+    Eval "var pc=UnityEngine.Object.FindAnyObjectByType<TableZero.TZPlayerController>(); pc.Place($(U 2.6 3.1 0.0),140f,30f); return ""placed"";" | Out-Null
+    Start-Sleep 1
+    foreach ($id in @("living_floor_blood", "kitchen_mug", "living_food_bag", "xprop_blood_smear", "living_chair")) { Photo $id }
+    Shot "18_markers"    2.95  2.85  0.0  142 36
+}

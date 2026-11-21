@@ -63,6 +63,19 @@ M = {
 tzprops.M.update(M)
 import tzprops2
 tzprops2.M.update(M)
+M.update({
+ 'bloodpool': mat('M_BloodPool', (0.20, 0.02, 0.02, 0.95), 0.2), 'shoeprint': mat('M_ShoePrint', (0.25, 0.05, 0.04, 0.8), 0.6),
+ 'bloodspatter': mat('M_BloodSpatter', (0.20, 0.02, 0.02, 0.95), 0.3), 'printdoc': mat('M_PrintDoc', (0.93, 0.92, 0.88, 1), 0.9),
+ 'ricecake_sauced': mat('M_RiceCakeSauced', (0.78, 0.30, 0.16, 1), 0.3), 'fishcake': mat('M_FishCake', (0.72, 0.48, 0.28, 1), 0.5),
+ 'scallion': mat('M_Scallion', (0.35, 0.55, 0.20, 1), 0.4), 'sundae_casing': mat('M_SundaeCasing', (0.16, 0.08, 0.09, 1), 0.3),
+ 'sundae_cut': mat('M_SundaeCut', (0.40, 0.28, 0.30, 1), 0.6), 'liver': mat('M_Liver', (0.30, 0.16, 0.10, 1), 0.5),
+ 'saltpack': mat('M_SaltPack', (0.95, 0.94, 0.92, 1), 0.5), 'foodlid': mat('M_FoodLid', (0.8, 0.8, 0.78, 0.6), 0.2),
+ 'danmuji': mat('M_Danmuji', (0.95, 0.80, 0.20, 1), 0.3), 'woodstick': mat('M_WoodStick', (0.85, 0.75, 0.55, 1), 0.7),
+ 'marker_yellow': mat('M_MarkerYellow', (0.98, 0.78, 0.05, 1), 0.4), 'hoodie': mat('M_HoodieOatmeal', (0.70, 0.66, 0.60, 1), 0.95),
+ 'tissue': mat('M_Tissue', (0.96, 0.96, 0.95, 1), 0.95), 'canred': mat('M_CanRed', (0.62, 0.05, 0.05, 1), 0.3),
+})
+import tzprops3
+tzprops3.M.update(M)
 R90 = math.radians(90)
 
 def W(name, mn, mx, m=None, col='Room302'):
@@ -127,12 +140,17 @@ def architecture():
     lit = mat('M_WindowLitWarm', (1.0, 0.78, 0.5, 1), 0.3)
     dark = mat('M_WindowDark', (0.03, 0.035, 0.045, 1), 0.1)
     wins = []
+    k = 0
     for i, (x, z, on) in enumerate([(-1.6, 0.9, True), (0.6, 0.9, False), (2.9, 0.9, True), (5.0, 0.9, False),
-                                     (-1.6, 3.6, False), (0.6, 3.6, True), (2.9, 3.6, False), (5.0, 3.6, False),
-                                     (-1.6, -1.8, False), (0.6, -1.8, False), (2.9, -1.8, True), (5.0, -1.8, False)]):
-        wins.append(boxes(f'tmp_xw{i}', [((x, WY + 3.17, z), (x + 1.2, WY + 3.2, z + 1.1), 0),
-                                          ((x - 0.04, WY + 3.15, z - 0.04), (x + 1.24, WY + 3.17, z), 1)],
-                          [lit if on else dark, M['pg']], bevel=0))
+                                     (-1.6, 3.6, False), (0.6, 3.6, True), (2.9, 3.6, False), (5.0, 3.6, True),
+                                     (-1.6, -1.8, False), (0.6, -1.8, True), (2.9, -1.8, True), (5.0, -1.8, False)]):
+        col = (k % 3) if on else 3
+        k += 1 if on else 0
+        wins.append(tzprops3.wall_card(f'tmp_xwp{i}', (x + 0.6, WY + 3.168, z + 0.55), '-y', 1.2, 1.1, lit if on else dark,
+                                       u_range=(col * 0.25, col * 0.25 + 0.25)))
+        wins.append(boxes(f'tmp_xw{i}', [((x - 0.04, WY + 3.15, z - 0.04), (x + 1.24, WY + 3.17, z), 0),
+                                          ((x - 0.04, WY + 3.15, z + 1.1), (x + 1.24, WY + 3.165, z + 1.14), 0),
+                                          ((x + 0.59, WY + 3.155, z), (x + 0.61, WY + 3.166, z + 1.1), 0)], [M['pg']], bevel=0))
     join('arch_exterior_windows', wins, origin=(2.0, WY + 3.18, 0.0))
     tube('arch_exterior_gaspipe', [(-0.4, WY + 3.15, -6.0), (-0.4, WY + 3.15, 6.0)], 0.025, M['pg'])
     lathe('fix_ceiling_light', [(0, -0.002), (0.22, -0.002), (0.23, -0.02), (0.22, -0.045), (0.0, -0.045)], M['led'], 40,
@@ -283,7 +301,8 @@ def kitchen():
     tzprops2.rice_cooker('xprop_rice_cooker', (0.30, 3.53, 0.86), rot=0.0)
     tzprops2.kettle('xprop_kettle', (0.26, 1.86, 0.86), rot=0.4)
     tzprops2.spoon_holder('xprop_spoon_holder', (0.48, 3.70, 0.86))
-    tzprops2.rubber_gloves('xprop_rubber_gloves', (0.56, 2.33, 0.862))
+    tzprops3.rubber_gloves_cloth('xprop_rubber_gloves', [(0.27, 1.47, math.radians(80), False), (0.55, 1.93, math.radians(-98), True)], 0.86,
+                                 mat('M_RubberGlovePink', (0.85, 0.35, 0.45, 1), 0.45), [bpy.data.objects[n] for n in ('fix_kitchen_counter', 'kitchen_cutting_board', 'kitchen_kitchen_knife')])
     tzprops2.condiments('xprop_condiments', (0.06, 3.36, 0.86))
     lathe('kitchen_bin', [(0, 0), (0.12, 0), (0.13, 0.36), (0.0, 0.36)], M['pg'], 32, location=(0.30, 3.52, 0.10))
     lathe('kitchen_bin_liner', [(0.125, 0.29), (0.135, 0.37), (0.125, 0.38)], M['bagw'], 32, location=(0.30, 3.52, 0.10))
@@ -350,24 +369,21 @@ def living():
                            ((tx1 - 0.07, ty0 + 0.04, 0.0), (tx1 - 0.04, ty0 + 0.07, 0.30)), ((tx0 + 0.04, ty1 - 0.07, 0.0), (tx0 + 0.07, ty1 - 0.04, 0.30)),
                            ((tx1 - 0.07, ty1 - 0.07, 0.0), (tx1 - 0.04, ty1 - 0.04, 0.30))], M['oak'], bevel=0.004)
     drawer_y('living_table_drawer', (1.55, ty0 + 0.02, 0.245), (1.85, ty0 + 0.30, 0.298), M['oak'], M['oak'])
-    tzprops2.floor_chair('living_chair', (2.32, 4.10, 0.0), rot_z=0.55)
+    tzprops2.floor_chair('living_chair', (2.62, 4.34, 0.0), rot_z=0.95)
     box('xprop_floor_cushion', (1.48, 2.86, 0.0), (1.90, 3.24, 0.06), M['cushion'], bevel=0.025, seg=3)
-    plastic_bag('living_food_bag', (1.45, 3.45, 0.33), (0.26, 0.18, 0.20), M['bagw'], knot=True)
-    rc = boxes('tmp_rcp', [((1.36, 3.355, 0.40), (1.44, 3.356, 0.52))], M['paper'], bevel=0.0)
-    rct = label('tmp_rc', '배달완료\n20:47\n떡볶이 1\n순대 1', 0.010, (1.40, 3.3545, 0.46), (R90, 0, 0), M['ink'])
-    join('xprop_delivery_receipt', [rc, rct], origin=(1.40, 3.355, 0.40))
-    c1 = lathe('tmp_c1', [(0, 0), (0.075, 0), (0.085, 0.06), (0.088, 0.065), (0, 0.065)], [M['pb']], 32, location=(1.70, 3.48, 0.33))
-    sauce = lathe('tmp_sauce', [(0, 0.035), (0.08, 0.035), (0.08, 0.04), (0, 0.04)], [M['sauce']], 32, location=(1.70, 3.48, 0.33))
-    cakes = []
-    for i in range(6):
-        cakes.append(tube(f'tmp_rcake{i}', [(1.66 + random.uniform(-0.03, 0.03), 3.45 + i * 0.012, 0.372),
-                                            (1.70 + random.uniform(0, 0.04), 3.47 + i * 0.01, 0.376)], 0.008, M['rice']))
-    join('living_food_container1', [c1, sauce] + cakes, origin=(1.70, 3.48, 0.33))
-    lathe('living_food_container2', [(0, 0), (0.06, 0), (0.07, 0.05), (0.072, 0.054), (0, 0.054)], [mat('M_FoodLid', (0.8, 0.8, 0.78, 0.6), 0.2)], 32,
-          location=(1.88, 3.62, 0.33))
-    boxes('living_disposable_spoon', [((1.62, 3.66, 0.33), (1.78, 3.675, 0.336))], M['pw'], bevel=0.002)
-    lathe('living_cola_can', [(0, 0), (0.026, 0), (0.033, 0.01), (0.033, 0.11), (0.027, 0.122), (0, 0.122)], M['red'], 28,
-          location=(1.95, 3.40, 0.33))
+    tzprops3.delivery_bag_open('living_food_bag', (1.44, 3.46, 0.338), rot=0.25, font=FONT)
+    rc = boxes('tmp_rcp', [((1.36, 3.372, 0.36), (1.44, 3.373, 0.45))], M['paper'], bevel=0.0)
+    rct = label('tmp_rc', '배달완료\n20:47\n떡볶이 1\n순대 1', 0.009, (1.40, 3.3715, 0.405), (R90, 0, 0), M['ink'])
+    join('xprop_delivery_receipt', [rc, rct], origin=(1.40, 3.372, 0.36))
+    tb, tlid = tzprops3.tteokbokki('living_food_container1', (1.70, 3.47, 0.33), rot=0.12)
+    tlid.name = 'xprop_tteok_lid'
+    tlid.rotation_euler = (math.pi, 0, 0.45); tlid.location = (2.02, 3.56, 0.339)
+    tzprops3.sundae('living_food_container2', (1.89, 3.44, 0.3335), rot=-0.1)
+    tzprops3.danmuji('xprop_danmuji', (1.86, 3.585, 0.33))
+    tzprops3.chopsticks('xprop_chopsticks_used', (1.71, 3.47, 0.392), 0.35, split=True)
+    tzprops3.chopsticks('xprop_chopsticks_unused', (1.78, 3.61, 0.3335), -0.25, split=False)
+    boxes('living_disposable_spoon', [((1.52, 3.585, 0.3405), (1.68, 3.60, 0.3465))], M['pw'], bevel=0.002)
+    tzprops3.soda_can('living_cola_can', (2.05, 3.37, 0.33), M['canred'])
     box('living_napkin', (1.32, 3.66, 0.33), (1.40, 3.74, 0.37), M['paper'], bevel=0.02, seg=3)
     mug = lathe('tmp_mug', [(0, 0), (0.038, 0), (0.042, 0.004), (0.043, 0.095), (0.039, 0.095), (0.038, 0.008), (0, 0.008)],
                 M['porc'], 36, location=(2.00, 3.72, 0.33))
@@ -375,22 +391,28 @@ def living():
                    location=(2.00, 3.72, 0.33))
     hnd = tube('tmp_mh', [(2.042, 3.72, 0.39), (2.07, 3.72, 0.38), (2.07, 3.72, 0.36), (2.042, 3.72, 0.35)], 0.006, M['porc'])
     join('kitchen_mug', [mug, coffee, hnd], origin=(2.00, 3.72, 0.33))
-    papers('living_paper_stack', (1.60, 3.72, 0.33))
-    label('xprop_settlement_title', '담다공방 3분기 정산', 0.011, (1.60, 3.80, 0.3395), (0, 0, math.pi), M['ink'])
+    stack = [tzprops3.sheet(f'tmp_pst{i}', 1.60 + random.uniform(-0.006, 0.006), 3.72 + random.uniform(-0.006, 0.006), 0.3305 + i * 0.0007,
+                            math.pi + random.uniform(-0.04, 0.04), page=(0 if i == 4 else 1), curl=0.0015) for i in range(5)]
+    join('living_paper_stack', stack, origin=(1.60, 3.72, 0.33))
+    label('xprop_settlement_title', '담다공방 3분기 정산', 0.0095, (1.60, 3.598, 0.3343), (0, 0, math.pi), M['ink'])
     sheets = []
-    for i, (x, y, r) in enumerate([(1.95, 4.15, 0.4), (2.55, 3.45, -0.9), (1.55, 4.35, 1.2), (2.55, 4.45, 0.2)]):
-        s = box(f'tmp_sheet{i}', (x - 0.105, y - 0.148, 0.0005), (x + 0.105, y + 0.148, 0.0013), M['paper'], bevel=0)
-        s.rotation_euler = (0, 0, r)
-        sheets.append(s)
+    for i, (x, y, r, pg, cu, lc) in enumerate([(1.95, 4.15, 0.4, 0, 0.004, 0.0), (2.55, 3.45, -0.9, 1, 0.006, 0.012),
+                                                (1.55, 4.35, 1.2, 1, 0.003, 0.0), (2.55, 4.45, 0.2, 0, 0.008, 0.02)]):
+        sheets.append(tzprops3.sheet(f'tmp_sheet{i}', x, y, 0.0009 + i * 0.0003, r, page=pg, curl=cu, lift_corner=lc))
     join('xprop_scattered_papers', sheets, origin=(2.05, 4.1, 0.0))
     boxes('living_envelope', [((1.86, 3.36, 0.33), (2.06, 3.46, 0.333))], mat('M_EnvelopeKraft', (0.75, 0.62, 0.42, 1), 0.85), bevel=0.0005)
     boxes('living_pen', [((1.45, 3.79, 0.333), (1.59, 3.80, 0.342))], M['pb'], bevel=0.003)
     boxes('living_notepad', [((1.33, 3.35, 0.33), (1.42, 3.47, 0.338))], mat('M_NotepadYellow', (0.95, 0.88, 0.55, 1), 0.85), bevel=0.001)
     # struggle traces
-    blood_decal('living_floor_blood', (2.22, 3.95, 0.0015), 0.16)
-    box('xprop_table_edge_stain', (2.06, 3.80, 0.3295), (2.10, 3.86, 0.3305), M['blood'], bevel=0)
-    smear('xprop_blood_smear', [(2.18, 4.02), (2.10, 4.18), (2.00, 4.34), (1.93, 4.50), (1.88, 4.64)], 0.05)
-    box('living_footprint', (1.82, 3.0, 0.0), (1.90, 3.26, 0.0012), mat('M_FootprintBlood', (0.20, 0.04, 0.03, 0.55), 0.7), bevel=0)
+    tzprops3.blood_pool('living_floor_blood', (2.24, 3.97, 0.0015))
+    tzprops3.spatter_cards('xprop_table_edge_stain', [('h', 2.055, 3.815, 0.3306, 0.09, 0.6),
+                                                      ('v', (2.1003, 3.80, 0.312), '+x', 0.07, 0.035),
+                                                      ('v', (2.0606, 3.795, 0.18), '+x', 0.03, 0.22)], origin=(2.08, 3.82, 0.3))
+    tzprops3.spatter_cards('xprop_blood_drops', [('h', 2.02, 3.93, 0.0017, 0.16, 0.3), ('h', 2.44, 3.80, 0.0017, 0.14, 2.2),
+                                                 ('h', 2.40, 4.22, 0.0017, 0.12, 4.0), ('h', 1.99, 4.12, 0.0026, 0.10, 1.1)], origin=(2.2, 3.97, 0.0))
+    tzprops3.blood_smear('xprop_blood_smear', [(2.18, 4.02), (2.12, 4.16), (2.03, 4.32), (1.95, 4.48), (1.90, 4.62)], 0.11)
+    tzprops3.shoeprints('living_footprint', [(2.40, 3.62, math.pi + 0.05, True, 0), (2.50, 3.33, math.pi - 0.04, False, 1),
+                                             (2.41, 3.04, math.pi + 0.08, True, 2), (2.49, 2.74, math.pi, False, 3)])
     shards('living_broken_glass', (1.15, 4.0, 0.0))
     ph = phone('living_phone', (2.55, 3.72, 0.0))
     ph.rotation_euler = (math.pi, 0, 0.6); ph.location.z = 0.0085
@@ -450,6 +472,7 @@ def living():
                                   ((2.6, 5.88, 0.0), (3.0, 5.9, 0.5))], M['oak'], bevel=0.003)
     drawer_y('sleep_bedside_drawer', (2.62, 5.5, 0.30), (2.98, 5.88, 0.46), M['oak'], M['oak'])
     tzprops2.tissue_box('xprop_tissue_box', (2.80, 5.70, 0.50), rot=0.25)
+    tzprops3.crumpled_tissues('xprop_crumpled_tissues', [(2.70, 5.40, 0.0, 0.028), (2.86, 5.33, 0.0, 0.024), (3.02, 5.45, 0.0, 0.03)], M['tissue'])
     tube('sleep_bedside_phone', [(2.70, 5.62, 0.345), (2.8, 5.66, 0.343), (2.9, 5.6, 0.343)], 0.003, M['pw'])
     wardrobe()
     chest()
@@ -578,6 +601,8 @@ def bed():
     o.name = 'sleep_blanket'
     set_origin(o, ((x0 + x1) / 2, y0 + 0.7, 0.5))
     shade_smooth_auto(o, 70)
+    tzprops3.hoodie_on_bed('xprop_hoodie', (x0, 4.62, 0.56), M['hoodie'],
+                           [bpy.data.objects[n] for n in ('fix_mattress', 'sleep_sheet', 'sleep_bed', 'sleep_blanket', 'arch_floor_main')])
     pillow('sleep_pillow1', (x0 + 0.42, y1 - 0.26, 0.56))
     pillow('sleep_pillow2', (x1 - 0.30, y1 - 0.62, 0.55))
 
@@ -660,8 +685,8 @@ def bathroom():
     lathe('bath_body_wash', [(0, 0), (0.035, 0), (0.035, 0.2), (0.012, 0.22), (0.012, 0.25), (0, 0.25)], M['green'], 20, location=(2.44, 0.10, -0.045))
     lathe('bath_drain', [(0, 0.0), (0.06, 0.0), (0.06, 0.003), (0.0, 0.003)], M['steel'], 32, location=(2.6, 0.55, -0.045))
     tube('xprop_towel_bar', [(2.30, 1.97, 1.35), (2.75, 1.97, 1.35)], 0.008, M['chrome'])
-    box('bath_towel1', (2.32, 1.945, 0.95), (2.50, 1.99, 1.37), mat('M_TowelGray', (0.55, 0.56, 0.58, 1), 1.0), bevel=0.012, seg=2)
-    box('bath_towel2', (2.52, 1.945, 1.0), (2.72, 1.99, 1.37), mat('M_TowelBeige', (0.78, 0.72, 0.62, 1), 1.0), bevel=0.012, seg=2)
+    tzprops3.towel_on_bar('bath_towel1', (2.32, 1.97, 1.35), (2.50, 1.97, 1.35), 0.80, mat('M_TowelGray', (0.55, 0.56, 0.58, 1), 1.0))
+    tzprops3.towel_on_bar('bath_towel2', (2.53, 1.97, 1.35), (2.73, 1.97, 1.35), 0.66, mat('M_TowelBeige', (0.78, 0.72, 0.62, 1), 1.0))
     lathe('bath_laundry_bin', [(0, 0), (0.14, 0), (0.15, 0.4), (0.14, 0.4), (0.13, 0.02), (0, 0.02)], [M['pw']], 24, location=(4.0, 1.75, -0.045))
     tzprops2.dipper('xprop_dipper', (2.42, 0.32, -0.045))
     tzprops2.detergent('xprop_detergent', (4.05, 1.25, -0.045), rot=0.3)
@@ -789,6 +814,7 @@ def contents():
     join('xprop_contents_bath_cabinet', p, origin=(3.2, 1.83, 0.11))
 
 architecture(); entrance(); kitchen(); living(); bathroom(); hallway(); contents()
+tzprops3.evidence_markers(FONT)
 
 args = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
 fbx = args[0] if args else os.path.join(os.path.dirname(__file__), '..', 'out', 'Room302.fbx')

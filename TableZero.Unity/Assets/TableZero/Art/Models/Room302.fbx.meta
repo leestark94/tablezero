@@ -37,8 +37,18 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: M_BloodPool
+    second: {fileID: 2100000, guid: 102649519257dfd4883f36b5a609edf2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: M_BloodSmear
     second: {fileID: 2100000, guid: ef0e0bc143087e24a8b83b524174e326, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_BloodSpatter
+    second: {fileID: 2100000, guid: f29366d95251dc44088dee4e7b0f10c5, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -64,6 +74,11 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: M_CabinetWood
     second: {fileID: 2100000, guid: 258736dbc43682846b94c272049d2455, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_CanRed
+    second: {fileID: 2100000, guid: 8d7510240fc3d8e4082bb4ab7dc0a371, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -122,6 +137,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: M_Danmuji
+    second: {fileID: 2100000, guid: eab0f257e90d107429cf5c5c3f30b21b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: M_DetergentBlue
     second: {fileID: 2100000, guid: 30236e460333d4847923cbbdac443ba3, type: 2}
   - first:
@@ -169,6 +189,11 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: M_FabricSheet
     second: {fileID: 2100000, guid: 1a94748adbf39f344a13770f932d4dcf, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_FishCake
+    second: {fileID: 2100000, guid: e9f533644c030174999012d959a64bca, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -232,6 +257,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: M_HoodieOatmeal
+    second: {fileID: 2100000, guid: f43f9dcedfc33434888000e0397313ab, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: M_InkBlack
     second: {fileID: 2100000, guid: a6bcca6025516f44499948001aa9bece, type: 2}
   - first:
@@ -267,6 +297,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: M_Liver
+    second: {fileID: 2100000, guid: 61f53a08f0b1af54d99b83cee3928029, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: M_LivingBox
     second: {fileID: 2100000, guid: 913e759018781cb40ba10c9d7193990b, type: 2}
   - first:
@@ -274,6 +309,11 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: M_MarkerBlack
     second: {fileID: 2100000, guid: 308c37978eac4874188dda9ed871c1a4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_MarkerYellow
+    second: {fileID: 2100000, guid: 7e274c122d7a1754a84e96c4daeea5c4, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -367,6 +407,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: M_PrintDoc
+    second: {fileID: 2100000, guid: d826e7dd2220c83438e9f299384f263f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: M_RamyeonPack
     second: {fileID: 2100000, guid: a03b202276e7b144c88a6dc0efda4120, type: 2}
   - first:
@@ -379,6 +424,11 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: M_RiceCake
     second: {fileID: 2100000, guid: dca6fdb65bc2826459364725570b8c69, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_RiceCakeSauced
+    second: {fileID: 2100000, guid: b8996c17597425c469e22f4919dc6d85, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -402,6 +452,16 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: M_SaltPack
+    second: {fileID: 2100000, guid: cde9c5bec41cfa346bd3042e479ed3f5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Scallion
+    second: {fileID: 2100000, guid: f0fcf2b01bb3070418848cdf532da376, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: M_ScreenOff
     second: {fileID: 2100000, guid: 7febe6ca8be8d974485a667210cfc0eb, type: 2}
   - first:
@@ -414,6 +474,11 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: M_ShirtCotton
     second: {fileID: 2100000, guid: c4b14a4278c2bb148923c182a30685b9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_ShoePrint
+    second: {fileID: 2100000, guid: 3f9e32a8c17ef9348b6269f673f65b57, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -454,6 +519,21 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: M_SuitcaseNavy
     second: {fileID: 2100000, guid: 0172156f8620e4a479828cfb19b787ca, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_SundaeCasing
+    second: {fileID: 2100000, guid: 53fd404cb9b6e5141988d63efc24410e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_SundaeCut
+    second: {fileID: 2100000, guid: 9d08fa22847b62540a7417fbd99003cd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Tissue
+    second: {fileID: 2100000, guid: 1c03f1ce2f34c984289078210eef6ac7, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -509,6 +589,11 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: M_WoodOak
     second: {fileID: 2100000, guid: 3a262eea8d25fc04a8478a984e86dec2, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_WoodStick
+    second: {fileID: 2100000, guid: d2fa4ea9a869b1d4d9331bceb0b40928, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule

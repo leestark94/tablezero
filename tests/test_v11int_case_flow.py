@@ -69,6 +69,17 @@ class CaseFlowTests(unittest.TestCase):
         r = self.c.file_report('s2', ['e01', 'e07', 'e08', 'e10', 'e06', 'e11'], final=True)
         self.assertFalse(r['report_accepted'])
 
+    def test_photo_marker_numbers_follow_first_photo_order(self):
+        self.c.transition('room302')
+        me = near(self.c, 'kitchen_mug')
+        r1 = self.c.props.procedure('kitchen_mug', 'photograph', player_pos=me)
+        me2 = near(self.c, 'living_floor_blood')
+        r2 = self.c.props.procedure('living_floor_blood', 'photograph', player_pos=me2)
+        r3 = self.c.props.procedure('living_floor_blood', 'photograph', player_pos=me2)
+        self.assertEqual((r1['marker_no'], r2['marker_no'], r3['marker_no']), (1, 2, 2))
+        self.assertFalse(r2['duplicate'])
+        self.assertTrue(r3['duplicate'])
+
     def test_proper_procedure_substantiated(self):
         self.c.transition('room302')
         me = near(self.c, 'kitchen_mug')

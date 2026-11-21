@@ -34,7 +34,7 @@ namespace TableZero
         [Serializable] class GloveReq { public bool on; }
         [Serializable] class PropData { public string prop_id, verb, observation, label, art_status; public bool opened, active, moved; public string[] procedure_actions; }
         [Serializable] class PropResp { public bool ok; public PropData data; public string error; }
-        [Serializable] class ProcData { public string prop_id, note; public bool photographed, collected, duplicate; public string[] defects; }
+        [Serializable] class ProcData { public string prop_id, note; public bool photographed, collected, duplicate; public int marker_no; public string[] defects; }
         [Serializable] class ProcResp { public bool ok; public ProcData data; public string error; }
 
         static string Verb(TZPropAction a) =>
@@ -140,7 +140,11 @@ namespace TableZero
                 var r = JsonUtility.FromJson<ProcResp>(text);
                 if (r?.data == null) { Fail(text); return; }
                 if (TZHud.I) TZHud.I.Toast(r.data.note);
-                if (action == "photograph") StartCoroutine(Flash());
+                if (action == "photograph")
+                {
+                    StartCoroutine(Flash());
+                    if (TZEvidenceMarkers.I && r.data.marker_no > 0) TZEvidenceMarkers.I.Place(r.data.marker_no, p, cam ? cam.transform.position : p.transform.position);
+                }
                 if (action == "collect" && r.data.collected && !r.data.duplicate)
                 {
                     // bagged: the object leaves the scene physically (chain of custody)

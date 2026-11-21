@@ -75,6 +75,7 @@ class PropAuthority:
         self.art = json.loads(ART_STATUS.read_text(encoding='utf-8')) if ART_STATUS.exists() else {}
         self.last_player_pos = None
         self.photos: set[str] = set()
+        self.photo_order: list[str] = []   # evidence marker numbers follow the order things were first photographed
         self.gloves_on = False
         self.collected: dict[str, dict] = {}
 
@@ -143,10 +144,14 @@ class PropAuthority:
         st = self.episode.state
         d = self.props.definitions[prop_id]
         if action == 'photograph':
-            self.photos.add(prop_id)
-            self.episode.state.case_clock_minutes += 0
-            self.episode._log('scene_photo', {'prop': prop_id})
-            return {'prop_id': prop_id, 'photographed': True, 'note': '사진 기록 · 위치와 상태가 촬영됐습니다'}
+            first = prop_id not in self.photos
+            if first:
+                self.photos.add(prop_id)
+                self.photo_order.append(prop_id)
+            marker_no = self.photo_order.index(prop_id) + 1
+            self.episode._log('scene_photo', {'prop': prop_id, 'marker': marker_no})
+            note = f'사진 기록 · 표지 {marker_no}번' if first else f'사진 추가 · 표지 {marker_no}번'
+            return {'prop_id': prop_id, 'photographed': True, 'marker_no': marker_no, 'duplicate': not first, 'note': note}
         if action != 'collect':
             raise GuardError('Unknown procedure')
         if d['interaction_type'] not in ('move', 'evidence_anchor'):
