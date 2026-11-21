@@ -1,0 +1,113 @@
+﻿screen,key,korean,usage_rule
+MAIN_MENU,new_game,새 사건,"기능/상태와 연결, 장식 버튼 금지"
+MAIN_MENU,continue,이어하기,"기능/상태와 연결, 장식 버튼 금지"
+MAIN_MENU,case_archive,사건 기록,"기능/상태와 연결, 장식 버튼 금지"
+MAIN_MENU,settings,설정,"기능/상태와 연결, 장식 버튼 금지"
+MAIN_MENU,quit,종료,"기능/상태와 연결, 장식 버튼 금지"
+MAIN_MENU,no_save,이어할 수 있는 사건 기록이 없습니다,"기능/상태와 연결, 장식 버튼 금지"
+MAIN_MENU,case_select,사건 선택,"기능/상태와 연결, 장식 버튼 금지"
+MAIN_MENU,case_001,302호의 밤,"기능/상태와 연결, 장식 버튼 금지"
+MAIN_MENU,case_002,준비 중,"기능/상태와 연결, 장식 버튼 금지"
+MAIN_MENU,offline_ai,심문 서비스에 연결할 수 없습니다. 연결을 확인하고 다시 시도해 주세요,"기능/상태와 연결, 장식 버튼 금지"
+MAIN_MENU,mic_unavailable,마이크를 사용할 수 없습니다. 텍스트로 조사할 수 있습니다,"기능/상태와 연결, 장식 버튼 금지"
+INCIDENT_BRIEF,case_id,CASE 001,"최초 공개 필드만 사용, 범인·정확한 부상시각 금지"
+INCIDENT_BRIEF,victim,정수연 · 29세,"최초 공개 필드만 사용, 범인·정확한 부상시각 금지"
+INCIDENT_BRIEF,work,화장품 회사 근무,"최초 공개 필드만 사용, 범인·정확한 부상시각 금지"
+INCIDENT_BRIEF,scene,"302호, 다세대주택","최초 공개 필드만 사용, 범인·정확한 부상시각 금지"
+INCIDENT_BRIEF,call,2026년 10월 15일 22:07 신고 접수,"최초 공개 필드만 사용, 범인·정확한 부상시각 금지"
+INCIDENT_BRIEF,caller,301호 거주자 박현수 신고,"최초 공개 필드만 사용, 범인·정확한 부상시각 금지"
+INCIDENT_BRIEF,victim_found,실내에서 의식을 잃은 여성이 발견됨,"최초 공개 필드만 사용, 범인·정확한 부상시각 금지"
+INCIDENT_BRIEF,hospital,병원 이송 후 사망 확인,"최초 공개 필드만 사용, 범인·정확한 부상시각 금지"
+INCIDENT_BRIEF,cause_unknown,정확한 사망 경위 조사 중,"최초 공개 필드만 사용, 범인·정확한 부상시각 금지"
+INCIDENT_BRIEF,start,현장으로 출동,"최초 공개 필드만 사용, 범인·정확한 부상시각 금지"
+INCIDENT_BRIEF,skip,시네마틱 건너뛰기,"최초 공개 필드만 사용, 범인·정확한 부상시각 금지"
+INCIDENT_BRIEF,brief_intro,현장 기록과 관련자 진술을 확인하십시오,"최초 공개 필드만 사용, 범인·정확한 부상시각 금지"
+SCENE,inspect,조사,실제 가능한 상호작용만; 행위 전 비용 표시
+SCENE,rotate,돌려 보기,실제 가능한 상호작용만; 행위 전 비용 표시
+SCENE,open,열기,실제 가능한 상호작용만; 행위 전 비용 표시
+SCENE,close,닫기,실제 가능한 상호작용만; 행위 전 비용 표시
+SCENE,photograph,현장 사진 기록,실제 가능한 상호작용만; 행위 전 비용 표시
+SCENE,collect,증거물 채취·봉인,실제 가능한 상호작용만; 행위 전 비용 표시
+SCENE,scene_status,현장 통제 중,실제 가능한 상호작용만; 행위 전 비용 표시
+SCENE,no_recording,월패드에 저장된 녹화 기록이 없습니다,실제 가능한 상호작용만; 행위 전 비용 표시
+SCENE,photo_cost,사진 기록 -1분,실제 가능한 상호작용만; 행위 전 비용 표시
+SCENE,collect_cost,채취·봉인 -3분,실제 가능한 상호작용만; 행위 전 비용 표시
+SCENE,inspection_free,관찰·문서 읽기 무료,실제 가능한 상호작용만; 행위 전 비용 표시
+SCENE,unavailable,현재 상태에서는 조사할 수 없습니다,실제 가능한 상호작용만; 행위 전 비용 표시
+SCENE,scene_leave,수사본부로 복귀,실제 가능한 상호작용만; 행위 전 비용 표시
+INTERROGATION,budget,남은 수사 예산,마이크/채팅 동일한 의미 경로; 인물의 죄 자동 힌트 금지
+INTERROGATION,world_time,작중 시간,마이크/채팅 동일한 의미 경로; 인물의 죄 자동 힌트 금지
+INTERROGATION,question,자유 질문,마이크/채팅 동일한 의미 경로; 인물의 죄 자동 힌트 금지
+INTERROGATION,evidence,증거 제시,마이크/채팅 동일한 의미 경로; 인물의 죄 자동 힌트 금지
+INTERROGATION,silence,침묵 전술,마이크/채팅 동일한 의미 경로; 인물의 죄 자동 힌트 금지
+INTERROGATION,pressure,심리적 압박,마이크/채팅 동일한 의미 경로; 인물의 죄 자동 힌트 금지
+INTERROGATION,desk,책상 내려치기,마이크/채팅 동일한 의미 경로; 인물의 죄 자동 힌트 금지
+INTERROGATION,question_placeholder,질문을 입력하거나 마이크로 말해 주세요,마이크/채팅 동일한 의미 경로; 인물의 죄 자동 힌트 금지
+INTERROGATION,microphone,말하기,마이크/채팅 동일한 의미 경로; 인물의 죄 자동 힌트 금지
+INTERROGATION,mic_preview,음성 인식 결과를 확인해 주세요,마이크/채팅 동일한 의미 경로; 인물의 죄 자동 힌트 금지
+INTERROGATION,edit_transcript,인식 문장 수정,마이크/채팅 동일한 의미 경로; 인물의 죄 자동 힌트 금지
+INTERROGATION,confirm_question,질문 전송,마이크/채팅 동일한 의미 경로; 인물의 죄 자동 힌트 금지
+INTERROGATION,question_cost,일반 질문 -2분,마이크/채팅 동일한 의미 경로; 인물의 죄 자동 힌트 금지
+INTERROGATION,compare_cost,증거 제시 -3분,마이크/채팅 동일한 의미 경로; 인물의 죄 자동 힌트 금지
+INTERROGATION,silence_cost,침묵 전술 -4분,마이크/채팅 동일한 의미 경로; 인물의 죄 자동 힌트 금지
+INTERROGATION,pressure_cost,압박 질문 -6분,마이크/채팅 동일한 의미 경로; 인물의 죄 자동 힌트 금지
+INTERROGATION,desk_cost,책상 내려치기 -12분,마이크/채팅 동일한 의미 경로; 인물의 죄 자동 힌트 금지
+INTERROGATION,desk_warning,이 행동은 진술 거부와 절차상 문제를 일으킬 수 있습니다,마이크/채팅 동일한 의미 경로; 인물의 죄 자동 힌트 금지
+INTERROGATION,no_audio_charge,인식 오류로 수사 예산은 차감되지 않았습니다,마이크/채팅 동일한 의미 경로; 인물의 죄 자동 힌트 금지
+INTERROGATION,llm_error,응답을 생성할 수 없습니다. 수사 예산이 차감되지 않았습니다,마이크/채팅 동일한 의미 경로; 인물의 죄 자동 힌트 금지
+INTERROGATION,transcript,진술 기록,마이크/채팅 동일한 의미 경로; 인물의 죄 자동 힌트 금지
+INTERROGATION,officer,형사,마이크/채팅 동일한 의미 경로; 인물의 죄 자동 힌트 금지
+INTERROGATION,call_suspect,조사실 호출,마이크/채팅 동일한 의미 경로; 인물의 죄 자동 힌트 금지
+INTERROGATION,call_cost,호출 -6분,마이크/채팅 동일한 의미 경로; 인물의 죄 자동 힌트 금지
+INTERROGATION,cancel_session,면담 마치기,마이크/채팅 동일한 의미 경로; 인물의 죄 자동 힌트 금지
+INTERROGATION,counsel,변호인 요청으로 면담 진행이 제한될 수 있습니다,마이크/채팅 동일한 의미 경로; 인물의 죄 자동 힌트 금지
+FORENSICS,lab,포렌식 의뢰,감식 요청비용=수사 예산; 실제 검사 종료 시간과 구별
+FORENSICS,scope,검사 목적,감식 요청비용=수사 예산; 실제 검사 종료 시간과 구별
+FORENSICS,limitation,이 검사만으로는 알 수 없는 것,감식 요청비용=수사 예산; 실제 검사 종료 시간과 구별
+FORENSICS,source,수집 출처,감식 요청비용=수사 예산; 실제 검사 종료 시간과 구별
+FORENSICS,integrity,원본·봉인 상태,감식 요청비용=수사 예산; 실제 검사 종료 시간과 구별
+FORENSICS,request,검사 요청,감식 요청비용=수사 예산; 실제 검사 종료 시간과 구별
+FORENSICS,queued,접수됨,감식 요청비용=수사 예산; 실제 검사 종료 시간과 구별
+FORENSICS,pending,회신 대기,감식 요청비용=수사 예산; 실제 검사 종료 시간과 구별
+FORENSICS,result,검사 회신,감식 요청비용=수사 예산; 실제 검사 종료 시간과 구별
+FORENSICS,no_slots,별도 총 검사 횟수 제한은 없습니다,감식 요청비용=수사 예산; 실제 검사 종료 시간과 구별
+FORENSICS,queue_time,예상 회신 시프트,감식 요청비용=수사 예산; 실제 검사 종료 시간과 구별
+FORENSICS,forensic_cost,검사 의뢰 비용,감식 요청비용=수사 예산; 실제 검사 종료 시간과 구별
+FORENSICS,legal,적법한 확보 절차 확인,감식 요청비용=수사 예산; 실제 검사 종료 시간과 구별
+CASEBOARD,evidence,증거,"표시 상태의 근거를 분명히, 유죄확률 UI 금지"
+CASEBOARD,claims,진술,"표시 상태의 근거를 분명히, 유죄확률 UI 금지"
+CASEBOARD,timeline,시간표,"표시 상태의 근거를 분명히, 유죄확률 UI 금지"
+CASEBOARD,relations,관계도,"표시 상태의 근거를 분명히, 유죄확률 UI 금지"
+CASEBOARD,hypothesis,가설,"표시 상태의 근거를 분명히, 유죄확률 UI 금지"
+CASEBOARD,observed,현장 관찰,"표시 상태의 근거를 분명히, 유죄확률 UI 금지"
+CASEBOARD,unverified,미확인,"표시 상태의 근거를 분명히, 유죄확률 UI 금지"
+CASEBOARD,source_unknown,출처 미확인,"표시 상태의 근거를 분명히, 유죄확률 UI 금지"
+CASEBOARD,contradiction,이전 진술과 일치하지 않는 부분,"표시 상태의 근거를 분명히, 유죄확률 UI 금지"
+CASEBOARD,linked,근거 연결됨,"표시 상태의 근거를 분명히, 유죄확률 UI 금지"
+CASEBOARD,not_proven,이 자료만으로는 확정할 수 없습니다,"표시 상태의 근거를 분명히, 유죄확률 UI 금지"
+CASEBOARD,save_hypothesis,내 가설 저장,"표시 상태의 근거를 분명히, 유죄확률 UI 금지"
+CASEBOARD,statement_revision,진술 수정 이력,"표시 상태의 근거를 분명히, 유죄확률 UI 금지"
+FINAL_REPORT,report,최종 수사보고서,"정식 제출=1회, 정답 및 범인명 미리 공개 금지"
+FINAL_REPORT,draft,초안,"정식 제출=1회, 정답 및 범인명 미리 공개 금지"
+FINAL_REPORT,suspect,지목 대상,"정식 제출=1회, 정답 및 범인명 미리 공개 금지"
+FINAL_REPORT,hold,지목 보류,"정식 제출=1회, 정답 및 범인명 미리 공개 금지"
+FINAL_REPORT,opportunity,접근과 시간,"정식 제출=1회, 정답 및 범인명 미리 공개 금지"
+FINAL_REPORT,motive,갈등 및 동기,"정식 제출=1회, 정답 및 범인명 미리 공개 금지"
+FINAL_REPORT,physical,치명상과 물리적 연결,"정식 제출=1회, 정답 및 범인명 미리 공개 금지"
+FINAL_REPORT,alternatives,다른 두 사람의 가능성 검토,"정식 제출=1회, 정답 및 범인명 미리 공개 금지"
+FINAL_REPORT,cite,증거 원본 인용,"정식 제출=1회, 정답 및 범인명 미리 공개 금지"
+FINAL_REPORT,compare,반증 또는 다른 설명,"정식 제출=1회, 정답 및 범인명 미리 공개 금지"
+FINAL_REPORT,precheck,제출 전 점검,"정식 제출=1회, 정답 및 범인명 미리 공개 금지"
+FINAL_REPORT,missing,근거가 충분히 연결되지 않았습니다,"정식 제출=1회, 정답 및 범인명 미리 공개 금지"
+FINAL_REPORT,submit,정식 제출,"정식 제출=1회, 정답 및 범인명 미리 공개 금지"
+FINAL_REPORT,submit_warning,정식 제출 이후 수사보고서를 수정할 수 없습니다,"정식 제출=1회, 정답 및 범인명 미리 공개 금지"
+FINAL_REPORT,confirm_submit,현재 기록으로 수사 의견을 제출하시겠습니까?,"정식 제출=1회, 정답 및 범인명 미리 공개 금지"
+FINAL_REPORT,cancel_submit,취소,"정식 제출=1회, 정답 및 범인명 미리 공개 금지"
+ENDING,solved,수사 의견 입증,유죄 확정 판결 아니라 게임 내부 수사 의견
+ENDING,correct_unproven,지목했으나 입증 부족,유죄 확정 판결 아니라 게임 내부 수사 의견
+ENDING,wrong,잘못된 수사 의견,유죄 확정 판결 아니라 게임 내부 수사 의견
+ENDING,procedure,자료 및 절차 재검토 필요,유죄 확정 판결 아니라 게임 내부 수사 의견
+ENDING,hold,판단 보류,유죄 확정 판결 아니라 게임 내부 수사 의견
+ENDING,archive,사건 기록 열람,유죄 확정 판결 아니라 게임 내부 수사 의견
+ENDING,retry,다시 조사하기,유죄 확정 판결 아니라 게임 내부 수사 의견
+ENDING,main_menu,메인 메뉴,유죄 확정 판결 아니라 게임 내부 수사 의견

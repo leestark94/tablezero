@@ -1,0 +1,24 @@
+{
+  "release": "V21.1-story-gameflow-uiux",
+  "scope": "Unity 6 and Claude Code design handoff, not completed game",
+  "build_date": "2026-11-22",
+  "case": "001",
+  "culprit_id": "s3",
+  "data_counts": {
+    "facts": 27,
+    "evidence": 19,
+    "events": 22,
+    "original_props": 208,
+    "hotspot_groups": 18,
+    "qa_cases": 129,
+    "ui_strings": 112
+  },
+  "validation": {
+    "static_data": "PASS",
+    "inline_javascript_syntax": "PASS",
+    "Unity_Play_Mode": "NOT_RUN",
+    "Windows_Build": "NOT_RUN",
+    "AI_interrogation": "NOT_RUN",
+    "STT_TTS": "NOT_RUN"
+  }
+}

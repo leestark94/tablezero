@@ -1,5 +1,9 @@
 # 다음 AI 인계지시서 (Claude Code / Codex 공통) — 2026-11-21 V14 기준
 
+> **2026-11-22 V21.1 적용 시작 — 사건 정본이 바뀌었다.** 진범은 박현수(s3, 21:57 치명상). 구 정본(이서연 진범)은 `reference/legacy_v04/`에 보관만, 로드 금지.
+> 최상위 지시: `references_images/V21_PACKAGE/TABLE_ZERO_V21_ULTIMATE_HANDOFF/01_CLAUDE_CODE_ULTIMATE_PROMPT.md` (+ `00_START_HERE.md`). 진행 상황: `docs/v21/P0_CONFLICT_REPORT.md`.
+> 서버 정본은 `python -I tools/build_v21_runtime.py`로 V21 패키지에서 생성한다(손 편집 금지). 다음 단계: P1 메인 메뉴→엔딩 전체 화면 흐름.
+
 > 새 세션 시작용 붙여넣기 프롬프트와 세션 종료 시 인계 순환 규칙: [`HANDOFF_PROMPT.md`](HANDOFF_PROMPT.md)
 
 ## 0. 새 계정·새 PC에서 시작하기

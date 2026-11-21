@@ -146,12 +146,12 @@ namespace TableZero
             bar.style.borderBottomWidth = 1; bar.style.borderBottomColor = Line; bar.style.paddingLeft = 28; bar.style.paddingRight = 24;
             var logo = new VisualElement(); logo.style.width = 300;
             var l1 = L("TABLE//ZERO", 22, Ink); l1.style.letterSpacing = 6; l1.style.unityFontStyleAndWeight = FontStyle.Bold;
-            logo.Add(l1); logo.Add(L("CASE 001 — 정수연 살인사건", 13, Dim)); bar.Add(logo);
+            logo.Add(l1); logo.Add(L("CASE 001 — 302호 사망 경위 조사", 13, Dim)); bar.Add(logo);
             var tabs = new VisualElement(); tabs.style.flexDirection = FlexDirection.Row; tabs.style.flexGrow = 1; tabs.style.justifyContent = Justify.Center;
             roomLbl = L("", 15, Dim); roomLbl.style.unityTextAlign = TextAnchor.MiddleCenter; tabs.Add(roomLbl);
             bar.Add(tabs);
             var right = new VisualElement(); right.style.flexDirection = FlexDirection.Row; right.style.alignItems = Align.Center;
-            clockLbl = L("2024. 03. 16 (토)", 15, Ink); clockLbl.style.marginRight = 28; right.Add(clockLbl);
+            clockLbl = L("2026. 10. 16 (금)", 15, Ink); clockLbl.style.marginRight = 28; right.Add(clockLbl);
             recLbl = L("REC  00:00:00", 15, Ink); recLbl.style.color = new Color(1, 0.45f, 0.45f); right.Add(recLbl);
             bar.Add(right);
             root.Add(bar);

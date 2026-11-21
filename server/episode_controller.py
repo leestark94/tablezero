@@ -33,7 +33,7 @@ class EpisodeState:
     authorized_events:set[str]=field(default_factory=set)
     acquired_chain:dict[str,list[str]]=field(default_factory=dict)
     closed:bool=False
-    case_clock_minutes:int=22*60+7
+    case_clock_minutes:int=0*60+10   # V21: detective reaches 302 at 00:10 on 2026-10-16 (report 22:07 the night before)
     persons_in_custody:set[str]=field(default_factory=set)
     open_meetings:set[str]=field(default_factory=set)
     shot_history:list[str]=field(default_factory=list)
@@ -86,7 +86,7 @@ class EpisodeController:
         if actor!='s2':return None
         seed=personas()['autonomy_seeds']['s2_contacts_s3']
         shown=self.world.presented_to.get('s2',set())
-        wants=any(p['kind']=='contact_acquaintance' for p in proposals) or bool(shown & {'e02','e03','e05','e07','e08','e09'})
+        wants=any(p['kind']=='contact_acquaintance' for p in proposals) or bool(shown & {'V21-E02','V21-E07','V21-E14','V21-E11'})
         if not wants:return None
         if any(e.kind=='contact_acquaintance' and e.actor=='s2' for e in self.world.events):return None
         rules=self.world._canon['autonomy']['action_windows']['contact_acquaintance']
@@ -120,7 +120,7 @@ class EpisodeController:
         if not authorized:raise GuardError('Server authorization required')
         if evidence_id in self.world.available_evidence:return {'duplicate':True}
         if item['access']=='obtained_at_start':raise GuardError('Starting record already present')
-        if evidence_id in ('e04',) and self.state.scene!='room302':
+        if item['access']=='scene_collect' and self.state.scene!='room302':
             raise GuardError('Physical evidence requires scene')
         if not photo_logged:raise GuardError('Evidence provenance/photo record required')
         if item['access'] in ('scene_collect','warrant_after_sufficient_cause') and not sealed:
@@ -204,7 +204,7 @@ class EpisodeController:
             raise GuardError('Report must be filed from investigation desk')
         if not final:raise GuardError('Explicit final confirmation required')
         # Server-recorded procedure defects that touch the SUBMITTED evidence (client list is advisory only)
-        prop_to_evidence={'kitchen_mug':'e06','living_phone':'e02','living_food_bag':'e04'}
+        prop_to_evidence={'kitchen_mug':'V21-E19','living_phone':'V21-E06','living_food_bag':'V21-E01','xprop_delivery_receipt':'V21-E01'}
         relevant=[d for d in self.state.chain_defects
                   if prop_to_evidence.get(d.split(':')[0]) in set(submitted_evidence or [])]
         outcome=self.outcomes.submit(accused_id,submitted_evidence,chain_defects=list(chain_defects)+relevant)

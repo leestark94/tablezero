@@ -1,0 +1,202 @@
+{
+  "version": "21.1-integrated-ui-spec",
+  "status": "design_contract_not_running_game",
+  "scene_order": [
+    "BOOT",
+    "MAIN_MENU",
+    "CASE_SELECT",
+    "DISPATCH_CINEMATIC",
+    "INCIDENT_BRIEF",
+    "CORRIDOR_302",
+    "ROOM302",
+    "HQ_DESK",
+    "INTERROGATION",
+    "FORENSICS",
+    "RECORDS",
+    "CASEBOARD",
+    "FINAL_REPORT",
+    "ENDING"
+  ],
+  "navigation": [
+    {
+      "from": "BOOT",
+      "to": "MAIN_MENU",
+      "requires": "basic_visual_ready"
+    },
+    {
+      "from": "MAIN_MENU",
+      "to": "CASE_SELECT",
+      "action": "new_case"
+    },
+    {
+      "from": "MAIN_MENU",
+      "to": "HQ_DESK",
+      "action": "continue",
+      "requires": "valid_save"
+    },
+    {
+      "from": "CASE_SELECT",
+      "to": "DISPATCH_CINEMATIC",
+      "requires": "case_001_selected"
+    },
+    {
+      "from": "DISPATCH_CINEMATIC",
+      "to": "INCIDENT_BRIEF",
+      "action": "finish_or_skip"
+    },
+    {
+      "from": "INCIDENT_BRIEF",
+      "to": "CORRIDOR_302",
+      "action": "dispatch"
+    },
+    {
+      "from": "CORRIDOR_302",
+      "to": "ROOM302",
+      "action": "enter_secured_scene"
+    },
+    {
+      "from": "ROOM302",
+      "to": "HQ_DESK",
+      "action": "return_to_hq",
+      "cost_type": "location_change"
+    },
+    {
+      "from": "HQ_DESK",
+      "to": "INTERROGATION",
+      "action": "call_suspect",
+      "cost_type": "suspect_call",
+      "requires": "interview_eligible"
+    },
+    {
+      "from": "INTERROGATION",
+      "to": "HQ_DESK",
+      "action": "end_interview"
+    },
+    {
+      "from": "HQ_DESK",
+      "to": "FORENSICS",
+      "action": "inspect_lab_queue"
+    },
+    {
+      "from": "FORENSICS",
+      "to": "HQ_DESK",
+      "action": "back"
+    },
+    {
+      "from": "HQ_DESK",
+      "to": "RECORDS",
+      "action": "inspect_request_queue"
+    },
+    {
+      "from": "RECORDS",
+      "to": "HQ_DESK",
+      "action": "back"
+    },
+    {
+      "from": "HQ_DESK",
+      "to": "CASEBOARD",
+      "action": "open_caseboard"
+    },
+    {
+      "from": "CASEBOARD",
+      "to": "HQ_DESK",
+      "action": "back"
+    },
+    {
+      "from": "HQ_DESK",
+      "to": "CORRIDOR_302",
+      "action": "revisit",
+      "cost_type": "location_change"
+    },
+    {
+      "from": "HQ_DESK",
+      "to": "FINAL_REPORT",
+      "action": "draft_report"
+    },
+    {
+      "from": "FINAL_REPORT",
+      "to": "HQ_DESK",
+      "action": "close_draft"
+    },
+    {
+      "from": "FINAL_REPORT",
+      "to": "ENDING",
+      "action": "submit_once",
+      "requires": "user_confirmed_and_report_state_committed"
+    }
+  ],
+  "resources": {
+    "action_budget_minutes": 180,
+    "world_clock": "independent_in_game_date_and_shift",
+    "wall_time": "never_charged",
+    "review_cost": 0,
+    "action_costs": {
+      "photo": 1,
+      "collect_sealed": 3,
+      "call_suspect": 6,
+      "normal_question_text_or_mic": 2,
+      "evidence_confrontation": 3,
+      "silence_tactic": 4,
+      "active_pressure": 6,
+      "desk_slam": 12,
+      "location_change": 5,
+      "record_request": 6,
+      "legal_request": 8,
+      "forensic_preliminary": 12,
+      "forensic_detailed": 18,
+      "edit_report": 0,
+      "submit_report": 0
+    },
+    "single_charge_rule": "one_effective_turn_one_cost_even_if_evidence_and_normal_question_both_used",
+    "rollback_on": [
+      "stt_rejected",
+      "llm_timeout",
+      "invalid_legal_access",
+      "user_cancelled",
+      "duplicate_action_replay",
+      "text_generation_validation_failure"
+    ],
+    "insufficient_budget": "cannot_commit_unaffordable_action; report_or_hold_remains_available"
+  },
+  "view_constraints": {
+    "briefing_public": [
+      "victim_name",
+      "age",
+      "occupation",
+      "reported_at",
+      "reported_by",
+      "scene_location",
+      "hospital_death_confirmation"
+    ],
+    "briefing_forbidden": [
+      "culprit_id",
+      "death_injury_at",
+      "private_suspect_actions",
+      "final_motive",
+      "case_truth"
+    ],
+    "evidence_tabs": [
+      "observed",
+      "provenance",
+      "statement",
+      "hypothesis",
+      "timeline"
+    ],
+    "interrogation_layout": {
+      "dossier_left_fraction": 0.25,
+      "actor_center_fraction": 0.55,
+      "tactic_right_fraction": 0.2,
+      "chat_bottom": true
+    },
+    "no_culprit_indicator": true,
+    "case_002_data_isolation": true
+  },
+  "saving": {
+    "journal_transactions": true,
+    "autosave_on_committed_action": true,
+    "autosave_on_scene_exit": true,
+    "unique_action_idempotency_key": true,
+    "report_submissions_per_run": 1
+  },
+  "prototype_disclaimer": "The HTML in this package is an interactive UX flow mockup: no LLM, real audio capture, real evidence processing or Unity game state."
+}

@@ -20,8 +20,8 @@ class UIContractTests(unittest.TestCase):
             self.assertIn('name="'+n+'"',doc)
     def test_03_server_only_reveals_acquired_evidence(self):
         d=page_projection(self.ctrl,'evidence')
-        self.assertEqual([x['id'] for x in d['records']],['e01'])
-        self.assertEqual([x['status'] for x in d['records']],['e01'])
+        self.assertEqual([x['id'] for x in d['records']],['V21-E17'])
+        self.assertEqual([x['status'] for x in d['records']],['V21-E17'])
         self.assertIn('limitation',d['records'][0])
         self.assertNotIn('culprit_id',json.dumps(d,ensure_ascii=False))
         self.assertNotIn('truth_events',json.dumps(d,ensure_ascii=False))
@@ -33,7 +33,7 @@ class UIContractTests(unittest.TestCase):
     def test_05_no_unacquired_evidence_on_timeline(self):
         d=page_projection(self.ctrl,'timeline')
         shown={x['id'] for x in d['records'] if x['kind']=='timeline_source'}
-        self.assertEqual(shown,{'e01'})
+        self.assertEqual(shown,{'V21-E17'})
     def test_06_testimony_unverified(self):
         self.ctrl.world.claims.append({'suspect_id':'s1','utterance':'저는 그 시간에 집에 있었어요','mode':'deny'})
         d=page_projection(self.ctrl,'interview')

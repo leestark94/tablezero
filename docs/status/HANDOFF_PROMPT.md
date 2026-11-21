@@ -12,7 +12,7 @@
 [2. 반드시 먼저 읽기 (이 순서)]
 1) docs/status/다음AI_인계지시서.md — 설치할 도구, 절대 규칙, 현재 상태, 남은 작업, 빌드 명령
 2) docs/status/개발현황.md, docs/status/미완성작업.md, docs/status/변경이력.md
-3) references_images/V14/CLAUDE_CODE_V14_MASTER_DIRECTIVE.txt — 현재 최우선 지시(실제 3D 심문실·살아 움직이는 이서연)
+3) references_images/V21_PACKAGE/TABLE_ZERO_V21_ULTIMATE_HANDOFF/01_CLAUDE_CODE_ULTIMATE_PROMPT.md — 현재 최우선 지시(V21.1: 진범 박현수, 메뉴→엔딩 완주 게임). docs/v21/P0_CONFLICT_REPORT.md 로 진행 상황 확인. (V14 지시는 3D 품질 참고용)
 4) references_images/ 의 승인 이미지(INTERROGATION_TARGET_VISUAL, SCENE_302_TARGET_VISUAL, V14/*)를 직접 본다.
 
 [3. 절대 규칙]

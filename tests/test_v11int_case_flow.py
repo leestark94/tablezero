@@ -40,7 +40,7 @@ class CaseFlowTests(unittest.TestCase):
         self.c.transition('room302')
         r = self.c.props.interact('kitchen_mug', 'inspect', action_id=uuid.uuid4().hex, player_pos=near(self.c, 'kitchen_mug'))
         self.assertNotIn('canonical_evidence_reference', r)
-        self.assertNotIn('e06', str(r))
+        self.assertNotIn('V21-E19', str(r))
         r2 = self.c.props.interact('kitchen_spoon', 'inspect', action_id=uuid.uuid4().hex, player_pos=near(self.c, 'kitchen_spoon'))
         self.assertEqual(r['procedure_actions'], r2['procedure_actions'])
 
@@ -63,10 +63,10 @@ class CaseFlowTests(unittest.TestCase):
         self.c.props.procedure('kitchen_mug', 'collect', player_pos=near(self.c, 'kitchen_mug'))
         self.assertTrue(any('no_gloves' in d for d in self.c.state.chain_defects))
         self.c.transition('desk')
-        self.c.state.interviewed.update({'s2'})
-        for e in ('e07', 'e08', 'e10', 'e06', 'e11'):
+        self.c.state.interviewed.update({'s1', 's2', 's3'}); self.c.state.flags.add('phone_seized')
+        for e in ('V21-E07', 'V21-E18', 'V21-E10', 'V21-E16', 'V21-E15', 'V21-E13', 'V21-E19'):
             self.c.desk.request(e)
-        r = self.c.file_report('s2', ['e01', 'e07', 'e08', 'e10', 'e06', 'e11'], final=True)
+        r = self.c.file_report('s3', ['V21-E17', 'V21-E07', 'V21-E18', 'V21-E10', 'V21-E16', 'V21-E15', 'V21-E13', 'V21-E19'], final=True)
         self.assertFalse(r['report_accepted'])
 
     def test_photo_marker_numbers_follow_first_photo_order(self):
@@ -92,24 +92,24 @@ class CaseFlowTests(unittest.TestCase):
         self.c.props.set_gloves(True)
         self.assertEqual(self.c.props.procedure('kitchen_mug', 'collect', player_pos=me)['defects'], [])
         self.c.transition('desk')
-        self.c.state.interviewed.update({'s2'})
-        for e in ('e07', 'e08', 'e10', 'e06', 'e11'):
+        self.c.state.interviewed.update({'s1', 's2', 's3'}); self.c.state.flags.add('phone_seized')
+        for e in ('V21-E07', 'V21-E18', 'V21-E10', 'V21-E16', 'V21-E15', 'V21-E13', 'V21-E19'):
             self.c.desk.request(e)
-        r = self.c.file_report('s2', ['e01', 'e07', 'e08', 'e10', 'e06', 'e11'], final=True)
+        r = self.c.file_report('s3', ['V21-E17', 'V21-E07', 'V21-E18', 'V21-E10', 'V21-E16', 'V21-E15', 'V21-E13', 'V21-E19'], final=True)
         self.assertTrue(r['report_accepted'])
 
     def test_desk_prerequisites_and_budget(self):
         self.c.transition('desk')
-        with self.assertRaises(GuardError): self.c.desk.request('e09')   # needs e02
-        with self.assertRaises(GuardError): self.c.desk.request('e11')   # needs presence + motive
-        with self.assertRaises(GuardError): self.c.desk.request('e02')   # phone not seized
+        with self.assertRaises(GuardError): self.c.desk.request('V21-E18')   # needs phone analysis first
+        with self.assertRaises(GuardError): self.c.desk.request('V21-E16')   # warrant needs presence + motive
+        with self.assertRaises(GuardError): self.c.desk.request('V21-E07')   # phone not seized
         self.c.state.flags.add('phone_seized')
-        self.c.desk.request('e02'); self.c.desk.request('e09')
+        self.c.desk.request('V21-E07'); self.c.desk.request('V21-E18')
         self.assertEqual(self.c.desk.budget - self.c.desk.spent, 8)
 
     def test_desk_options_never_reveal_identity(self):
         txt = str(self.c.desk.options())
-        self.assertNotIn('culprit', txt); self.assertNotIn('이서연', txt)
+        self.assertNotIn('culprit', txt); self.assertNotIn('박현수', txt)
 
 
 class MindTests(unittest.TestCase):
@@ -118,18 +118,19 @@ class MindTests(unittest.TestCase):
 
     def test_locked_memories_not_in_context(self):
         sysp = build_system_prompt(self.c.world, 's2', presented=set(), climate={}, known_events=[])
-        for w in ('편의점', '21시 39분', '몸싸움', '21시 34분'):
+        for w in ('편의점', '21시 39분', '소매', '21시 34분', '개인 빚'):
             self.assertNotIn(w, sysp)
-        sysp2 = build_system_prompt(self.c.world, 's2', presented={'e08'}, climate={}, known_events=[])
+        sysp2 = build_system_prompt(self.c.world, 's2', presented={'V21-E14'}, climate={}, known_events=[])
         self.assertIn('편의점', sysp2)
 
     def test_other_suspect_secrets_never_in_prompt(self):
-        allev = {'e01', 'e02', 'e03', 'e05', 'e07', 'e08', 'e09', 'e10'}
+        allev = {e['id'] for e in self.c.world._canon['evidence']}
+        own = {'s1': '공유폴더', 's2': '개인 빚', 's3': '서류 일부를 챙겨'}
         for sid in ('s1', 's2', 's3'):
             sysp = build_system_prompt(self.c.world, sid, presented=allev, climate={'trust_turns': 99}, known_events=[])
             self.assertNotIn('culprit', sysp); self.assertNotIn('truth_server_only', sysp)
-            if sid != 's1': self.assertNotIn('한지윤', sysp)
-            if sid != 's3': self.assertNotIn('단기 임대', sysp)
+            for other, phrase in own.items():
+                if other != sid: self.assertNotIn(phrase, sysp)
 
     def test_gate_blocks_volunteered_detail(self):
         bad = guard_utterance('s2', '그날 편의점에 잠깐 갔었어요', presented=set(), detective_text='어디 계셨어요?', memories=[])
@@ -138,7 +139,8 @@ class MindTests(unittest.TestCase):
         self.assertEqual(ok, [])
 
     def test_unearned_confession_blocked(self):
-        self.assertIn('unearned_confession', guard_utterance('s2', '제가 밀었어요', presented={'e08'}))
+        self.assertIn('unearned_confession', guard_utterance('s3', '제가 밀었어요', presented={'V21-E14'}))
+        self.assertIn('false_confession_innocent', guard_utterance('s2', '제가 밀었어요', presented={'V21-E14'}))
         self.assertIn('false_confession_innocent', guard_utterance('s1', '제가 죽였어요', presented=set()))
 
     def test_rejected_generation_not_charged_and_retried(self):
@@ -150,7 +152,7 @@ class MindTests(unittest.TestCase):
         self.assertEqual(r.seconds_left, 900 - 24)
 
     def test_all_attempts_fail_no_charge(self):
-        fake = Fake(['편의점', '편의점 갔어요', '생수 샀어요'])
+        fake = Fake(['편의점', '편의점 갔어요', '편의점이었어요'])
         c = EpisodeController(provider=fake); s = InterviewService(c)
         c.transition('desk'); c.transition('interview'); s.begin('s2')
         with self.assertRaises(GuardError):
@@ -160,9 +162,9 @@ class MindTests(unittest.TestCase):
     def test_autonomy_reaches_s3_memory_only(self):
         fake = Fake(['그건 회사 일이었어요'])
         c = EpisodeController(provider=fake); s = InterviewService(c)
-        c.world.expose_evidence('e09')
+        c.world.expose_evidence('V21-E07')
         c.transition('desk'); c.transition('interview'); s.begin('s2')
-        s.ask('21시 34분 통화 상대가 이서연 씨예요', input_mode='typed', action_id=uuid.uuid4().hex, presented_evidence='e09')
+        s.ask('21시 34분 통화 상대가 이서연 씨예요', input_mode='typed', action_id=uuid.uuid4().hex, presented_evidence='V21-E07')
         ev = s.close()
         self.assertIsNotNone(ev)
         e = next(x for x in c.world.events if x.event_id == ev)

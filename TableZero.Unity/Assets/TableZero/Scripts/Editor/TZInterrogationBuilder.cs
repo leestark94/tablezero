@@ -38,9 +38,9 @@ namespace TableZero.EditorTools
             screen.koreanFont = AssetDatabase.FindAssets("NotoSansKR_SDF t:FontAsset").Select(g => AssetDatabase.LoadAssetAtPath<FontAsset>(AssetDatabase.GUIDToAssetPath(g))).FirstOrDefault();
             screen.suspects = new[]
             {
-                S("s1", "강도현", "31", "물류센터 주간 관리직", "피해자의 전 남자친구", "진술녹화실 1", "21시 20분 무렵 건물을 나왔다", "그 뒤로 다시 방문하지 않았다"),
-                S("s2", "이서연", "29", "화장품 회사 마케팅팀 대리", "피해자의 친구·직장 동료", "진술녹화실 2", "21시부터 22시까지 집에 있었다", "피해자와 해결하지 못한 금전 문제가 없다"),
-                S("s3", "박현수", "46", "배달 대행 라이더", "피해자의 옆집 주민", "진술녹화실 3", "소음을 듣지 못했다"),
+                S("s1", "강도현", "32", "물류설비 업체 야간 교대 근무", "피해자의 전 남자친구", "진술녹화실 1", "21시 20분쯤 나와 바로 직장으로 갔다", "피해자에게 손댄 적 없다"),
+                S("s2", "이서연", "30", "화장품 회사 직원·공방 동업자", "피해자의 친구·동업자", "진술녹화실 2", "그날 밤 302호에 가지 않았다", "480만원은 정산이 밀린 것뿐이다"),
+                S("s3", "박현수", "39", "배송 집하 계약직", "301호 이웃·최초 신고자", "진술녹화실 3", "22시 7분에 처음 발견해 신고했다", "302호 안에는 들어가지 않았다"),
             };
             screen.grain = Grain();
             screen.serifFont = AssetDatabase.FindAssets("NotoSerifKR_SDF t:FontAsset").Select(g => AssetDatabase.LoadAssetAtPath<FontAsset>(AssetDatabase.GUIDToAssetPath(g))).FirstOrDefault();

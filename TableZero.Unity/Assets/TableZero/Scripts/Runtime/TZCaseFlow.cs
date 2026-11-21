@@ -67,7 +67,7 @@ namespace TableZero
             var head = L("CASE 001  ·  302호의 밤", 15, Dim); head.style.letterSpacing = 3; col.Add(head);
             var title = L("현장 조사 개시", 40, Ink); title.style.marginTop = 6; title.style.unityFontStyleAndWeight = FontStyle.Bold; col.Add(title);
             var line = new VisualElement(); line.style.height = 1; line.style.backgroundColor = new Color(1, 1, 1, 0.15f); line.style.marginTop = 18; line.style.marginBottom = 18; col.Add(line);
-            var c1 = L("2024. 03. 16 (토) 22:07 신고 접수 — 빌라 302호 정수연(29) 사망 사건.\n현장은 보존된 상태다. 아직 누구도 심문하지 않았다.", 19, Ink); col.Add(c1);
+            var c1 = L("2026. 10. 15 (목) 22:07 301호 주민 신고. 302호 거주 여성 1명이 의식을 잃은 상태로 발견돼 응급처치 후 이송, 병원에서 사망이 확인됐다.\n부상 경위와 정확한 시각은 조사 중이다. 피해자는 현장에 없다. 지금은 10월 16일 00:10.", 19, Ink); col.Add(c1);
             var steps = new[] { ("1", "302호 현장을 조사한다", "사물을 살펴보고, 사진을 찍고, 장갑을 끼고 증거를 채취한다"),
                                 ("2", "확보한 증거를 가지고 경찰서로 복귀한다", "Tab — 수사 수첩에서 복귀"),
                                 ("3", "관련자를 호출해 심문한다", "증거를 제시하고 진술을 대조한다") };

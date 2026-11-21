@@ -11,7 +11,7 @@ from __future__ import annotations
 from pathlib import Path
 import json, re
 
-PERSONA_PATH = Path(__file__).resolve().parents[1] / 'reference' / 'CASE001_SUSPECT_PERSONAS_SERVER_ONLY.json'
+PERSONA_PATH = Path(__file__).resolve().parents[1] / 'reference' / 'v21' / 'CASE001_V21_PERSONAS_SERVER_ONLY.json'
 SPEECH_PATH = Path(__file__).resolve().parents[1] / 'data' / 'character_speech_bible.json'
 
 _PERSONAS = None
@@ -202,6 +202,15 @@ def similarity(a, b):
 
 HANGUL = re.compile(r'[가-힣]')
 
+def _confession_gate():
+    """(culprit id, evidence that must have been presented before any admission of the fatal act may stand).
+    Read from the server-only runtime case so no story is hard-coded here."""
+    from .runtime import CANON_PATH
+    c = json.loads(Path(CANON_PATH).read_text(encoding='utf-8'))
+    logic = c['case_result_logic']
+    return logic['identity'], set(logic.get('confession_requires_presented', ['V21-E16', 'V21-E15']))
+
+
 def guard_utterance(suspect_id, utterance, *, presented: set[str], detective_text: str = '', memories=None,
                     question: str = '', recent=(), mode: str = 'answer'):
     """Return list of blocking problems. Empty = ok."""
@@ -221,8 +230,10 @@ def guard_utterance(suspect_id, utterance, *, presented: set[str], detective_tex
         problems.append('stage_direction_in_line')
     if any(t in utterance for t in leak_terms_for(suspect_id)):
         problems.append('cross_suspect_knowledge_leak')
-    if suspect_id == 's2' and CONFESSION.search(utterance) and not {'e06', 'e11'}.issubset(presented):
-        problems.append('unearned_confession')
-    if suspect_id in ('s1', 's3') and CONFESSION.search(utterance):
-        problems.append('false_confession_innocent')
+    if CONFESSION.search(utterance):
+        culprit, needed = _confession_gate()
+        if suspect_id != culprit:
+            problems.append('false_confession_innocent')
+        elif not needed.issubset(presented):
+            problems.append('unearned_confession')
     return problems

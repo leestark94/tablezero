@@ -1,0 +1,1064 @@
+{
+ "version": "v21.1-runtime",
+ "case_id": "CASE001",
+ "title": "302호의 밤",
+ "setting": "가상의 경기도 소도시 4층 빌라(2014년 준공) 301/302, 2026년 10월 15일",
+ "victim": "정수연, 29세",
+ "victim_removed_from_scene": true,
+ "case_date": "2026-10-15",
+ "player_arrival": "2026-10-16 00:10",
+ "truth_server_only": {
+  "culprit": "s3",
+  "cause": "21:57 박현수의 거친 밀침에 정수연이 낮은 탁자 모서리에 머리 충돌, 치명상 후 구조 지연; 병원 사망",
+  "incident_separation": {
+   "s1_minor_assault": "F07",
+   "s2_palm_cut": "F14",
+   "s3_fatal_injury": "F21"
+  }
+ },
+ "truth_events": [
+  {
+   "id": "F01",
+   "at": "12:00",
+   "date": "2026-09-07",
+   "actor": "s2",
+   "event": "사업계좌에서 이서연이 480만원을 사전 동의 없이 개인채무에 사용",
+   "private_to": [
+    "s2"
+   ],
+   "evidence_ids": [
+    "V21-E11"
+   ]
+  },
+  {
+   "id": "F02",
+   "at": "15:00",
+   "date": "2026-09-17",
+   "actor": "s0",
+   "event": "정수연이 계좌 공백을 확인하고 외부 보고를 미룸",
+   "private_to": [
+    "s0"
+   ],
+   "evidence_ids": [
+    "V21-E11"
+   ]
+  },
+  {
+   "id": "F03",
+   "at": "12:00",
+   "date": "2026-09-22",
+   "actor": "s0",
+   "event": "정수연이 물품배송 분실 기록에 박현수 이름을 허위 기재",
+   "private_to": [
+    "s0"
+   ],
+   "evidence_ids": [
+    "V21-E10"
+   ]
+  },
+  {
+   "id": "F04",
+   "at": "18:00",
+   "date": "2026-10-03",
+   "actor": "s1",
+   "event": "강도현이 정수연에게 480만원을 차용금으로 송금",
+   "private_to": [
+    "s0",
+    "s1"
+   ],
+   "evidence_ids": [
+    "V21-E11"
+   ]
+  },
+  {
+   "id": "F05",
+   "at": "20:47",
+   "date": "2026-10-15",
+   "actor": "s0",
+   "event": "떡볶이·순대 배달 수령",
+   "private_to": [
+    "s0"
+   ],
+   "evidence_ids": [
+    "V21-E01"
+   ]
+  },
+  {
+   "id": "F06",
+   "at": "21:12",
+   "date": "2026-10-15",
+   "actor": "s1",
+   "event": "강도현이 빌라로 들어감",
+   "private_to": [
+    "s0",
+    "s1"
+   ],
+   "evidence_ids": [
+    "V21-E02"
+   ]
+  },
+  {
+   "id": "F07",
+   "at": "21:17",
+   "date": "2026-10-15",
+   "actor": "s1",
+   "event": "정수연 왼팔 잡음. 휴대전화가 떨어져 화면 깨짐. 치명상과 별개",
+   "private_to": [
+    "s0",
+    "s1"
+   ],
+   "evidence_ids": [
+    "V21-E05",
+    "V21-E06"
+   ]
+  },
+  {
+   "id": "F08",
+   "at": "21:21",
+   "date": "2026-10-15",
+   "actor": "s1",
+   "event": "강도현 건물 퇴장",
+   "private_to": [
+    "s1"
+   ],
+   "evidence_ids": [
+    "V21-E02"
+   ]
+  },
+  {
+   "id": "F09",
+   "at": "21:26",
+   "date": "2026-10-15",
+   "actor": "s1",
+   "event": "강도현 차량에서 남은 공방 공유폴더로 구버전 책임자료 확인",
+   "private_to": [
+    "s1"
+   ],
+   "evidence_ids": [
+    "V21-E12"
+   ]
+  },
+  {
+   "id": "F10",
+   "at": "21:28",
+   "date": "2026-10-15",
+   "actor": "s1",
+   "event": "강도현→박현수 구버전 배송분실 책임 화면 전송. 박의 방문 약속은 이전부터 잡혀 있음",
+   "private_to": [
+    "s1",
+    "s3"
+   ],
+   "evidence_ids": [
+    "V21-E12"
+   ]
+  },
+  {
+   "id": "F11",
+   "at": "21:34",
+   "date": "2026-10-15",
+   "actor": "s2",
+   "event": "정수연–이서연 통화; 직접 만날 약속",
+   "private_to": [
+    "s0",
+    "s2"
+   ],
+   "evidence_ids": [
+    "V21-E07"
+   ]
+  },
+  {
+   "id": "F12",
+   "at": "21:35",
+   "date": "2026-10-15",
+   "actor": "s1",
+   "event": "강도현 근무지로 출발",
+   "private_to": [
+    "s1"
+   ],
+   "evidence_ids": [
+    "V21-E13"
+   ]
+  },
+  {
+   "id": "F13",
+   "at": "21:39",
+   "date": "2026-10-15",
+   "actor": "s2",
+   "event": "이서연 302호 방문",
+   "private_to": [
+    "s0",
+    "s2"
+   ],
+   "evidence_ids": [
+    "V21-E02"
+   ]
+  },
+  {
+   "id": "F14",
+   "at": "21:42",
+   "date": "2026-10-15",
+   "actor": "s2",
+   "event": "서류 말다툼, 액자 낙하·유리 깨짐·정수연 오른손바닥 상처. 이서연 소매에 소량 혈액 접촉. 이때 두부 치명상 없음",
+   "private_to": [
+    "s0",
+    "s2"
+   ],
+   "evidence_ids": [
+    "V21-E08",
+    "V21-E09"
+   ]
+  },
+  {
+   "id": "F15",
+   "at": "21:49",
+   "date": "2026-10-15",
+   "actor": "s2",
+   "event": "이서연 퇴장. 정수연 의식·언어·보행 가능",
+   "private_to": [
+    "s0",
+    "s2"
+   ],
+   "evidence_ids": [
+    "V21-E02",
+    "V21-E14"
+   ]
+  },
+  {
+   "id": "F16",
+   "at": "21:50",
+   "date": "2026-10-15",
+   "actor": "s0",
+   "event": "정수연이 21:50~51 업무 음성메모(박 정정서·도현 송금·서연 관련 업무) 및 문서 손질",
+   "private_to": [
+    "s0"
+   ],
+   "evidence_ids": [
+    "V21-E07",
+    "V21-E10"
+   ]
+  },
+  {
+   "id": "F17",
+   "at": "21:51",
+   "date": "2026-10-15",
+   "actor": "s1",
+   "event": "강도현 근무지 출입",
+   "private_to": [
+    "s1"
+   ],
+   "evidence_ids": [
+    "V21-E13"
+   ]
+  },
+  {
+   "id": "F18",
+   "at": "21:54",
+   "date": "2026-10-15",
+   "actor": "s3",
+   "event": "미리 정해둔 면담을 위해 박현수 302호 입실(301→302 일부 CCTV 시야 밖)",
+   "private_to": [
+    "s0",
+    "s3"
+   ],
+   "evidence_ids": [
+    "V21-E03",
+    "V21-E10"
+   ]
+  },
+  {
+   "id": "F19",
+   "at": "21:55",
+   "date": "2026-10-15",
+   "actor": "s2",
+   "event": "이서연 편의점 카드 결제",
+   "private_to": [
+    "s2"
+   ],
+   "evidence_ids": [
+    "V21-E14"
+   ]
+  },
+  {
+   "id": "F20",
+   "at": "21:56",
+   "date": "2026-10-15",
+   "actor": "s1",
+   "event": "강도현 근무시설에서 실제 점검 업무(21:56~22:00)",
+   "private_to": [
+    "s1"
+   ],
+   "evidence_ids": [
+    "V21-E13"
+   ]
+  },
+  {
+   "id": "F21",
+   "at": "21:57",
+   "date": "2026-10-15",
+   "actor": "s3",
+   "event": "박현수 서류 실랑이 끝에 정수연을 밀침. 낮은 탁자 모서리에 머리 치명상. 박은 이를 목격",
+   "private_to": [
+    "s0",
+    "s3"
+   ],
+   "evidence_ids": [
+    "V21-E09",
+    "V21-E15",
+    "V21-E16"
+   ]
+  },
+  {
+   "id": "F22",
+   "at": "22:02",
+   "date": "2026-10-15",
+   "actor": "s3",
+   "event": "박현수 문서 일부를 챙겨 301호로 돌아가 숨김. 현관을 완전히 닫지 않음",
+   "private_to": [
+    "s3"
+   ],
+   "evidence_ids": [
+    "V21-E10",
+    "V21-E16"
+   ]
+  },
+  {
+   "id": "F23",
+   "at": "22:07",
+   "date": "2026-10-15",
+   "actor": "s3",
+   "event": "박현수가 다시 문 앞으로 와 112 신고하며 방금 발견했다고 설명",
+   "private_to": [
+    "s3"
+   ],
+   "evidence_ids": [
+    "V21-E03"
+   ]
+  },
+  {
+   "id": "F24",
+   "at": "22:15",
+   "date": "2026-10-15",
+   "actor": "ems",
+   "event": "119·초동 경찰 도착, 구조 시도, 후일 현장에 응급처치 흔적",
+   "private_to": [
+    "ems"
+   ],
+   "evidence_ids": [
+    "V21-E17"
+   ]
+  },
+  {
+   "id": "F25",
+   "at": "22:30",
+   "date": "2026-10-15",
+   "actor": "ems",
+   "event": "병원 이송(연출상 설정 시각, 의료 자문 후 조정 가능)",
+   "private_to": [
+    "ems"
+   ],
+   "evidence_ids": [
+    "V21-E17"
+   ]
+  },
+  {
+   "id": "F26",
+   "at": "23:20",
+   "date": "2026-10-15",
+   "actor": "hospital",
+   "event": "병원에서 사망 확인(연출상 가안, 의료 자문 후 조정 가능)",
+   "private_to": [
+    "hospital"
+   ],
+   "evidence_ids": [
+    "V21-E17"
+   ]
+  },
+  {
+   "id": "F27",
+   "at": "23:35",
+   "date": "2026-10-15",
+   "actor": "dispatch",
+   "event": "사망 경위 수사를 위한 사건 배정. 플레이어는 00:10경 302호 도착(2026-10-16). 피해자는 병원에 있음",
+   "private_to": [
+    "police"
+   ],
+   "evidence_ids": []
+  }
+ ],
+ "suspects": [
+  {
+   "id": "s1",
+   "name": "강도현",
+   "role": "전 남자친구",
+   "speech_style": "말수가 적고 시간·출처를 구분하려 함. 몰리면 단어가 짧아지고 침묵으로 통제",
+   "private_fact_ids": [
+    "F04",
+    "F06",
+    "F07",
+    "F08",
+    "F09",
+    "F10",
+    "F12",
+    "F17",
+    "F20"
+   ],
+   "concealment": "팔 접촉·휴대전화 파손, 박에게 보낸 구버전 문서, 바로 출근했다는 거짓말",
+   "goals": [
+    "자기 비겁한 행동이 드러나지 않게 하기",
+    "살인 혐의 벗기"
+   ],
+   "starting_claim_ids": [
+    "c_s1_direct_work",
+    "c_s1_no_touch"
+   ],
+   "possible_motions": [
+    "still",
+    "look_down",
+    "lean_forward",
+    "jaw_tight",
+    "avoid_gaze",
+    "back_in_chair"
+   ]
+  },
+  {
+   "id": "s2",
+   "name": "이서연",
+   "role": "피해자의 친구·동업자",
+   "speech_style": "예의 바르게 필요한 부분만 고름. 뜻을 되물어 시간을 벎. 화가 나도 끝을 매끄럽게 정돈",
+   "private_fact_ids": [
+    "F01",
+    "F11",
+    "F13",
+    "F14",
+    "F15"
+   ],
+   "concealment": "480만원 무단 사용, 302호 방문, 손바닥 상처와 소매 혈흔",
+   "goals": [
+    "도움 되는 사람으로 남기",
+    "돈 문제와 방문 사실 축소"
+   ],
+   "starting_claim_ids": [
+    "c_s2_no_visit",
+    "c_s2_money_delay"
+   ],
+   "possible_motions": [
+    "still",
+    "cup_touch",
+    "hand_stop",
+    "look_down",
+    "back_in_chair",
+    "deep_breath"
+   ]
+  },
+  {
+   "id": "s3",
+   "name": "박현수",
+   "role": "301호 이웃·최초 신고자",
+   "speech_style": "서류와 배송 일에 정확하고 때로 친절. 거칠게 추궁받으면 불신하지만 동요만으로 드러나지 않음",
+   "private_fact_ids": [
+    "F10",
+    "F18",
+    "F21",
+    "F22",
+    "F23"
+   ],
+   "concealment": "21:28 문서 수신, 21:54 방문, 서류 실랑이와 밀침, 종이 조각 소지와 늦은 신고",
+   "goals": [
+    "신고자로서 협조하는 모습 유지",
+    "자기 폭력과 입실 사실 감추기"
+   ],
+   "starting_claim_ids": [
+    "c_s3_first_found",
+    "c_s3_never_entered"
+   ],
+   "possible_motions": [
+    "still",
+    "look_down",
+    "finger_tap",
+    "lean_back",
+    "exhale",
+    "cross_arms"
+   ]
+  }
+ ],
+ "claims": [
+  {
+   "id": "c_s1_direct_work",
+   "speaker": "s1",
+   "text": "21:21 뒤 바로 직장에 갔다",
+   "truth": "false",
+   "contradictions": [
+    "V21-E12",
+    "V21-E13"
+   ]
+  },
+  {
+   "id": "c_s1_no_touch",
+   "speaker": "s1",
+   "text": "피해자에게 손댄 적 없다",
+   "truth": "false",
+   "contradictions": [
+    "V21-E05",
+    "V21-E06"
+   ]
+  },
+  {
+   "id": "c_s2_no_visit",
+   "speaker": "s2",
+   "text": "그날 밤 302호에 가지 않았다/확실히 기억 안 난다",
+   "truth": "false",
+   "contradictions": [
+    "V21-E02",
+    "V21-E08",
+    "V21-E14"
+   ]
+  },
+  {
+   "id": "c_s2_money_delay",
+   "speaker": "s2",
+   "text": "480만원은 정산이 밀린 것뿐이었다",
+   "truth": "false",
+   "contradictions": [
+    "V21-E11"
+   ]
+  },
+  {
+   "id": "c_s3_first_found",
+   "speaker": "s3",
+   "text": "22:07에 처음 피해자를 발견했다",
+   "truth": "false",
+   "contradictions": [
+    "V21-E03",
+    "V21-E10",
+    "V21-E15",
+    "V21-E16"
+   ]
+  },
+  {
+   "id": "c_s3_never_entered",
+   "speaker": "s3",
+   "text": "302호에 들어간 적 없다/신고할 때 문밖에서 봤다",
+   "truth": "false",
+   "contradictions": [
+    "V21-E10",
+    "V21-E15",
+    "V21-E16"
+   ]
+  }
+ ],
+ "evidence": [
+  {
+   "id": "V21-E01",
+   "name": "20:47 배달 영수증 및 배달업체 기록",
+   "source_family": "DELIVERY",
+   "prop_ids": [
+    "LV-001",
+    "LV-037"
+   ],
+   "found": "현장 봉투 확인→필요시 업체 기록 원본 대조",
+   "fact_ids": [
+    "F05"
+   ],
+   "cost": 0,
+   "access": "scene_collect",
+   "detail": "20:47 배달, 음식은 피해자 거주지 도착",
+   "strength": "medium",
+   "limitations": "식사 인원, 방문자, 범행시각 / 소품 이동/음식 섞임",
+   "interrogation_bridge": "세 용의자의 식사/방문 설명은 별도 확인"
+  },
+  {
+   "id": "V21-E02",
+   "name": "공동현관·복도 CCTV 원본",
+   "source_family": "CCTV",
+   "prop_ids": [
+    "CR-006"
+   ],
+   "found": "관리실 제공→원본 보존→카메라 광학 시야·시간오차 대조",
+   "fact_ids": [
+    "F06",
+    "F08",
+    "F13",
+    "F15"
+   ],
+   "cost": 1,
+   "access": "request_record",
+   "detail": "강 21:12 입·21:21 퇴, 이 21:39 접근·21:49 퇴장. 301→302 일부 시야 밖",
+   "strength": "medium",
+   "limitations": "내부 폭행, 301→302 경로, 미촬영 구간에 사람이 없었음 / 시각 편차/압축/해상도",
+   "interrogation_bridge": "강·이의 출입 자체를 확인하지만 죄/무죄 결론은 따로"
+  },
+  {
+   "id": "V21-E03",
+   "name": "박현수 22:07 신고 녹취",
+   "source_family": "DISPATCH",
+   "prop_ids": [
+    "CR-003"
+   ],
+   "found": "112 초기 접수 자료·정확한 녹취",
+   "fact_ids": [
+    "F18",
+    "F23"
+   ],
+   "cost": 1,
+   "access": "request_record",
+   "detail": "박의 신고 내용·접수 시각·최초 진술",
+   "strength": "medium",
+   "limitations": "정말 22:07 처음 피해자를 봤는지 / 신고자가 놀라 시각을 부정확하게 말할 수 있음",
+   "interrogation_bridge": "박의 신고시각=최초 발견시각이라는 가정 교차"
+  },
+  {
+   "id": "V21-E04",
+   "name": "복도 환경음 녹음(선택·불확실)",
+   "source_family": "HALL_AUDIO",
+   "prop_ids": [
+    "CR-002",
+    "CR-003"
+   ],
+   "found": "박의 동의 또는 정당한 확보와 음원 원본검사. 미확보해도 보고 가능",
+   "fact_ids": [],
+   "cost": 1,
+   "access": "witness_interview",
+   "detail": "두 개의 충격 가능성/소음 시각의 참고, 신원 미확정",
+   "strength": "medium",
+   "limitations": "사람·가해자 자동 식별, 정확한 범행행위 / 녹음 시계·소리 원인·녹음 적법성",
+   "interrogation_bridge": "추가 진술 대조용; 박 보유 녹음은 자동 제출하지 않음"
+  },
+  {
+   "id": "V21-E05",
+   "name": "피해자 왼팔 접촉 흔적",
+   "source_family": "MEDICAL",
+   "prop_ids": [
+    "LV-027"
+   ],
+   "found": "의료 기록·증상 소견과 외부 진술 대조",
+   "fact_ids": [
+    "F07"
+   ],
+   "cost": 1,
+   "access": "request_record",
+   "detail": "팔을 강하게 붙잡거나 접촉한 정황이 의학 기록과 부합 가능",
+   "strength": "medium",
+   "limitations": "강이 그때 붙잡았다는 정확한 가해자·분 특정 / 부상 발생시점/개인차",
+   "interrogation_bridge": "강이 손댄 적 없다는 진술과 대조"
+  },
+  {
+   "id": "V21-E06",
+   "name": "파손 휴대전화 외형과 현장 위치",
+   "source_family": "SCENE_PHONE",
+   "prop_ids": [
+    "LV-027"
+   ],
+   "found": "현장 사진→원형·바닥 파편 위치→법적 디지털 분석",
+   "fact_ids": [
+    "F07"
+   ],
+   "cost": 0,
+   "access": "scene_collect",
+   "detail": "휴대전화는 사망 전 파손되어 있었고 잠금 상태에서도 기능이 일부 유지",
+   "strength": "medium",
+   "limitations": "누가 직접 던졌는지/정확한 파손시각 / 파손 이전 손상/이송 중 물품 이동",
+   "interrogation_bridge": "강 팔 접촉과 파손경위 질문"
+  },
+  {
+   "id": "V21-E07",
+   "name": "피해자 휴대전화 통화기록·21:50 음성메모",
+   "source_family": "PHONE_DIGITAL",
+   "prop_ids": [
+    "LV-027"
+   ],
+   "found": "권한 확인·압수 적법성→포렌식→파일 무결성·기기시각·음성 대조",
+   "fact_ids": [
+    "F11",
+    "F16"
+   ],
+   "cost": 2,
+   "access": "forensic_request",
+   "detail": "21:34 이와 통화, 21:50~51 수연 목소리 업무메모 가능; 이후 살아 있었다는 근거",
+   "strength": "medium",
+   "limitations": "메모 원본 검증 없이는 작성자·시각 확정, 살인범 식별 / 메타데이터 조작 가능성, 앱 저장지연, 기기시계 편차",
+   "interrogation_bridge": "서연 21:49 퇴장 뒤 수연 생존, 박 방문 목적 추론"
+  },
+  {
+   "id": "V21-E08",
+   "name": "깨진 네 사람 사진 액자·유리 파편",
+   "source_family": "SCENE_GLASS",
+   "prop_ids": [
+    "LV-029",
+    "LV-012"
+   ],
+   "found": "현장 사진·안전 조치·필요시 파편 대조",
+   "fact_ids": [
+    "F14"
+   ],
+   "cost": 0,
+   "access": "scene_collect",
+   "detail": "사건 현장에서 사진 액자 유리 깨짐, 손 상처와 부합 가능",
+   "strength": "medium",
+   "limitations": "치명상 행위나 정확한 발생시각 / 구급 구조/이동 때 추가 파손 가능",
+   "interrogation_bridge": "서연의 21:42 다툼을 들춰냄"
+  },
+  {
+   "id": "V21-E09",
+   "name": "두 부상군의 의학적 구별",
+   "source_family": "MEDICAL",
+   "prop_ids": [
+    "LV-007",
+    "LV-040"
+   ],
+   "found": "의료진 소견·감정절차→현장 혈흔/탁자 대조",
+   "fact_ids": [
+    "F14",
+    "F21"
+   ],
+   "cost": 1,
+   "access": "request_record",
+   "detail": "오른손바닥 열상과 두부 치명상은 서로 다른 기전일 가능성",
+   "strength": "medium",
+   "limitations": "두 손상 각각 정확한 분·가해자 이름 / 현장 출혈 혼합/후속 처치",
+   "interrogation_bridge": "이 소매 혈액이 두부치명상을 뜻한다는 오판 검증"
+  },
+  {
+   "id": "V21-E10",
+   "name": "정정서 원본·구버전 배송자료·파편 대응",
+   "source_family": "DOCUMENT",
+   "prop_ids": [
+    "LV-021",
+    "LV-022",
+    "LV-024",
+    "LV-038",
+    "LV-045"
+   ],
+   "found": "현장 원본 사진→발행/수정 기록→박 쪽 문서 적법 확인→파편 물리 대응",
+   "fact_ids": [
+    "F03",
+    "F16",
+    "F18",
+    "F22"
+   ],
+   "cost": 2,
+   "access": "forensic_request",
+   "detail": "박 이름 허위 기재, 정수연이 뒤늦게 정정서 작성, 현장 서류와 별도 확보 조각이 같은 출처일 가능성",
+   "strength": "medium",
+   "limitations": "그 종이를 누가 언제 찢었는지 자동 확정 / 문서 보관경로/인쇄 시점/서류 겹침과 사후 오염",
+   "interrogation_bridge": "박의 서류 관련 진술, 도현이 보낸 건 구버전이었다는 사실"
+  },
+  {
+   "id": "V21-E11",
+   "name": "공방 계좌·480만원 이체 원본",
+   "source_family": "FINANCE",
+   "prop_ids": [
+    "LV-021",
+    "LV-038"
+   ],
+   "found": "자발적 제출/정당한 금융자료 확보와 공방 문서 교차",
+   "fact_ids": [
+    "F01",
+    "F02",
+    "F04"
+   ],
+   "cost": 2,
+   "access": "financial_inquiry",
+   "detail": "이 무단 사용 480만원, 강이 수연에게 480만원 송금, 수연이 박에게 책임을 허위 전가한 동기적 맥락",
+   "strength": "medium",
+   "limitations": "누가 죽였는지 / 금액 같다고 동일 거래 2건 자동 묶기 금지",
+   "interrogation_bridge": "3명 각자의 독립적 경제적 원한"
+  },
+  {
+   "id": "V21-E12",
+   "name": "강도현→박현수 21:28 책임서 화면 메시지",
+   "source_family": "MESSAGING",
+   "prop_ids": [
+    "LV-038",
+    "CR-003"
+   ],
+   "found": "수신자/발신자 원본 또는 동의·절차에 따른 확인",
+   "fact_ids": [
+    "F09",
+    "F10"
+   ],
+   "cost": 2,
+   "access": "legal_request",
+   "detail": "박이 치명상 전에 구버전 문서 화면을 받았고 강은 바로 출근하지 않았음",
+   "strength": "medium",
+   "limitations": "강이 박에게 폭행을 지시했다는 증명 아님 / 스크린샷만으로 원본성 단정 금지",
+   "interrogation_bridge": "두 사람의 거짓말과 감정 자극을 각각 대조"
+  },
+  {
+   "id": "V21-E13",
+   "name": "강도현 21:51~22:00 근무 확인",
+   "source_family": "WORKPLACE",
+   "prop_ids": [
+    "CR-006"
+   ],
+   "found": "사업장 출입 기록+점검로그+동료 확인 등 교차",
+   "fact_ids": [
+    "F12",
+    "F17",
+    "F20"
+   ],
+   "cost": 1,
+   "access": "request_record",
+   "detail": "근무지 출입·점검·동료 진술을 대조해 직접 치명상 가해 가능성을 낮춤",
+   "strength": "medium",
+   "limitations": "21:17 별도 폭력·21:28 서류 전송까지 무죄로 지움 / 출입카드 대리 태깅 가능성 및 독립성 검증",
+   "interrogation_bridge": "강의 바로 출근 주장 일부 거짓과 21:57 현장 부재 분리"
+  },
+  {
+   "id": "V21-E14",
+   "name": "이서연 21:49 퇴장·21:55 편의점",
+   "source_family": "MERCHANT",
+   "prop_ids": [
+    "CR-006"
+   ],
+   "found": "편의점 결제+원본 영상·진술 대조. CCTV와 별도 근원 확보",
+   "fact_ids": [
+    "F15",
+    "F19"
+   ],
+   "cost": 1,
+   "access": "request_record",
+   "detail": "이서연이 21:55 편의점에서 결제했고 퇴장 기록과 연결",
+   "strength": "medium",
+   "limitations": "카드 결제만으로 이전 출입·치명상 가해/비가해 자동 확정 / 카드 대리 사용 및 영상 인물 식별",
+   "interrogation_bridge": "21:50 음성메모와 이 퇴장을 비교"
+  },
+  {
+   "id": "V21-E15",
+   "name": "탁자 모서리·의자·혈흔 재구성",
+   "source_family": "SCENE_IMPACT",
+   "prop_ids": [
+    "LV-007",
+    "LV-008",
+    "LV-040",
+    "LV-055"
+   ],
+   "found": "현장사진→예비소견→전문 혈흔/접촉 재구성→구급 흔적 제거",
+   "fact_ids": [
+    "F21"
+   ],
+   "cost": 2,
+   "access": "forensic_request",
+   "detail": "저상 탁자와 충돌하며 두부 손상이 발생할 수 있는 위치·흔적",
+   "strength": "medium",
+   "limitations": "정확한 밀친 사람·몇 분에 일어났는지 / 2회 사건 흔적·구급대 재배치",
+   "interrogation_bridge": "박과 이의 신체 접촉 주장과 구별"
+  },
+  {
+   "id": "V21-E16",
+   "name": "박의 물증: 찢어진 원본 일부·의복 접촉 흔적",
+   "source_family": "PARK_POSSESSION",
+   "prop_ids": [
+    "LV-022",
+    "LV-008"
+   ],
+   "found": "동의·영장 등 적법 경로→원본 사진·대응 조사→봉인/동일성 감정",
+   "fact_ids": [
+    "F21",
+    "F22"
+   ],
+   "cost": 2,
+   "access": "warrant_after_sufficient_cause",
+   "detail": "박이 정정 관련 서류 일부를 보유한 사실 및 실내 접촉 정황을 지원",
+   "strength": "medium",
+   "limitations": "언제 박이 현장에 있었는지 단독 확정, 살인 자동 증명 / 이전에 오갔던 관계, 수사 후 접촉, 자료 이전 전달 가능성",
+   "interrogation_bridge": "처음엔 안 들어갔다는 주장·발견시각 설명과 교차"
+  },
+  {
+   "id": "V21-E17",
+   "name": "119 구조 기록과 의료 사망 확인",
+   "source_family": "EMS_HOSPITAL",
+   "prop_ids": [
+    "LV-041",
+    "LV-042"
+   ],
+   "found": "구급일지·병원 기록을 적법 확인",
+   "fact_ids": [
+    "F24",
+    "F25",
+    "F26"
+   ],
+   "cost": 0,
+   "access": "obtained_at_start",
+   "detail": "신고 뒤 처치/이송 과정, 현장 EMS 유래 흔적, 병원 사망 확인",
+   "strength": "medium",
+   "limitations": "치명상 가해자/분 자동 특정 / 영상·기록 사후 정리 시각",
+   "interrogation_bridge": "현장의 끌린 흔적을 범행 은폐로 오인하지 않기"
+  },
+  {
+   "id": "V21-E18",
+   "name": "피해자와 박의 당일 방문 약속·연락",
+   "source_family": "PHONE_DIGITAL",
+   "prop_ids": [
+    "LV-027",
+    "LV-022"
+   ],
+   "found": "피해자/박 메시지 원본과 기기시각 교차, 타 출처 확인",
+   "fact_ids": [],
+   "cost": 2,
+   "access": "forensic_request",
+   "detail": "사망 전부터 박이 방문하기로 한 사전 약속과 문서 전달 의도",
+   "strength": "medium",
+   "limitations": "실제 방문 완료 자동 확정 / E07과 같은 원본이면 독립증거 2개로 집계 금지",
+   "interrogation_bridge": "박이 우연히 문 열려 신고했다는 주장 검증"
+  },
+  {
+   "id": "V21-E19",
+   "name": "과거 접촉 머그컵·주방 일반 흔적",
+   "source_family": "OLD_CONTACT",
+   "prop_ids": [
+    "KI-016"
+   ],
+   "found": "사진·필요한 경우만 감식, 과거 방문 대안 고려",
+   "fact_ids": [],
+   "cost": 2,
+   "access": "forensic_request",
+   "detail": "과거 방문자 접촉 흔적이 남았을 수 있음",
+   "strength": "medium",
+   "limitations": "사건 당일 타살 가해/범행시각 / 시간 특정 불가",
+   "interrogation_bridge": "과잉감식 유혹을 플레이어가 판단"
+  }
+ ],
+ "cctv_coverage": {
+  "CR-006": "공동현관 및 계단 접근 구간은 기록. 301호 문에서 302호 문으로의 짧은 복도 이동 중 일부는 화각 밖. 실제 Unity 장면에서 카메라 렌즈 뷰와 일치시킬 것. 녹화된 영상은 조작/삭제/마법 확대하지 말 것."
+ },
+ "locations": [
+  {
+   "id": "room302",
+   "name": "302호",
+   "is_3d": true
+  },
+  {
+   "id": "hall",
+   "name": "빌라 복도·계단",
+   "is_3d": true
+  },
+  {
+   "id": "interview",
+   "name": "조사실 TABLE//ZERO",
+   "is_3d": true
+  },
+  {
+   "id": "market",
+   "name": "편의점",
+   "is_3d": false,
+   "presentation": "CCTV/영수증 UI"
+  }
+ ],
+ "case_result_logic": {
+  "identity": "s3",
+  "must_prove": [
+   "presence_or_timing",
+   "motive",
+   "physical_link",
+   "exclude_alternative"
+  ],
+  "presence_or_timing_evidence_sets": [
+   [
+    "V21-E07",
+    "V21-E18"
+   ],
+   [
+    "V21-E07",
+    "V21-E03",
+    "V21-E02"
+   ]
+  ],
+  "motive_evidence_sets": [
+   [
+    "V21-E10"
+   ],
+   [
+    "V21-E12"
+   ]
+  ],
+  "physical_link_evidence_sets": [
+   [
+    "V21-E16",
+    "V21-E15"
+   ],
+   [
+    "V21-E16",
+    "V21-E10"
+   ],
+   [
+    "V21-E16",
+    "V21-E09"
+   ],
+   [
+    "V21-E10",
+    "V21-E15"
+   ]
+  ],
+  "exclude_alternative_evidence_sets": [
+   [
+    "V21-E13",
+    "V21-E07"
+   ],
+   [
+    "V21-E13",
+    "V21-E14",
+    "V21-E02"
+   ]
+  ],
+  "outcomes": [
+   "SOLVED_PROVEN",
+   "CORRECT_UNPROVEN",
+   "WRONG_ACCUSATION",
+   "PROCEDURAL_HOLD",
+   "UNRESOLVED"
+  ],
+  "no_confession_requirement": true,
+  "note": "각 축에 주장은 1개 이상, 확인된 원본에 연결된 근거, 대안설명 처리. PHYSICAL_LINK는 서로 다른 source_family 최소 2개 이상. 사건 진실을 맞히더라도 임의 대사/동기만으로 입증 불가."
+ },
+ "autonomy": {
+  "allowed_actions": [
+   "stay_quiet",
+   "request_counsel",
+   "prepare_statement",
+   "request_interview",
+   "cancel_optional_meeting",
+   "contact_acquaintance"
+  ],
+  "communication_edges": [
+   {
+    "from": "s2",
+    "to": "s3",
+    "known_from_start": true,
+    "reason": "공방 배송 일로 아는 사이"
+   },
+   {
+    "from": "s1",
+    "to": "s3",
+    "known_from_start": true,
+    "reason": "공방 일로 알던 사이, 21:28 메시지"
+   }
+  ],
+  "action_windows": {
+   "contact_acquaintance": {
+    "min_case_clock": "00:40",
+    "requires_not_in_custody": true
+   },
+   "cancel_optional_meeting": {
+    "requires_open_meeting": true
+   },
+   "request_counsel": {
+    "always": true
+   }
+  }
+ },
+ "production_rules": {
+  "initial_action_budget": 12,
+  "major_action_costs": {
+   "secure_record": 1,
+   "lab_request": 2,
+   "legal_request": 2,
+   "new_interview_session": 1,
+   "review_existing_evidence": 0,
+   "ask_followup_during_interview": 0,
+   "present_already_held_evidence": 0
+  },
+  "final_accusations": 1,
+  "ai_refusal_or_timeout": "explicit_error_no_world_state_mutation"
+ },
+ "source": "built by tools/build_v21_runtime.py from V21 package; do not edit by hand"
+}

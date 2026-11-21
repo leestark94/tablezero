@@ -1,0 +1,187 @@
+{
+  "version": "21.0",
+  "note": "18개는 208개 물건을 의미있게 조사하기 위한 논리 그룹, 모든 그룹이 필수는 아님. 실제 클릭 개수는 씬 QA 후 확정",
+  "groups": [
+    {
+      "id": "G01_출입통제",
+      "prop_ids": [
+        "CR-007",
+        "CR-008"
+      ],
+      "primary_evidence_ids": []
+    },
+    {
+      "id": "G02_복도카메라",
+      "prop_ids": [
+        "CR-006"
+      ],
+      "primary_evidence_ids": [
+        "V21-E02",
+        "V21-E13",
+        "V21-E14"
+      ]
+    },
+    {
+      "id": "G03_301호동선",
+      "prop_ids": [
+        "CR-002",
+        "CR-003"
+      ],
+      "primary_evidence_ids": [
+        "V21-E03",
+        "V21-E04",
+        "V21-E12"
+      ]
+    },
+    {
+      "id": "G04_현관인터폰",
+      "prop_ids": [
+        "CR-005",
+        "EN-001",
+        "EN-002",
+        "EN-021"
+      ],
+      "primary_evidence_ids": []
+    },
+    {
+      "id": "G05_전남친짐",
+      "prop_ids": [
+        "EN-016",
+        "BD-012"
+      ],
+      "primary_evidence_ids": []
+    },
+    {
+      "id": "G06_피해자폰",
+      "prop_ids": [
+        "LV-027"
+      ],
+      "primary_evidence_ids": [
+        "V21-E05",
+        "V21-E06",
+        "V21-E07",
+        "V21-E18"
+      ]
+    },
+    {
+      "id": "G07_깨진액자",
+      "prop_ids": [
+        "LV-029",
+        "LV-012"
+      ],
+      "primary_evidence_ids": [
+        "V21-E08"
+      ]
+    },
+    {
+      "id": "G08_좌식탁자충돌",
+      "prop_ids": [
+        "LV-007",
+        "LV-040",
+        "LV-055"
+      ],
+      "primary_evidence_ids": [
+        "V21-E09",
+        "V21-E15"
+      ]
+    },
+    {
+      "id": "G09_뒤집힌의자",
+      "prop_ids": [
+        "LV-008"
+      ],
+      "primary_evidence_ids": [
+        "V21-E15",
+        "V21-E16"
+      ]
+    },
+    {
+      "id": "G10_구급흔적",
+      "prop_ids": [
+        "LV-041",
+        "LV-042"
+      ],
+      "primary_evidence_ids": [
+        "V21-E17"
+      ]
+    },
+    {
+      "id": "G11_배송영수증",
+      "prop_ids": [
+        "LV-001",
+        "LV-002",
+        "LV-003",
+        "LV-037",
+        "LV-053",
+        "LV-054"
+      ],
+      "primary_evidence_ids": [
+        "V21-E01"
+      ]
+    },
+    {
+      "id": "G12_정산서",
+      "prop_ids": [
+        "LV-021",
+        "LV-038"
+      ],
+      "primary_evidence_ids": [
+        "V21-E10",
+        "V21-E11",
+        "V21-E12"
+      ]
+    },
+    {
+      "id": "G13_봉투뒤쪽",
+      "prop_ids": [
+        "LV-022"
+      ],
+      "primary_evidence_ids": [
+        "V21-E10",
+        "V21-E16",
+        "V21-E18"
+      ]
+    },
+    {
+      "id": "G14_노트북수정본",
+      "prop_ids": [
+        "LV-024"
+      ],
+      "primary_evidence_ids": [
+        "V21-E10"
+      ]
+    },
+    {
+      "id": "G15_송장재고",
+      "prop_ids": [
+        "LV-045"
+      ],
+      "primary_evidence_ids": [
+        "V21-E10"
+      ]
+    },
+    {
+      "id": "G16_머그컵",
+      "prop_ids": [
+        "KI-016"
+      ],
+      "primary_evidence_ids": [
+        "V21-E19"
+      ]
+    },
+    {
+      "id": "G17_월패드녹화없음",
+      "prop_ids": [
+        "EN-018"
+      ],
+      "primary_evidence_ids": []
+    },
+    {
+      "id": "G18_현장시계",
+      "prop_ids": [
+        "LV-019"
+      ],
+      "primary_evidence_ids": []
+    }
+  ]
+}

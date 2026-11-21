@@ -42,22 +42,32 @@ def apply_scene_notes(props):
 
 # Desk requests: canon evidence id -> procedure (cost uses canon production_rules budget)
 REQUESTS = {
-    'e02': {'cost': 2, 'minutes': 40, 'label': '휴대전화 디지털 포렌식 분석', 'needs_flags': ['phone_seized'],
-            'why_blocked': '현장에서 휴대전화를 적법하게 확보해야 분석을 의뢰할 수 있습니다'},
-    'e03': {'cost': 1, 'minutes': 20, 'label': '공동현관 출입기록 요청'},
-    'e05': {'cost': 1, 'minutes': 10, 'label': '박현수 녹음파일 임의제출 요청', 'needs_interviewed': ['s3'],
-            'why_blocked': '녹음 보유자에게 먼저 사정을 듣고 임의제출을 요청해야 합니다'},
-    'e06': {'cost': 2, 'minutes': 90, 'label': '머그컵 표면 감정의뢰', 'needs_flags': ['mug_collected'],
-            'why_blocked': '현장에서 머그컵을 채취·봉인해야 감정을 의뢰할 수 있습니다'},
-    'e07': {'cost': 1, 'minutes': 25, 'label': '복도 CCTV 추가 확보'},
-    'e08': {'cost': 1, 'minutes': 30, 'label': '인근 편의점 결제·영상 확인', 'needs_interviewed': ['s2'],
-            'why_blocked': '대상자를 특정할 이유(면담 등)가 있어야 결제 기록을 조회할 수 있습니다'},
-    'e09': {'cost': 2, 'minutes': 60, 'label': '21시 34분 통화상대 통신자료 조회', 'needs_evidence': ['e02'],
-            'why_blocked': '통화 기록이 먼저 확인돼야 통신자료 조회 요건을 갖춥니다'},
-    'e10': {'cost': 1, 'minutes': 30, 'label': '공동 투자 정산 이력 확인', 'needs_interviewed_any': ['s1', 's2'],
-            'why_blocked': '금전 관계를 확인할 단서(관계자 진술)가 먼저 필요합니다'},
-    'e11': {'cost': 3, 'minutes': 120, 'label': '압수수색영장 집행 및 착의 감정', 'needs_axes': ['presence_or_timing', 'motive'],
-            'why_blocked': '영장 청구에는 방문·시각과 동기에 대한 소명이 먼저 필요합니다'},
+    'V21-E02': {'cost': 1, 'minutes': 30, 'label': '공동현관·복도 CCTV 원본 확보', 'sealed': False},
+    'V21-E03': {'cost': 1, 'minutes': 15, 'label': '112 신고 녹취 확인'},
+    'V21-E04': {'cost': 1, 'minutes': 20, 'label': '복도 환경음 녹음 임의제출 요청', 'needs_interviewed': ['s3'],
+                'why_blocked': '녹음 보유자에게 먼저 사정을 듣고 동의를 구해야 합니다'},
+    'V21-E05': {'cost': 1, 'minutes': 40, 'label': '피해자 왼팔 의료 소견 확인'},
+    'V21-E07': {'cost': 2, 'minutes': 90, 'label': '피해자 휴대전화 디지털 포렌식', 'needs_flags': ['phone_seized'], 'sealed': True,
+                'why_blocked': '현장에서 휴대전화를 적법하게 확보해야 분석을 의뢰할 수 있습니다'},
+    'V21-E09': {'cost': 2, 'minutes': 120, 'label': '두 부상군 의학적 구별 감정', 'needs_evidence': ['V21-E17'],
+                'why_blocked': '구급·병원 기록이 먼저 확보돼야 감정을 의뢰할 수 있습니다'},
+    'V21-E10': {'cost': 1, 'minutes': 90, 'label': '정정서·구버전 배송자료 원본 대조'},
+    'V21-E11': {'cost': 2, 'minutes': 60, 'label': '공방 계좌·480만원 이체 원본 조회', 'needs_interviewed_any': ['s1', 's2'],
+                'why_blocked': '금전 관계를 확인할 단서(관계자 진술)가 먼저 필요합니다'},
+    'V21-E12': {'cost': 2, 'minutes': 60, 'label': '21:28 메시지 원본 확인', 'needs_interviewed_any': ['s1', 's3'],
+                'why_blocked': '메시지 송수신 당사자에게 먼저 사정을 들어야 합니다'},
+    'V21-E13': {'cost': 1, 'minutes': 30, 'label': '강도현 근무지 출입·점검 기록 확인', 'needs_interviewed': ['s1'],
+                'why_blocked': '대상자 진술(근무지)이 먼저 있어야 조회 범위를 정할 수 있습니다'},
+    'V21-E14': {'cost': 1, 'minutes': 30, 'label': '인근 편의점 결제·영상 확인', 'needs_interviewed': ['s2'],
+                'why_blocked': '대상자를 특정할 이유(면담 등)가 있어야 결제 기록을 조회할 수 있습니다'},
+    'V21-E15': {'cost': 1, 'minutes': 120, 'label': '탁자·의자·혈흔 현장 재구성 감정'},
+    'V21-E16': {'cost': 3, 'minutes': 120, 'label': '압수수색영장 집행·서류 파편/의복 감정', 'sealed': True,
+                'needs_axes': ['presence_or_timing', 'motive'],
+                'why_blocked': '영장 청구에는 방문·시각과 동기에 대한 소명이 먼저 필요합니다'},
+    'V21-E18': {'cost': 2, 'minutes': 60, 'label': '피해자 당일 방문 약속 메시지 확인', 'needs_evidence': ['V21-E07'],
+                'why_blocked': '피해자 휴대전화 분석이 먼저 돼야 합니다'},
+    'V21-E19': {'cost': 2, 'minutes': 90, 'label': '머그컵 표면 감정의뢰', 'needs_flags': ['mug_collected'], 'sealed': True,
+                'why_blocked': '현장에서 머그컵을 채취·봉인해야 감정을 의뢰할 수 있습니다'},
 }
 
 class PropAuthority:
@@ -240,7 +250,7 @@ class RecordDesk:
         self.requested.append(eid)
         self.episode.state.case_clock_minutes += r['minutes']
         self.episode.acquire(eid, authorized=True, photo_logged=True,
-                             sealed=REQUESTS[eid].get('sealed', eid in ('e06', 'e11')))
+                             sealed=REQUESTS[eid].get('sealed', False))
         return {'acquired': eid, 'budget_left': self.budget - self.spent, 'clock': self.episode.clock_text()}
 
     def charge_interview(self):

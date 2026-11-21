@@ -114,7 +114,7 @@ namespace TableZero
             var head = new VisualElement(); head.style.flexDirection = FlexDirection.Row; head.style.justifyContent = Justify.SpaceBetween; head.style.alignItems = Align.FlexStart;
             var org = new VisualElement();
             org.Add(P("○○경찰서 형사과 강력1팀", 17, PaperMid));
-            var cs = P("CASE 001 · 빌라 302호 정수연(29) 사망 사건", 17, PaperMid); cs.style.marginTop = 3; org.Add(cs);
+            var cs = P("CASE 001 · 빌라 302호 여성 사망 경위 조사", 17, PaperMid); cs.style.marginTop = 3; org.Add(cs);
             head.Add(org);
             var stamp = new VisualElement(); stamp.style.width = 90; stamp.style.height = 90; Radius(stamp, 45);
             Border(stamp, 3, StampRed); stamp.style.alignItems = Align.Center; stamp.style.justifyContent = Justify.Center; stamp.style.rotate = new Rotate(-12f); stamp.style.marginTop = -8;
@@ -306,7 +306,7 @@ namespace TableZero
         {
             if (bgB != null && bg != null) { bgB.style.scale = bg.style.scale; bgB.style.translate = bg.style.translate; }
             if (recDot != null) recDot.style.opacity = (Time.unscaledTime % 1.4f) < 0.9f ? 1 : 0.15f;
-            if (feedTime != null) feedTime.text = "2024. 03. 16 (토)  " + (string.IsNullOrEmpty(clockText) ? "--:--" : clockText) + ":" + ((int)(Time.unscaledTime % 60)).ToString("00");
+            if (feedTime != null) feedTime.text = "2026. 10. 16 (금)  " + (string.IsNullOrEmpty(clockText) ? "--:--" : clockText) + ":" + ((int)(Time.unscaledTime % 60)).ToString("00");
             if (!ledgerOpen || entering || Keyboard.current == null || suspects == null) return;
             if (Keyboard.current.upArrowKey.wasPressedThisFrame) Select((sel + suspects.Length - 1) % suspects.Length);
             if (Keyboard.current.downArrowKey.wasPressedThisFrame) Select((sel + 1) % suspects.Length);

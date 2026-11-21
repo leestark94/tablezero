@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 import copy, json, hashlib, time
 
-CANON_PATH = Path(__file__).resolve().parents[1] / 'reference' / 'CASE001_CANON_LOCKED.json'
+CANON_PATH = Path(__file__).resolve().parents[1] / 'reference' / 'v21' / 'CASE001_V21_RUNTIME.json'
 CATALOG_PATH = Path(__file__).resolve().parents[1] / 'data' / 'cinematic_catalog_82.json'
 MODES = {'answer','deny','partial_admission','counter','angry','silence','request_counsel','uncertain'}
 ALLOWED_MOTIONS = {'still','cup_touch','hand_stop','look_down','table_slam','lean_back','finger_tap','deep_breath','shift_chair','avoid_gaze','cross_arms','lean_forward','back_in_chair','exhale','chair_shift','jaw_tight'}

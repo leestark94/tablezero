@@ -51,11 +51,14 @@ class BeatDirector:
     def __init__(self, world, catalog_path: str|Path = DEFAULT_CATALOG):
         self.world = world
         data=json.loads(Path(catalog_path).read_text(encoding='utf-8'))
-        self.beats = data['beats']
+        evidence_ids={e['id'] for e in self.world._canon['evidence']}
+        # Beats written for another case version (e.g. the retired v0.4 story) reference evidence this case does not have.
+        # They are disabled, never auto-loaded, and listed for review — a beat may not smuggle an old story back in.
+        self.disabled_foreign=[b['id'] for b in data['beats'] if not set(b.get('requires_evidence_ids',[])).issubset(evidence_ids)]
+        self.beats = [b for b in data['beats'] if b['id'] not in set(self.disabled_foreign)]
         self.by_id={b['id']: b for b in self.beats}
         if len(self.by_id) != len(self.beats):raise BeatValidationError('Duplicate beat ID')
         catalog_ids=set(self.world.catalog)
-        evidence_ids={e['id'] for e in self.world._canon['evidence']}
         for b in self.beats:
             if b['trigger'] not in TRIGGERS or b['scene'] not in SCENES or b['kind'] not in SCENE_KINDS:
                 raise BeatValidationError(f'Unknown scene/trigger/kind for {b["id"]}')

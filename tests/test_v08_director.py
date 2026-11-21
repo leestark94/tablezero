@@ -12,19 +12,23 @@ class DirectorV08Tests(unittest.TestCase):
  def setUp(self):
   self.world=World()
   self.ctrl=EpisodeController(world=self.world)
- def test_01_beat_95(self):self.assertEqual(len(self.ctrl.director.beats),95)
- def test_02_unique_beat_ids(self):self.assertEqual(len(self.ctrl.director.by_id),95)
+ def test_01_beat_95(self):
+  # 95 authored beats; those tied to the retired v0.4 story's evidence are disabled, never auto-loaded
+  d=self.ctrl.director;self.assertEqual(len(d.beats)+len(d.disabled_foreign),95)
+  ev={e['id'] for e in self.world._canon['evidence']}
+  self.assertTrue(all(set(b['requires_evidence_ids'])<=ev for b in d.beats))
+ def test_02_unique_beat_ids(self):self.assertEqual(len(self.ctrl.director.by_id),len(self.ctrl.director.beats))
  def test_03_82_original_cues(self):self.assertEqual(len(self.world.catalog),82)
  def test_04_no_stolen_evidence(self):
   with self.assertRaises(GuardError):self.ctrl.question('시간은요?')
- def test_05_case_start_evidence(self):self.assertEqual(self.world.available_evidence,{'e01'})
+ def test_05_case_start_evidence(self):self.assertEqual(self.world.available_evidence,{'V21-E17'})
  def test_06_no_unacquired_access(self):
-  with self.assertRaises(GuardError):self.ctrl.acquire('e08',authorized=False,photo_logged=True)
+  with self.assertRaises(GuardError):self.ctrl.acquire('V21-E14',authorized=False,photo_logged=True)
  def test_07_evidence_chain(self):
   self.ctrl.transition('room302')
-  with self.assertRaises(GuardError):self.ctrl.acquire('e04',authorized=True,photo_logged=True,sealed=False)
-  self.ctrl.acquire('e04',authorized=True,photo_logged=True,sealed=True)
-  self.assertIn('sealed',self.ctrl.state.acquired_chain['e04'])
+  with self.assertRaises(GuardError):self.ctrl.acquire('V21-E01',authorized=True,photo_logged=True,sealed=False)
+  self.ctrl.acquire('V21-E01',authorized=True,photo_logged=True,sealed=True)
+  self.assertIn('sealed',self.ctrl.state.acquired_chain['V21-E01'])
  def test_08_scene_transition_cannot_jump_to_interview(self):
   with self.assertRaises(GuardError):self.ctrl.transition('interview')
  def test_09_interview_preview(self):
@@ -48,7 +52,7 @@ class DirectorV08Tests(unittest.TestCase):
   for e in self.world._canon['evidence']:self.world.expose_evidence(e['id'])
  def test_14_correct_full_report(self):
   self._all_evidence();self.ctrl.transition('desk')
-  r=self.ctrl.file_report('s2',sorted(self.world.available_evidence),final=True)
+  r=self.ctrl.file_report('s3',sorted(self.world.available_evidence),final=True)
   self.assertEqual(r['ending_code'],'substantiated')
   self.assertFalse(r['may_continue'])
  def test_15_wrong_accusation_not_accepted(self):
@@ -58,21 +62,21 @@ class DirectorV08Tests(unittest.TestCase):
   self.assertNotIn('correct_identity',r)
  def test_16_correct_but_missing_axis_no_spoiler(self):
   self.ctrl.transition('desk')
-  r=self.ctrl.file_report('s2',['e01'],final=True)
+  r=self.ctrl.file_report('s3',['V21-E17'],final=True)
   self.assertEqual(r['ending_code'],'recheck_required')
   self.assertTrue(r['may_continue'])
   self.assertNotIn('underproved_true_person',json.dumps(r,ensure_ascii=False))
  def test_17_chain_defect(self):
   self._all_evidence();self.ctrl.transition('desk')
-  r=self.ctrl.file_report('s2',sorted(self.world.available_evidence),final=True,chain_defects=['e11'])
+  r=self.ctrl.file_report('s3',sorted(self.world.available_evidence),final=True,chain_defects=['V21-E16'])
   self.assertFalse(r['report_accepted'])
  def test_18_no_reverse_route(self):
   self.ctrl.set_act('pressure')
   with self.assertRaises(GuardError):self.ctrl.set_act('arrival')
  def test_19_contact_after_clock(self):
   self.ctrl.transition('desk');self.ctrl.transition('interview');self.ctrl.start_interview('s2')
-  # V11-INT: scene travel now consumes case time; pin the clock to the report time to test the window
-  self.ctrl.state.case_clock_minutes=22*60+7
+  # V21: contact window opens 00:40 on the investigation night; pin just before it
+  self.ctrl.state.case_clock_minutes=0*60+30
   with self.assertRaises(GuardError):self.ctrl.resolve_action('contact_acquaintance','s3',approved=True)
   self.ctrl.advance_case_clock(15,approved=True)
   r=self.ctrl.resolve_action('contact_acquaintance','s3',approved=True)
@@ -120,12 +124,12 @@ class DirectorV08Tests(unittest.TestCase):
   self.assertEqual(len(ENDING_SCRIPTS),5)
   self.assertFalse(any(line.endswith('.') for v in ENDING_SCRIPTS.values() for a,b,line in v))
  def test_33_public_report_never_includes_identity_correct(self):
-  self.ctrl.transition('desk');r=self.ctrl.file_report('s1',['e01'],final=True)
+  self.ctrl.transition('desk');r=self.ctrl.file_report('s1',['V21-E17'],final=True)
   self.assertFalse('correct_identity' in r)
  def test_34_no_evidence_name_auto_leak(self):
   from server.api import page_projection
   page=page_projection(self.ctrl,'evidence')
-  self.assertEqual([x['status'] for x in page['records']],['e01'])
+  self.assertEqual([x['status'] for x in page['records']],['V21-E17'])
  def test_35_question_no_terminal_dot(self):
   self.ctrl.transition('desk');self.ctrl.transition('interview');self.ctrl.start_interview('s2')
   self.assertFalse(self.ctrl.question('몇 시요?')['line'].endswith('.'))
