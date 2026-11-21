@@ -56,3 +56,9 @@ if ($Only.Count -eq 0 -or $Only -contains "18_markers") {
     foreach ($id in @("living_floor_blood", "kitchen_mug", "living_food_bag", "xprop_blood_smear", "living_chair")) { Photo $id }
     Shot "18_markers"    2.95  2.85  0.0  142 36
 }
+
+# v5: bathroom floor clutter, printed labels, condensation mould, bed-head wall
+Shot "22_bath_floor"     2.45  1.55  0.0  -18 45
+Shot "23_condiments"     0.75  3.36  0.0   90 25
+Shot "24_window_corner"  1.60  4.90  0.0  159 10
+Shot "25_bed_wall"       2.60  4.60  0.0 -144 12

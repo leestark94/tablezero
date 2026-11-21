@@ -689,6 +689,9 @@ def bathroom():
     tzprops3.towel_on_bar('bath_towel2', (2.53, 1.97, 1.35), (2.73, 1.97, 1.35), 0.66, mat('M_TowelBeige', (0.78, 0.72, 0.62, 1), 1.0))
     lathe('bath_laundry_bin', [(0, 0), (0.14, 0), (0.15, 0.4), (0.14, 0.4), (0.13, 0.02), (0, 0.02)], [M['pw']], 24, location=(4.0, 1.75, -0.045))
     tzprops2.dipper('xprop_dipper', (2.42, 0.32, -0.045))
+    tzprops3.bath_stool('xprop_bath_stool', (2.82, 0.78, -0.045), mat('M_StoolPink', (0.92, 0.55, 0.62, 1), 0.45))
+    tzprops3.wash_basin('xprop_wash_basin', (3.10, 0.30, -0.045), mat('M_BasinRed', (0.75, 0.12, 0.12, 1), 0.45))
+    tzprops3.drain_hair('xprop_drain_hair', (2.6, 0.55, -0.045), mat('M_HairDark', (0.035, 0.025, 0.02, 1), 0.6))
     tzprops2.detergent('xprop_detergent', (4.05, 1.25, -0.045), rot=0.3)
     box('bath_floor_mat', (2.25, 1.15, -0.045), (2.70, 1.60, -0.035), mat('M_BathMat', (0.45, 0.55, 0.6, 1), 1.0), bevel=0.004)
     shoe('xprop_bath_slippers', (2.40, 0.95, -0.045), 0.26, mat('M_BathSlipper', (0.35, 0.55, 0.62, 1), 0.5), M['rubber'], rot=0.2, slipper=True)
@@ -814,6 +817,28 @@ def contents():
     join('xprop_contents_bath_cabinet', p, origin=(3.2, 1.83, 0.11))
 
 architecture(); entrance(); kitchen(); living(); bathroom(); hallway(); contents()
+
+def labels_v5():
+    """Printed product words on packaging (generic product names only, no brands)."""
+    ink_w = mat('M_InkWhite', (0.95, 0.95, 0.94, 1), 0.5)
+    def add_to(name, parts):
+        o = bpy.data.objects[name]
+        assert o.parent is None, name
+        join(name, [o] + parts, origin=tuple(o.location))
+    cx, cy, cz = 0.06, 3.36, 0.86
+    parts = tzprops3.bottle_label('soy', cx, cy, cz + 0.05, cz + 0.12, 0.035, mat('M_LabelSoy', (0.50, 0.07, 0.05, 1), 0.5), '진간장', ink_w, FONT, 0.021)
+    parts += tzprops3.bottle_label('oil', cx + 0.08, cy, cz + 0.06, cz + 0.15, 0.032, mat('M_LabelOil', (0.95, 0.82, 0.25, 1), 0.5), '식용유', M['inkred'], FONT, 0.021)
+    parts += tzprops3.bottle_label('ses', cx + 0.04, cy + 0.07, cz + 0.035, cz + 0.10, 0.025, mat('M_LabelSesame', (0.55, 0.32, 0.08, 1), 0.5), '참기름', ink_w, FONT, 0.015)
+    add_to('xprop_condiments', parts)
+    add_to('bath_shampoo', tzprops3.bottle_label('sh', 2.35, 0.12, -0.045 + 0.05, -0.045 + 0.14, 0.035, mat('M_LabelShampoo', (0.48, 0.30, 0.60, 1), 0.5),
+                                                 '샴푸', ink_w, FONT, 0.028, facing='+y'))
+    add_to('bath_body_wash', tzprops3.bottle_label('bw', 2.44, 0.10, -0.045 + 0.05, -0.045 + 0.15, 0.035, mat('M_LabelBodyWash', (0.92, 0.92, 0.86, 1), 0.5),
+                                                   '바디워시', M['green'], FONT, 0.017, facing='+y'))
+    rm = [box('tmp_rmband', (0.3001, 2.36, 1.83), (0.3006, 2.59, 1.855), mat('M_LabelOrange', (0.95, 0.55, 0.10, 1), 0.5), bevel=0),
+          label('tmp_rmtxt', '얼큰라면', 0.03, (0.3009, 2.475, 1.885), (R90, 0, R90), ink_w)]
+    add_to('xprop_contents_upper2', rm + [label('tmp_rice', '즉석밥', 0.018, (0.2006, 2.14, 1.588), (R90, 0, R90), M['inkred'])])
+
+labels_v5()
 tzprops3.evidence_markers(FONT)
 
 args = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []

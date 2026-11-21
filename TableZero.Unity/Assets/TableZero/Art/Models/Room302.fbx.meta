@@ -12,6 +12,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: M_BasinRed
+    second: {fileID: 2100000, guid: 0cf9d97b7b385a548b200a0c67628f2c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: M_BathFloor
     second: {fileID: 2100000, guid: 9a6fc866e2a36074ba80a20a4da33d16, type: 2}
   - first:
@@ -242,6 +247,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: M_HairDark
+    second: {fileID: 2100000, guid: 22c473c1cf4a5c4419429906db8d81c7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: M_HallConcrete
     second: {fileID: 2100000, guid: 508099b077510d8448c512def09e2315, type: 2}
   - first:
@@ -272,6 +282,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: M_InkWhite
+    second: {fileID: 2100000, guid: 8cf92c14984c7684fa7a307db7290875, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: M_InstantRice
     second: {fileID: 2100000, guid: c42b45f9575b57648b74f982938c22ec, type: 2}
   - first:
@@ -279,6 +294,36 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: M_LEDPanel
     second: {fileID: 2100000, guid: a50e8fc01aaf8354a8a03090a013e66c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_LabelBodyWash
+    second: {fileID: 2100000, guid: a2321b38d9d356e469a8033596c739cb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_LabelOil
+    second: {fileID: 2100000, guid: 51c1e906b4b8d1741a85978aeb76621c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_LabelOrange
+    second: {fileID: 2100000, guid: ca94b805cdc7de642b22a8de4f952896, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_LabelSesame
+    second: {fileID: 2100000, guid: e8de1d507a8c82844b25f02b7eb48d3b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_LabelShampoo
+    second: {fileID: 2100000, guid: 35653328f54a5834f9bba11837029708, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_LabelSoy
+    second: {fileID: 2100000, guid: 08d665a2b70f5ed408ee134801a8f641, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -509,6 +554,11 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: M_StickerWhite
     second: {fileID: 2100000, guid: f88510c3424ec6646851a33c0d686cda, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_StoolPink
+    second: {fileID: 2100000, guid: 3d64032a3c28fe14db4e9b4e6518d7a4, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule

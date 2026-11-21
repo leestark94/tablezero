@@ -224,6 +224,7 @@ sleep_wardrobe_right
 xprop_aircon_unit
 xprop_bath_light
 xprop_bath_slippers
+xprop_bath_stool
 xprop_bath_vent_grille
 xprop_blood_drops
 xprop_blood_smear
@@ -249,6 +250,7 @@ xprop_delivery_receipt
 xprop_detergent
 xprop_dipper
 xprop_door_flyers
+xprop_drain_hair
 xprop_drying_rack
 xprop_electric_blanket
 xprop_employee_badge
@@ -282,6 +284,7 @@ xprop_underbed_livingbox
 xprop_wall_calendar
 xprop_wallpad
 xprop_wardrobe_rod
+xprop_wash_basin
 xprop_washer_door
 xprop_washing_machine
 xprop_water_bundle

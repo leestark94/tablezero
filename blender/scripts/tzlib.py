@@ -257,7 +257,7 @@ def shade_smooth_auto(obj, angle=35):
 
 _FONT = {}
 def text_mesh(name, text, size, location, rotation=(0, 0, 0), material=None, font_path=None, extrude=0.0004,
-              collection='Room302', align='CENTER'):
+              collection='Room302', align='CENTER', bold=0.0):
     """Real Korean text as thin geometry (labels, receipts, markers). Font must be OFL (Noto)."""
     if font_path and font_path not in _FONT:
         _FONT[font_path] = bpy.data.fonts.load(font_path)
@@ -265,6 +265,7 @@ def text_mesh(name, text, size, location, rotation=(0, 0, 0), material=None, fon
     cu.body = text
     cu.size = size
     cu.extrude = extrude
+    cu.offset = bold            # fattens glyph outlines (Noto variable font has no bold face loaded)
     cu.align_x = align
     cu.align_y = 'CENTER'
     if font_path:

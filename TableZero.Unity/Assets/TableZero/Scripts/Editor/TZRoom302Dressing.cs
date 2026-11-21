@@ -69,7 +69,7 @@ namespace TableZero.EditorTools
         }
 
         // ------------------------------------------------------------------ grime decals
-        enum Grime { HandSmudge, Scuff, WaterStain, Grease, Mildew, Dust }
+        enum Grime { HandSmudge, Scuff, WaterStain, Grease, Mildew, Dust, WaterStreak, PinkMold, SoapScum, HairOil, PosterFade, CondensationMold }
 
         static Texture2D GrimeTex(Grime g)
         {
@@ -96,9 +96,25 @@ namespace TableZero.EditorTools
                                 a = Mathf.Clamp01(1 - r) * 0.22f * n1 + ring; c = new Color(0.55f, 0.45f, 0.28f); break;
                             case Grime.Grease: a = Mathf.Clamp01(1 - r * 1.05f) * (0.4f + 0.6f * n1) * 0.45f; c = new Color(0.42f, 0.33f, 0.18f); break;
                             case Grime.Mildew: a = Mathf.Clamp01(1 - (v + 1) * 1.3f) * Mathf.Pow(n2, 1.5f) * 1.1f; c = new Color(0.12f, 0.13f, 0.11f); break;
+                            case Grime.WaterStreak:   // limescale runs down the tiles under the shower
+                                float runs = Mathf.Pow(Mathf.PerlinNoise(ox + x * 0.09f, oy + y * 0.004f), 3f) * 2.2f;
+                                a = runs * Mathf.Clamp01(1 - Mathf.Abs(u) * 1.1f) * Mathf.Clamp01((v + 1.1f) * 0.6f) * 0.55f; c = new Color(0.80f, 0.79f, 0.72f); break;
+                            case Grime.PinkMold:      // Serratia film in wet corners
+                                a = Mathf.Clamp01(1 - r * 1.15f) * Mathf.Pow(n2, 1.3f) * 1.2f; c = new Color(0.72f, 0.38f, 0.40f); break;
+                            case Grime.SoapScum:
+                                float rg = Mathf.Exp(-Mathf.Pow((r - 0.45f - (n1 - 0.5f) * 0.3f) * 5f, 2));
+                                a = (rg * 0.5f + Mathf.Clamp01(1 - r) * 0.15f) * (0.5f + n2); c = new Color(0.86f, 0.85f, 0.80f); break;
+                            case Grime.HairOil:       // greasy patch on the wallpaper above the headboard
+                                a = Mathf.Clamp01(1 - Mathf.Abs(u) * 1.05f) * Mathf.Clamp01(1 - Mathf.Abs(v) * 1.3f) * (0.4f + 0.6f * n1) * 0.42f; c = new Color(0.50f, 0.42f, 0.26f); break;
+                            case Grime.PosterFade:    // brighter unfaded rectangle + tape corners where a poster hung
+                                bool inRect = Mathf.Abs(u) < 0.72f && Mathf.Abs(v) < 0.86f;
+                                bool tape = (Mathf.Abs(Mathf.Abs(u) - 0.72f) < 0.07f) && (Mathf.Abs(Mathf.Abs(v) - 0.86f) < 0.06f);
+                                a = tape ? 0.55f * (0.6f + 0.4f * n2) : inRect ? 0.13f : 0f; c = tape ? new Color(0.62f, 0.55f, 0.40f) : new Color(1f, 1f, 0.98f); break;
+                            case Grime.CondensationMold: // black mould spreading from a cold window corner
+                                a = Mathf.Clamp01(1 - r * 1.05f) * Mathf.Pow(n2, 1.1f) * Mathf.Pow(n1, 0.6f) * 1.6f; c = new Color(0.07f, 0.08f, 0.06f); break;
                             default: a = Mathf.Clamp01(1 - r) * n1 * 0.3f; c = new Color(0.45f, 0.43f, 0.40f); break;
                         }
-                        a = Mathf.Clamp01(a) * Mathf.Clamp01((1 - r) * 4f);
+                        a = Mathf.Clamp01(a) * (g == Grime.PosterFade || g == Grime.WaterStreak ? 1f : Mathf.Clamp01((1 - r) * 4f));
                         px[y * N + x] = new Color(c.r, c.g, c.b, a);
                     }
                 var t = new Texture2D(N, N, TextureFormat.RGBA32, false);
@@ -165,6 +181,20 @@ namespace TableZero.EditorTools
             Decal(root, "mildew_south", Grime.Mildew, new Vector3(2.9f, 0.002f, 0.12f), new Vector3(0, 1, 0), new Vector2(1.3f, 0.35f));
             Decal(root, "mildew_corner", Grime.Mildew, new Vector3(2.201f, 0.4f, 0.12f), new Vector3(1, 0, 0), new Vector2(0.8f, 0.35f));
             Decal(root, "mildew_drain", Grime.Dust, new Vector3(2.6f, 0.55f, -0.0435f), new Vector3(0, 0, 1), new Vector2(0.4f, 0.4f));
+            // v5: the bathroom is used every day — limescale runs, pink film in wet corners, soap scum at the drain and the sink
+            Decal(root, "streak_shower", Grime.WaterStreak, new Vector3(2.62f, 0.002f, 0.85f), new Vector3(0, 1, 0), new Vector2(0.75f, 1.5f));
+            Decal(root, "streak_sink", Grime.WaterStreak, new Vector3(3.22f, 1.998f, 1.0f), new Vector3(0, -1, 0), new Vector2(0.5f, 0.45f));
+            Decal(root, "pinkmold_corner", Grime.PinkMold, new Vector3(2.32f, 0.12f, -0.0438f), new Vector3(0, 0, 1), new Vector2(0.35f, 0.3f), 30);
+            Decal(root, "pinkmold_wall", Grime.PinkMold, new Vector3(2.202f, 0.25f, 0.05f), new Vector3(1, 0, 0), new Vector2(0.4f, 0.18f));
+            Decal(root, "pinkmold_toilet", Grime.PinkMold, new Vector3(3.74f, 0.5f, -0.0437f), new Vector3(0, 0, 1), new Vector2(0.42f, 0.36f));
+            Decal(root, "scum_drain", Grime.SoapScum, new Vector3(2.6f, 0.55f, -0.0434f), new Vector3(0, 0, 1), new Vector2(0.34f, 0.34f), 40);
+            // v5: walls — condensation mould at the cold window corners (결로), greasy patch above the bed head, a poster that was taken down
+            Decal(root, "condmold_win_l", Grime.CondensationMold, new Vector3(1.18f, 5.997f, 0.95f), new Vector3(0, -1, 0), new Vector2(0.36f, 0.42f));
+            Decal(root, "condmold_win_r", Grime.CondensationMold, new Vector3(2.72f, 5.997f, 2.05f), new Vector3(0, -1, 0), new Vector2(0.42f, 0.36f), 180);
+            Decal(root, "condmold_ceil", Grime.CondensationMold, new Vector3(4.05f, 5.85f, 2.299f), new Vector3(0, 0, -1), new Vector2(0.5f, 0.45f));
+            Decal(root, "condmold_base", Grime.CondensationMold, new Vector3(4.198f, 5.7f, 0.12f), new Vector3(-1, 0, 0), new Vector2(0.55f, 0.25f));
+            Decal(root, "hairoil_bed", Grime.HairOil, new Vector3(3.6f, 5.997f, 0.98f), new Vector3(0, -1, 0), new Vector2(0.8f, 0.32f));
+            Decal(root, "poster_west", Grime.PosterFade, new Vector3(0.003f, 3.95f, 1.55f), new Vector3(1, 0, 0), new Vector2(0.5f, 0.7f));
         }
 
         // ------------------------------------------------------------------ probes + bake

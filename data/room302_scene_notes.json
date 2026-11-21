@@ -505,6 +505,27 @@
       "label_ko": "구겨진 휴지",
       "interaction_type": "inspect",
       "observation_ko": "침대 옆 바닥에 구겨진 휴지 몇 장"
+    },
+    {
+      "prop_id": "xprop_bath_stool",
+      "zone": "bath",
+      "label_ko": "목욕의자",
+      "interaction_type": "inspect",
+      "observation_ko": "분홍색 플라스틱 목욕의자. 물기는 없다"
+    },
+    {
+      "prop_id": "xprop_wash_basin",
+      "zone": "bath",
+      "label_ko": "대야",
+      "interaction_type": "inspect",
+      "observation_ko": "빨간 플라스틱 대야가 엎어져 있지 않고 바로 놓여 있다. 비어 있다"
+    },
+    {
+      "prop_id": "xprop_drain_hair",
+      "zone": "bath",
+      "label_ko": "배수구",
+      "interaction_type": "inspect",
+      "observation_ko": "배수구 덮개에 긴 머리카락이 몇 가닥 엉켜 있다"
     }
   ]
 }

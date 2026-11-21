@@ -1,0 +1,230 @@
+{
+  "note": "Tripo 3D generation plan for CASE 001. Single-mesh props only (articulated furniture with doors/drawers stays Blender-built so server-approved motions keep working). Every output is imported as RELEASE review art and logged in ASSET_LICENSE_LEDGER.csv with the task id, account plan and generation date. Run now: tier A only (essential). Tier D is deferred until the essential results are reviewed.",
+  "style_suffix": "photorealistic, real-world scale, worn and used, neutral studio lighting, single object, no text, no logo, no brand",
+  "items": [
+    {
+      "id": "char_fp_hands",
+      "tier": "A",
+      "for": "game-pc",
+      "replaces": "first-person hands (RELEASE_BLOCKED_ASSET)",
+      "prompt": "right forearm and hand of an adult man in a blue nitrile glove gripping a black tactical flashlight, dark navy jacket sleeve, first-person game view model, static pose",
+      "note": "static pose mesh parented to the camera; a forearm is not a humanoid rig target"
+    },
+    {
+      "id": "char_s1",
+      "tier": "A",
+      "for": "anim",
+      "replaces": "suspect s1 (RELEASE_BLOCKED_ASSET)",
+      "prompt": "Korean man age 31, logistics center day-shift supervisor, short black hair, plain grey work jacket over t-shirt, jeans, tired expression, full body A-pose"
+    },
+    {
+      "id": "char_s2",
+      "tier": "A",
+      "for": "anim",
+      "replaces": "suspect s2 (RELEASE_BLOCKED_ASSET)",
+      "prompt": "Korean woman age 29, cosmetics company marketing assistant manager, shoulder-length dark hair, beige trench coat over office blouse, slacks, full body A-pose"
+    },
+    {
+      "id": "char_s3",
+      "tier": "A",
+      "for": "anim",
+      "replaces": "suspect s3 (RELEASE_BLOCKED_ASSET)",
+      "prompt": "Korean man age 46, food delivery motorbike rider, weathered face, short greying hair, black padded rider jacket, cargo pants, sneakers, full body A-pose"
+    },
+    {
+      "id": "prop_rice_cooker",
+      "tier": "D",
+      "replaces": "xprop_rice_cooker",
+      "prompt": "Korean electric pressure rice cooker, white body with dark red lid, small digital panel",
+      "note": "deferred: procedural Blender version is in game; replace only after the essential set is approved"
+    },
+    {
+      "id": "prop_kettle",
+      "tier": "D",
+      "replaces": "xprop_kettle",
+      "prompt": "cheap stainless steel cordless electric kettle on its base, fingerprints",
+      "note": "deferred: procedural Blender version is in game; replace only after the essential set is approved"
+    },
+    {
+      "id": "prop_floor_chair",
+      "tier": "D",
+      "replaces": "living_chair",
+      "prompt": "Korean floor chair jwasik uija, foldable padded seat and backrest, navy fabric, no legs",
+      "note": "deferred: procedural Blender version is in game; replace only after the essential set is approved"
+    },
+    {
+      "id": "prop_tteokbokki",
+      "tier": "D",
+      "replaces": "living_food_container1",
+      "prompt": "half-eaten tteokbokki in a black rectangular plastic takeout tray, red gochujang sauce, rice cakes, fish cake, green onion",
+      "note": "deferred: procedural Blender version is in game; replace only after the essential set is approved"
+    },
+    {
+      "id": "prop_sundae",
+      "tier": "D",
+      "replaces": "living_food_container2",
+      "prompt": "Korean sundae blood sausage slices with liver in a white plastic takeout tray with clear lid closed",
+      "note": "deferred: procedural Blender version is in game; replace only after the essential set is approved"
+    },
+    {
+      "id": "prop_delivery_bag",
+      "tier": "D",
+      "replaces": "living_food_bag",
+      "prompt": "opened white plastic food delivery bag slumped on a table, handles flopped",
+      "note": "deferred: procedural Blender version is in game; replace only after the essential set is approved"
+    },
+    {
+      "id": "prop_mug",
+      "tier": "D",
+      "replaces": "kitchen_mug",
+      "prompt": "white ceramic mug with cold coffee, stained rim",
+      "note": "deferred: procedural Blender version is in game; replace only after the essential set is approved"
+    },
+    {
+      "id": "prop_phone",
+      "tier": "D",
+      "replaces": "living_phone",
+      "prompt": "modern smartphone face down, cracked clear case",
+      "note": "deferred: procedural Blender version is in game; replace only after the essential set is approved"
+    },
+    {
+      "id": "prop_laptop",
+      "tier": "D",
+      "replaces": "living_laptop",
+      "prompt": "closed silver thin laptop, scratches",
+      "note": "deferred: procedural Blender version is in game; replace only after the essential set is approved"
+    },
+    {
+      "id": "prop_floor_lamp",
+      "tier": "D",
+      "replaces": "living_lamp",
+      "prompt": "cheap black metal floor lamp with upward cone shade, round base",
+      "note": "deferred: procedural Blender version is in game; replace only after the essential set is approved"
+    },
+    {
+      "id": "prop_aircon",
+      "tier": "D",
+      "replaces": "xprop_aircon_unit",
+      "prompt": "Korean wall-mounted split air conditioner indoor unit, white, yellowed plastic",
+      "note": "deferred: procedural Blender version is in game; replace only after the essential set is approved"
+    },
+    {
+      "id": "prop_wallpad",
+      "tier": "D",
+      "replaces": "xprop_wallpad",
+      "prompt": "Korean apartment intercom wall pad with small screen and buttons, beige plastic",
+      "note": "deferred: procedural Blender version is in game; replace only after the essential set is approved"
+    },
+    {
+      "id": "prop_tissue_box",
+      "tier": "D",
+      "replaces": "xprop_tissue_box",
+      "prompt": "rectangular tissue box with one tissue pulled up, pastel green",
+      "note": "deferred: procedural Blender version is in game; replace only after the essential set is approved"
+    },
+    {
+      "id": "prop_noodle_cup",
+      "tier": "D",
+      "replaces": "kitchen_instant_noodle1",
+      "prompt": "Korean spicy instant noodle cup, red paper cup with sealed lid",
+      "note": "deferred: procedural Blender version is in game; replace only after the essential set is approved"
+    },
+    {
+      "id": "prop_soju_glass",
+      "tier": "D",
+      "replaces": "living_broken_glass",
+      "prompt": "shards of a broken clear drinking glass on the floor",
+      "note": "deferred: procedural Blender version is in game; replace only after the essential set is approved"
+    },
+    {
+      "id": "prop_suitcase",
+      "tier": "D",
+      "replaces": "sleep_suitcase",
+      "prompt": "navy hard-shell carry-on suitcase lying flat, worn wheels",
+      "note": "deferred: procedural Blender version is in game; replace only after the essential set is approved"
+    },
+    {
+      "id": "prop_laundry_basket",
+      "tier": "D",
+      "replaces": "sleep_laundry",
+      "prompt": "grey plastic laundry basket with crumpled clothes",
+      "note": "deferred: procedural Blender version is in game; replace only after the essential set is approved"
+    },
+    {
+      "id": "prop_drying_rack",
+      "tier": "D",
+      "replaces": "xprop_drying_rack",
+      "prompt": "Korean foldable aluminum clothes drying rack with a few hanging shirts",
+      "note": "deferred: procedural Blender version is in game; replace only after the essential set is approved"
+    },
+    {
+      "id": "prop_box_dohyun",
+      "tier": "D",
+      "replaces": "xprop_box_dohyun",
+      "prompt": "cardboard moving box packed with clothes and a coat, flaps open",
+      "note": "deferred: procedural Blender version is in game; replace only after the essential set is approved"
+    },
+    {
+      "id": "prop_stock_boxes",
+      "tier": "D",
+      "replaces": "xprop_stock_boxes",
+      "prompt": "stack of three small cardboard shipping boxes with blank waybill stickers",
+      "note": "deferred: procedural Blender version is in game; replace only after the essential set is approved"
+    },
+    {
+      "id": "prop_sneakers",
+      "tier": "D",
+      "replaces": "entrance shoes",
+      "prompt": "pair of worn white canvas sneakers",
+      "note": "deferred: procedural Blender version is in game; replace only after the essential set is approved"
+    },
+    {
+      "id": "prop_slippers",
+      "tier": "D",
+      "replaces": "xprop_bath_slippers",
+      "prompt": "pair of blue plastic Korean bathroom slippers",
+      "note": "deferred: procedural Blender version is in game; replace only after the essential set is approved"
+    },
+    {
+      "id": "prop_bath_stool",
+      "tier": "D",
+      "replaces": "xprop_bath_stool",
+      "prompt": "pink plastic Korean bath stool with hand hole",
+      "note": "deferred: procedural Blender version is in game; replace only after the essential set is approved"
+    },
+    {
+      "id": "prop_basin",
+      "tier": "D",
+      "replaces": "xprop_wash_basin",
+      "prompt": "red plastic round wash basin daeya",
+      "note": "deferred: procedural Blender version is in game; replace only after the essential set is approved"
+    },
+    {
+      "id": "prop_fire_ext",
+      "tier": "D",
+      "replaces": "xprop_fire_extinguisher",
+      "prompt": "Korean red powder fire extinguisher 3.3kg with gauge and hose",
+      "note": "deferred: procedural Blender version is in game; replace only after the essential set is approved"
+    },
+    {
+      "id": "prop_ppe_box",
+      "tier": "D",
+      "replaces": "xprop_ppe_box",
+      "prompt": "open cardboard box of blue nitrile gloves and white shoe covers",
+      "note": "deferred: procedural Blender version is in game; replace only after the essential set is approved"
+    },
+    {
+      "id": "prop_trash_bag",
+      "tier": "D",
+      "replaces": "living_trash_bag",
+      "prompt": "tied full white Korean volume-based garbage bag",
+      "note": "deferred: procedural Blender version is in game; replace only after the essential set is approved"
+    }
+  ],
+  "essential": [
+    "char_fp_hands",
+    "char_s1",
+    "char_s2",
+    "char_s3"
+  ]
+}

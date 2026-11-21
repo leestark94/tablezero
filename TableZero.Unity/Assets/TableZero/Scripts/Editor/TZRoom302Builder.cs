@@ -35,7 +35,7 @@ namespace TableZero.EditorTools
         static readonly Dictionary<string, MatSpec> Specs = new Dictionary<string, MatSpec>
         {
             {"M_WallPaper", S("gen_silkwallpaper", 1f / 1.06f, C(1f,1f,1f), 1f, 0, false, 0, 0.6f)},
-            {"M_Floor", S("laminate_floor_02", 0.55f, C(1.0f,0.88f,0.72f), 0.58f)},
+            {"M_Floor", S("laminate_floor_02", 0.55f, C(0.80f,0.72f,0.62f), 0.48f)},
             {"M_EntranceTile", S("gen_entrancetile_300", 1f / 1.2f, C(1f,1f,1f), 1f)},
             {"M_BathTile", S("gen_walltile_300x600", 1f / 1.2f, C(1f,1f,1f), 1f)},
             {"M_BathFloor", S("gen_floortile_200", 1f, C(1f,1f,1f), 1f)},
@@ -371,6 +371,11 @@ namespace TableZero.EditorTools
         // ------------------------------------------------------------------ pipeline
         static void ConfigurePipeline()
         {
+            // realtime reflection probes were off in every quality level: probes never rendered and all chrome/mirrors
+            // reflected the black fallback cubemap. Turn them on for every level (2 small time-sliced probes).
+            int q0 = QualitySettings.GetQualityLevel();
+            for (int i = 0; i < QualitySettings.names.Length; i++) { QualitySettings.SetQualityLevel(i, false); QualitySettings.realtimeReflectionProbes = true; }
+            QualitySettings.SetQualityLevel(q0, false);
             var rp = AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>("Assets/Settings/PC_RPAsset.asset");
             if (rp)
             {
@@ -440,7 +445,7 @@ namespace TableZero.EditorTools
                 if (r) { r.shadowCastingMode = ShadowCastingMode.On; r.receiveShadows = true; }
             }
             // thin decals should not cast shadows or block rays oddly
-            foreach (var n in new[] { "living_floor_blood", "living_footprint", "living_broken_glass", "xprop_blood_smear", "xprop_blood_drops",
+            foreach (var n in new[] { "living_floor_blood", "living_footprint", "living_broken_glass", "xprop_blood_smear", "xprop_blood_drops", "xprop_drain_hair",
                                       "xprop_table_edge_stain", "xprop_scattered_papers" })
                 if (objs.TryGetValue(n, out var g)) { var r = g.GetComponent<MeshRenderer>(); if (r) r.shadowCastingMode = ShadowCastingMode.Off; }
         }

@@ -517,18 +517,89 @@ def evidence_markers(font, count=12, at=(-6.0, -6.0, 0.0)):
         t22 = math.radians(22)
         for s in (-1, 1):
             # A-frame: each leaf leans in so the two tops meet over the centre line
-            p = box(f'tmp_mk{n}{s}', (-0.035, -0.0015, 0.0), (0.035, 0.0015, 0.095), yel, bevel=0.001)
+            p = box(f'tmp_mk{n}{s}', (-0.045, -0.0018, 0.0), (0.045, 0.0018, 0.115), yel, bevel=0.0012)
             p.data.transform(Matrix.Rotation(s * t22, 4, 'X'))
-            p.data.transform(Matrix.Translation((0, s * math.sin(t22) * 0.095, 0)))
+            p.data.transform(Matrix.Translation((0, s * math.sin(t22) * 0.115, 0)))
             parts.append(p)
-            txt = text_mesh(f'tmp_mkt{n}{s}', str(n), 0.042, (0, 0, 0), (math.radians(90), 0, 0 if s < 0 else math.pi), M['ink'],
-                            font_path=font, extrude=0.0004)
+            txt = text_mesh(f'tmp_mkt{n}{s}', str(n), 0.082, (0, 0, 0), (math.radians(90), 0, 0 if s < 0 else math.pi), M['ink'],
+                            font_path=font, extrude=0.0006, bold=0.0013)
             txt.data.transform(Matrix.Rotation(s * t22, 4, 'X'))
-            h = 0.05
-            yy = s * (math.sin(t22) * 0.095 - math.sin(t22) * h) + s * math.cos(t22) * 0.0022
+            h = 0.058
+            yy = s * (math.sin(t22) * 0.115 - math.sin(t22) * h) + s * math.cos(t22) * 0.0026
             txt.data.transform(Matrix.Translation((0, yy, math.cos(t22) * h + math.sin(t22) * 0.0022)))
             parts.append(txt)
         o = join(f'kit_marker_{n:02d}', parts, origin=(0, 0, 0))
         o.location = (bx, by, bz)
         out.append(o)
     return out
+
+
+# ----------------------------------------------------------------------------- v5: labels, bath clutter
+def wrap_on_cylinder(obj, cx, cy, r, facing='+x'):
+    """Bend a flat label/text mesh (built tangent to the cylinder) onto its surface so no edge floats."""
+    mw = obj.matrix_world.copy(); inv = mw.inverted()
+    for v in obj.data.vertices:
+        w = mw @ v.co
+        if facing in ('+x', '-x'):
+            sgn = 1 if facing == '+x' else -1
+            t, d = w.y - cy, (w.x - cx) * sgn - r          # tangent offset, height above the tangent plane
+            a = t / r
+            w.x, w.y = cx + sgn * (r + d) * math.cos(a), cy + (r + d) * math.sin(a)
+        else:
+            sgn = 1 if facing == '+y' else -1
+            t, d = w.x - cx, (w.y - cy) * sgn - r
+            a = t / r
+            w.y, w.x = cy + sgn * (r + d) * math.cos(a), cx + (r + d) * math.sin(a)
+        v.co = inv @ w
+    return obj
+
+
+def bottle_label(tag, cx, cy, z0, z1, r, band_mat, text, text_mat, font, size, facing='+x'):
+    """Printed wrap label: a band ring around the bottle + the product word bent onto it."""
+    band = lathe(f'tmp_lb{tag}', [(r + 0.0008, z0), (r + 0.0008, z1)], [band_mat], 28, location=(cx, cy, 0))
+    rot = (math.radians(90), 0, math.radians(90)) if facing == '+x' else (math.radians(90), 0, math.radians(180))
+    zc = (z0 + z1) / 2
+    loc = (cx + r + 0.0014, cy, zc) if facing == '+x' else (cx, cy + r + 0.0014, zc)
+    txt = label_text(f'tmp_lt{tag}', text, size, loc, rot, text_mat, font)
+    bpy.context.view_layer.update()
+    wrap_on_cylinder(txt, cx, cy, r, facing)
+    return [band, txt]
+
+
+def label_text(name, text, size, loc, rot, m, font):
+    return text_mesh(name, text, size, loc, rot, m, font_path=font, extrude=0.0003, bold=size * 0.022)
+
+
+def bath_stool(name, at, material):
+    """목욕의자: low square-ish plastic stool with a flared skirt and a hand hole in the seat."""
+    x, y, z = at
+    o = tzprops2.loft('tmp_stool', [(0.0, 0.16, 0.15, 0, 0), (0.02, 0.155, 0.145, 0, 0), (0.21, 0.135, 0.125, 0, 0),
+                                     (0.235, 0.145, 0.135, 0, 0), (0.25, 0.14, 0.13, 0, 0)], [material], steps=40,
+                       cap_bottom=False, cap_top=True, superness=3.5, location=(x, y, z))
+    sm = o.modifiers.new('s', 'SOLIDIFY'); sm.thickness = 0.004; bake(o)
+    hole = box('tmp_stoolhole', (x - 0.04, y - 0.012, z + 0.2), (x + 0.04, y + 0.012, z + 0.3), None, bevel=0.01, seg=3)
+    boolean_cut(o, hole)
+    o.name = name
+    return o
+
+
+def wash_basin(name, at, material):
+    """대야: wide shallow plastic basin, rim lip."""
+    x, y, z = at
+    return lathe(name, [(0, 0.0), (0.15, 0.0), (0.2, 0.11), (0.215, 0.115), (0.212, 0.12), (0.195, 0.115), (0.145, 0.006), (0, 0.006)],
+                 [material], 48, location=(x, y, z))
+
+
+def drain_hair(name, at, material):
+    """Long hairs tangled on the drain cover (thin curved tubes)."""
+    rnd = random.Random(13)
+    x, y, z = at
+    parts = []
+    for i in range(7):
+        a0 = rnd.uniform(0, 6.28); pts = []
+        rr = rnd.uniform(0.02, 0.05)
+        for k in range(7):
+            a = a0 + k * rnd.uniform(0.6, 1.1)
+            pts.append((x + math.cos(a) * rr * (1 + 0.3 * k / 6), y + math.sin(a) * rr * (1 + 0.3 * k / 6), z + 0.0035 + 0.0012 * (k % 2)))
+        parts.append(tube(f'tmp_hair{i}', pts, 0.0011, material, res=4))
+    return join(name, parts, origin=at)
