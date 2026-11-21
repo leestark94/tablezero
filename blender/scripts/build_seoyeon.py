@@ -84,14 +84,16 @@ equipped = {}
 skin = first_asset('skins', 'mhmat', 'young_asian_female', 'middleage_asian_female', 'asian_female')
 if skin:
     HumanService.set_character_skin(skin, human, skin_type='ENHANCED_SSS'); equipped['skin'] = skin
-for subdir, needles, atype in (('eyes', ('low-poly',), 'Eyes'), ('eyebrows', ('eyebrow010', 'eyebrow001'), 'Eyebrows'),
-                               ('eyelashes', ('eyelashes02', 'eyelashes01'), 'Eyelashes'), ('hair', ('long01',), 'Hair'),
-                               ('clothes', ('female_casualsuit01',), 'Clothes')):
+# brows come from the projected reference photo (no brow cards on top of painted brows); long-sleeve top + trousers
+# (male_casualsuit04 fitted to her body by MPFB, re-materialled as brown cable knit / dark wool); dark flats
+for subdir, needles, atype in (('eyes', ('low-poly',), 'Eyes'), ('eyelashes', ('eyelashes02', 'eyelashes01'), 'Eyelashes'),
+                               ('hair', ('long01',), 'Hair'), ('clothes', ('male_casualsuit04',), 'Clothes'),
+                               ('clothes', ('shoes04',), 'Clothes')):
     p = first_asset(subdir, 'mhclo', *needles)
     if p:
         try:
             HumanService.add_mhclo_asset(p, human, asset_type=atype, subdiv_levels=0, material_type='MAKESKIN')
-            equipped[atype] = p
+            equipped[atype + ':' + os.path.basename(p)] = p
         except Exception as e:
             print('ASSET_FAIL', atype, e)
 print('EQUIPPED', equipped)
@@ -135,6 +137,31 @@ for m in list(human.modifiers):
     human.modifiers.remove(m)
 human.data.update()
 
+# ------------------------------------------------------------ outfit split: knit top vs wool trousers (by height / arm reach)
+suit = next((o for o in bpy.data.objects if 'casualsuit' in o.name), None)
+if suit:
+    hips_z = (rig.matrix_world @ rig.data.bones['mixamorig:Hips'].head_local).z
+    knit = bpy.data.materials.new('Seoyeon_Knit'); trousers = bpy.data.materials.new('Seoyeon_Trousers')
+    suit.data.materials.clear(); suit.data.materials.append(knit); suit.data.materials.append(trousers)
+    mwS = suit.matrix_world; n_k = 0
+    for poly in suit.data.polygons:
+        c = mwS @ poly.center
+        is_top = c.z > hips_z + 0.02 or abs(c.x) > 0.22
+        poly.material_index = 0 if is_top else 1; n_k += is_top
+    print('OUTFIT_SPLIT knit_faces', n_k, 'of', len(suit.data.polygons))
+
+# ------------------------------------------------------------ identity: project the approved front reference onto the face
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import seoyeon_face_bake
+tex_dir = os.path.join(os.path.dirname(OUT_FBX), 'textures'); os.makedirs(tex_dir, exist_ok=True)
+eyes_obj = next((o for o in bpy.data.objects if 'low-poly' in o.name or 'high-poly' in o.name), None)
+skin_img = next((i for i in bpy.data.images if 'diffuse' in i.name.lower() and 'skinned' in i.name.lower()), None)
+if eyes_obj and skin_img:
+    seoyeon_face_bake.bake(human, eyes_obj, os.path.join(REPO, 'assets_src', '3d_sources', 's2.png'),
+                           bpy.path.abspath(skin_img.filepath), os.path.join(tex_dir, 'seoyeon_skin_diffuse.png'))
+else:
+    print('FACE_BAKE_SKIPPED eyes', bool(eyes_obj), 'skin', bool(skin_img))
+
 # ------------------------------------------------------------ export
 os.makedirs(os.path.dirname(OUT_FBX), exist_ok=True)
 bpy.ops.object.select_all(action='DESELECT')
@@ -148,11 +175,10 @@ bpy.ops.export_scene.fbx(filepath=OUT_FBX, use_selection=True, apply_unit_scale=
                          primary_bone_axis='Y', secondary_bone_axis='X', armature_nodetype='NULL', bake_anim=False,
                          path_mode='COPY', embed_textures=False)
 import shutil
-tex_dir = os.path.join(os.path.dirname(OUT_FBX), 'textures'); os.makedirs(tex_dir, exist_ok=True)
 copied = []
 for img in bpy.data.images:
     fp = bpy.path.abspath(img.filepath) if img.filepath else ''
-    if fp and os.path.isfile(fp):
+    if fp and os.path.isfile(fp) and os.path.dirname(os.path.abspath(fp)) != os.path.abspath(tex_dir):
         shutil.copy2(fp, os.path.join(tex_dir, os.path.basename(fp))); copied.append(os.path.basename(fp))
 print('TEXTURES', copied)
 bpy.ops.wm.save_as_mainfile(filepath=OUT_BLEND)
