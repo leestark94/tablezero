@@ -59,7 +59,7 @@ namespace TableZero
         // ---------------------------------------------------------------- UI
         VisualElement root, stageEl, bg, flicker, grainEl, vignette, picker, evidencePanel, memoList, thinking, topBar, leftCol, rightCol, dock;
         float bgZoom = 1f, bgShiftY = 0f;
-        Label roomLbl, nameLbl, metaJob, metaRel, metaStatus, clockLbl, recLbl, subName, subText, timeVal, qVal, eVal, toast;
+        Label continueHint, roomLbl, nameLbl, metaJob, metaRel, metaStatus, clockLbl, recLbl, subName, subText, timeVal, qVal, eVal, toast;
         VisualElement timeBar, portrait, subtitleBox;
         TextField input;
         Suspect cur;
@@ -68,6 +68,7 @@ namespace TableZero
         bool busy, started;
         string pendingEvidence;
         Coroutine typeCo, toastCo;
+        bool awaitingContinue, typing; string typingFull = "";
 
         static readonly Color Red = new Color(0.86f, 0.18f, 0.20f), Ink = new Color(0.93f, 0.93f, 0.92f), Dim = new Color(0.62f, 0.63f, 0.66f),
                               Panel = new Color(0.07f, 0.075f, 0.085f, 0.82f), Line = new Color(1, 1, 1, 0.10f);
@@ -105,8 +106,12 @@ namespace TableZero
             }
             if (thinking != null && thinking.style.display == DisplayStyle.Flex)
                 thinking.style.opacity = 0.45f + 0.45f * Mathf.Abs(Mathf.Sin(Time.time * 2.4f));
-            var kb = UnityEngine.InputSystem.Keyboard.current;
-            if (input != null && input.focusController?.focusedElement == input && kb != null && kb.enterKey.wasPressedThisFrame) Send();
+            var kb = UnityEngine.InputSystem.Keyboard.current; var ms = UnityEngine.InputSystem.Mouse.current;
+            bool adv = kb != null && (kb.spaceKey.wasPressedThisFrame || kb.enterKey.wasPressedThisFrame || kb.numpadEnterKey.wasPressedThisFrame)
+                       || ms != null && ms.leftButton.wasPressedThisFrame;
+            if (typing && adv) { typing = false; }
+            else if (awaitingContinue && adv) { Continue(); return; }
+            if (input != null && input.focusController?.focusedElement == input && kb != null && kb.enterKey.wasPressedThisFrame && dock.style.display != DisplayStyle.None) Send();
             if (started && kb != null && (input == null || input.focusController?.focusedElement != input))
             {
                 if (kb.tabKey.wasPressedThisFrame) TogglePanel(leftCol);
@@ -195,14 +200,18 @@ namespace TableZero
 
         void BuildBottom()
         {
-            subtitleBox = new VisualElement(); Abs(subtitleBox, float.NaN, Length.Percent(22), 132, Length.Percent(27)); subtitleBox.style.flexDirection = FlexDirection.Row;
-            subtitleBox.style.alignItems = Align.FlexStart; subtitleBox.style.opacity = 0;
+            subtitleBox = new VisualElement(); Abs(subtitleBox, float.NaN, Length.Percent(16), 64, Length.Percent(16)); subtitleBox.style.flexDirection = FlexDirection.Row;
+            subtitleBox.style.alignItems = Align.FlexStart; subtitleBox.style.opacity = 0; subtitleBox.pickingMode = PickingMode.Ignore;
+            subtitleBox.style.backgroundColor = new Color(0.01f, 0.01f, 0.012f, 0.80f); Radius(subtitleBox, 6);
+            subtitleBox.style.paddingTop = 16; subtitleBox.style.paddingBottom = 18; subtitleBox.style.paddingLeft = 22; subtitleBox.style.paddingRight = 22;
             var bar = new VisualElement(); bar.style.width = 2; bar.style.height = 54; bar.style.backgroundColor = Red; bar.style.marginRight = 16; subtitleBox.Add(bar);
             subName = L("", 22, new Color(1f, 0.35f, 0.38f)); subName.style.width = 92; subName.style.unityFontStyleAndWeight = FontStyle.Bold; subtitleBox.Add(subName);
-            subText = L("", 23, Ink); subText.style.whiteSpace = WhiteSpace.Normal; subText.style.flexShrink = 1; subText.style.flexGrow = 1;
+            subText = L("", 26, Ink); subText.style.whiteSpace = WhiteSpace.Normal; subText.style.flexShrink = 1; subText.style.flexGrow = 1;
             subText.style.textShadow = new TextShadow { offset = new Vector2(0, 2), blurRadius = 6, color = new Color(0, 0, 0, 0.9f) };
             subtitleBox.Add(subText);
-            thinking = L("· · ·", 26, Ink); thinking.style.display = DisplayStyle.None; subtitleBox.Add(thinking);
+            thinking = L("· · ·", 26, Ink); thinking.style.display = DisplayStyle.None; subtitleBox.Insert(subtitleBox.IndexOf(subText), thinking);
+            continueHint = L("Space · Enter · 클릭  계속", 13, Dim); continueHint.style.position = Position.Absolute;
+            continueHint.style.right = 16; continueHint.style.bottom = 6; continueHint.style.opacity = 0; subtitleBox.Add(continueHint);
             root.Add(subtitleBox);
 
             dock = new VisualElement(); Abs(dock, float.NaN, Length.Percent(19), 28, Length.Percent(19)); dock.style.backgroundColor = new Color(0.03f, 0.03f, 0.035f, 0.72f);
@@ -346,6 +355,7 @@ namespace TableZero
             var q = (input.value ?? "").Trim();
             if (q.Length < 2 && pendingEvidence == null) return;
             busy = true; input.value = "";
+            ShowDock(false);
             StartCoroutine(AskCo(q.Length < 2 ? "이걸 보세요. 설명해 보시겠습니까?" : q, pendingEvidence));
             pendingEvidence = null;
         }
@@ -355,7 +365,7 @@ namespace TableZero
             var actor = TZInterrogationRoom3D.Instance ? TZInterrogationRoom3D.Instance.ActiveActor : null;
             Say("형사", q); RecordTurn(cur.id, "형사", q);
             if (actor) actor.SetState(TZSuspectActor.State.Listen);
-            yield return new WaitForSecondsRealtime(0.6f);
+            yield return new WaitForSecondsRealtime(Mathf.Clamp(q.Length * 0.06f, 1.4f, 3.2f));   // the question is read, then the room goes quiet
             if (actor) actor.SetState(TZSuspectActor.State.Think);
             Say(cur.name, ""); thinking.style.display = DisplayStyle.Flex;
             var body = JsonUtility.ToJson(new AskReq { question = q, action_id = TZServer.NewActionId(), input_mode = "typed", evidence_id = evidence });
@@ -366,12 +376,15 @@ namespace TableZero
             {
                 Say(cur.name, "……"); if (actor) actor.SetState(TZSuspectActor.State.Silence);
                 Toast(raw != null && raw.Contains("503") ? "로컬 AI가 응답하지 않습니다 (Ollama 실행 확인)" : "답변을 받지 못했습니다: " + (resp?.error ?? raw));
+                awaitingContinue = true; continueHint.style.opacity = 1;
                 yield break;
             }
             asked++; if (evidence != null) presented++;
             secondsLeft = resp.data.seconds_left; RefreshState();
             if (actor) { actor.Speak(resp.data.suspect_text, resp.data.reply_mode, resp.data.motion_proposal); yield return new WaitForSecondsRealtime(0.45f); }
             TypeLine(cur.name, resp.data.suspect_text); RecordTurn(cur.id, cur.name, resp.data.suspect_text);
+            while (typing) yield return null;
+            awaitingContinue = true; continueHint.style.opacity = 1;
             if (!string.IsNullOrEmpty(resp.data.motion_proposal) && MotionKo.TryGetValue(resp.data.motion_proposal, out var m)) AddMemo(m);
             if (secondsLeft <= 0) { metaStatus.text = "면담 시간 종료"; Toast("면담 시간이 끝났습니다"); }
         }
@@ -441,6 +454,26 @@ namespace TableZero
             subName.text = who; subText.text = text;
             subName.style.color = who == "형사" ? new Color(0.70f, 0.78f, 0.92f) : new Color(1f, 0.35f, 0.38f);
             subtitleBox.style.opacity = string.IsNullOrEmpty(who) && string.IsNullOrEmpty(text) ? 0 : 1;
+            subtitleBox.style.bottom = 64; subText.style.color = Ink; continueHint.style.opacity = 0;
+        }
+
+        /// <summary>Input bar is only on screen while the player is composing; it never covers a reply.</summary>
+        void ShowDock(bool show)
+        {
+            if (dock == null) return;
+            dock.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
+            if (show)
+            {   // last reply stays readable, dimmed, just above the bar
+                if (subtitleBox.style.opacity.value > 0) { subtitleBox.style.bottom = 178; subText.style.color = new Color(0.86f, 0.86f, 0.84f); }
+                input.Focus();
+            }
+            else input.Blur();
+        }
+
+        void Continue()
+        {
+            awaitingContinue = false; continueHint.style.opacity = 0;
+            if (cur != null && started) ShowDock(true);
         }
 
         void TypeLine(string who, string text)
@@ -451,8 +484,15 @@ namespace TableZero
 
         IEnumerator TypeCo(string who, string text)
         {
-            Say(who, "");
-            for (int i = 1; i <= text.Length; i++) { subText.text = text.Substring(0, i); yield return new WaitForSecondsRealtime(text[i - 1] == ' ' ? 0.02f : 0.045f); }
+            Say(who, ""); typing = true; typingFull = text;
+            for (int i = 1; i <= text.Length && typing; i++)
+            {
+                subText.text = text.Substring(0, i);
+                char c = text[i - 1];
+                float d = c == ' ' ? 0.035f : (c == ',' || c == '…' || c == '.' || c == '?' || c == '!') ? 0.32f : 0.085f;
+                yield return new WaitForSecondsRealtime(d);
+            }
+            subText.text = text; typing = false;
         }
 
         void Toast(string m)

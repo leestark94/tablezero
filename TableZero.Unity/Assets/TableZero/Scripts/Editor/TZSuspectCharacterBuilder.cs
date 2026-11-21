@@ -74,23 +74,36 @@ namespace TableZero.EditorTools
                     var m = AssetDatabase.LoadAssetAtPath<Material>(path);
                     if (!m) { m = new Material(lit); AssetDatabase.CreateAsset(m, path); }
                     m.shader = lit;
-                    Texture2D d = null, nm = null; float smooth = 0.35f; bool cut = false; Color tint = Color.white;
-                    if (n.Contains("hair") || n.Contains("long01")) { d = Tex("long01", "diffuse") ?? Tex("long01"); nm = Tex("long01", "normal"); smooth = 0.42f; cut = true; tint = new Color(0.22f, 0.17f, 0.14f); }
+                    Texture2D d = null, nm = null; float smooth = 0.35f; bool cut = false; Color tint = Color.white; float metal = 0f;
+                    string sn = src ? src.name.ToLower() : "";
+                    m.SetTextureScale("_BaseMap", Vector2.one); m.SetFloat("_BumpScale", 1f);
+                    if (n.Contains("fringe")) { d = Tex("seoyeon_fringe"); smooth = 0.45f; cut = true; tint = new Color(0.85f, 0.8f, 0.78f); }
+                    else if (n.Contains("watch"))
+                    {
+                        if (sn.Contains("dial")) { tint = new Color(0.05f, 0.05f, 0.06f); smooth = 0.92f; metal = 0f; }
+                        else { tint = new Color(0.78f, 0.78f, 0.8f); smooth = 0.78f; metal = 1f; }
+                    }
+                    else if (sn.Contains("knit"))
+                    {   // brown chunky cable knit (approved reference) — procedural tile from tools/gen_cloth_textures.py
+                        d = Tex("seoyeon_knit_diffuse"); nm = Tex("seoyeon_knit_normal"); smooth = 0.06f;
+                        m.SetTextureScale("_BaseMap", new Vector2(3f, 3f)); m.SetFloat("_BumpScale", 1.4f);
+                    }
+                    else if (sn.Contains("trousers"))
+                    {
+                        d = Tex("seoyeon_trousers_diffuse"); nm = Tex("seoyeon_trousers_normal"); smooth = 0.12f;
+                        m.SetTextureScale("_BaseMap", new Vector2(6f, 6f)); m.SetFloat("_BumpScale", 0.8f);
+                    }
+                    else if (n.Contains("shoes")) { d = Tex("shoes04", "diffuse"); nm = Tex("shoes04", "normal"); smooth = 0.35f; tint = new Color(0.25f, 0.25f, 0.25f); }
+                    else if (n.Contains("hair") || n.Contains("long01")) { d = Tex("long01", "diffuse") ?? Tex("long01"); nm = Tex("long01", "normal"); smooth = 0.42f; cut = true; tint = new Color(0.22f, 0.17f, 0.14f); }
                     else if (n.Contains("eyebrow")) { d = Tex("eyebrow"); cut = true; smooth = 0.2f; tint = new Color(0.35f, 0.3f, 0.28f); }
                     else if (n.Contains("eyelash")) { d = Tex("eyelash"); cut = true; smooth = 0.2f; tint = new Color(0.3f, 0.3f, 0.3f); }
                     else if (n.Contains("eye") || n.Contains("high-poly") || n.Contains("low-poly") || n.Contains("_poly")) { d = Tex("brown_eye") ?? Tex("eye"); smooth = 0.9f; }
-                    else if (n.Contains("casualsuit") || n.Contains("cloth") || n.Contains("suit"))
-                    {   // brown chunky knit (approved look) instead of the pack's printed sport tee: CC0 cotton jersey weave, tinted
-                        d = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/TableZero/Art/Textures/PolyHaven/cotton_jersey/cotton_jersey_diff_2k.jpg");
-                        nm = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/TableZero/Art/Textures/PolyHaven/cotton_jersey/cotton_jersey_nor_gl_2k.jpg");
-                        smooth = 0.08f; tint = new Color(0.42f, 0.30f, 0.22f);
-                        m.SetTextureScale("_BaseMap", new Vector2(6f, 6f)); m.SetFloat("_BumpScale", 1.6f);
-                    }
-                    else { d = Tex("lightskinned_female", "diffuse") ?? Tex("skin"); smooth = 0.36f; }
-                    if (d) m.SetTexture("_BaseMap", d);
+                    else { d = Tex("seoyeon_skin_diffuse") ?? Tex("lightskinned_female", "diffuse") ?? Tex("skin"); smooth = 0.36f; }
+                    m.SetTexture("_BaseMap", d);
                     m.SetColor("_BaseColor", tint);
-                    if (nm) { m.SetTexture("_BumpMap", nm); m.EnableKeyword("_NORMALMAP"); }
-                    m.SetFloat("_Smoothness", smooth); m.SetFloat("_Metallic", 0f);
+                    m.SetTexture("_BumpMap", nm);
+                    if (nm) m.EnableKeyword("_NORMALMAP"); else m.DisableKeyword("_NORMALMAP");
+                    m.SetFloat("_Smoothness", smooth); m.SetFloat("_Metallic", metal);
                     if (cut)
                     {
                         m.SetFloat("_AlphaClip", 1); m.SetFloat("_Cutoff", 0.35f); m.EnableKeyword("_ALPHATEST_ON");

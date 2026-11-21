@@ -162,6 +162,17 @@ if eyes_obj and skin_img:
 else:
     print('FACE_BAKE_SKIPPED eyes', bool(eyes_obj), 'skin', bool(skin_img))
 
+# ------------------------------------------------------------ fringe/side strands over the eyes + left-wrist watch
+# (textures from tools/gen_cloth_textures.py — run it first)
+import seoyeon_extras
+hair_obj = next((o for o in bpy.data.objects if 'long01' in o.name), None)
+fringe_tex = os.path.join(tex_dir, 'seoyeon_fringe_diffuse.png')
+if hair_obj and os.path.exists(fringe_tex):
+    seoyeon_extras.add_fringe(human, hair_obj, rig, fringe_tex)
+else:
+    print('FRINGE_SKIPPED hair', bool(hair_obj), 'tex', os.path.exists(fringe_tex))
+seoyeon_extras.add_watch(human, rig)
+
 # ------------------------------------------------------------ export
 os.makedirs(os.path.dirname(OUT_FBX), exist_ok=True)
 bpy.ops.object.select_all(action='DESELECT')

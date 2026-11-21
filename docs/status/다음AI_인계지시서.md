@@ -44,6 +44,9 @@ git checkout dev/v11-integration              # 작업 브랜치 (main은 이전
 - **진행 중(WIP, 커밋 e9cf074)**: 품질 패스
   - 완료: 승인 정면 레퍼런스 `assets_src/3d_sources/s2.png`를 얼굴 텍스처에 투영(`seoyeon_face_bake.py`, 코 위치 오차 약 2 px), 긴팔 상의+바지 분리(male_casualsuit04 → `Seoyeon_Knit`/`Seoyeon_Trousers`), 검정 플랫(shoes04), 눈썹은 사진에서
   - 남음: ① `TZSuspectCharacterBuilder.BuildMaterials`를 새 재질에 연결(피부 `seoyeon_skin_diffuse.png`, 니트=케이블 니트 텍스처 생성 필요, 바지=짙은 울) ② 앞머리·옆머리 카드(머리 본 100% 가중치)로 눈·이마 가리기 + 펜던트 갓 차광 강화 ③ 손목시계(왼손) ④ 추가 대기 자세(손으로 입 가리기, 한 팔 테이블) ⑤ Game View 비교 검수 → 커밋 → 백업
+- **게임 순서 (2026-11-22)**: 게임 시작 = 302호 씬 → 브리핑(Enter 수사 시작) → 현장 조사(좌상단 확보 증거 수, 서버 기준) → Tab 수사 수첩 → Enter 경찰서 복귀(서버 scene→desk, 사건 시각 +38분) → `Case001_Interrogation` 로드(서버 프로세스 유지, 증거 그대로) → 호출 대장 → 심문. `TZCaseFlow`가 302 씬에 런타임으로 붙음(씬 재빌드 불필요)
+- **심문 대화 UX (2026-11-22, 사용자 피드백 반영)**: 보내기 즉시 입력창 숨김 → 질문 표시 → "이서연 · · ·" → 답변 느리게 타이핑(구두점에서 멈춤) → 화면에 유지, Space·Enter·클릭으로 계속 → 입력창 복귀, 직전 답변은 입력창 위에 흐리게 유지
+- 미구현: 심문 후 현장으로 돌아가기 버튼(서버는 desk→room302 허용), 302 브리핑 뒤 HUD 사물 안내가 희미하게 비침
 - UI: 심문 중 좌·우 패널 기본 숨김(Tab 인물 기록 / E 증거 / R 심문 행동 / Q 추천 질문 / Esc 종료)
 
 ## 3. 빌드·검수 파이프라인
