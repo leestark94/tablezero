@@ -25,3 +25,4 @@ server/runtime_state/
 # Blender temp
 *.blend1
 *.blend2
+assets_src/mpfb_packs/*.zip

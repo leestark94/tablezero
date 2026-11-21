@@ -98,7 +98,7 @@ namespace TableZero.EditorTools
             // ---------------------------------------------------- lights
             var rig = new GameObject("Lights").transform; rig.SetParent(room.transform, false);
             // pendant key: warm, wide, hard-ish shadows from the shade rim; sits slightly over her side of the table
-            var key = Spot(rig, "L_Pendant_Key", U(0f, 0.42f, 1.585f), Quaternion.Euler(90f, 0f, 0f), new Color(1f, 0.80f, 0.58f), 5.8f, 3.2f, 118f, 70f, LightShadows.Soft);
+            var key = Spot(rig, "L_Pendant_Key", U(0f, 0.62f, 1.645f), Quaternion.Euler(90f, 0f, 0f), new Color(1f, 0.80f, 0.58f), 5.8f, 3.2f, 118f, 70f, LightShadows.Soft);
             key.shadowStrength = 0.92f; key.shadowNearPlane = 0.05f;
             key.GetComponent<UniversalAdditionalLightData>().softShadowQuality = SoftShadowQuality.High;
             // caged wall bulb behind-left of her: hair / shoulder rim
@@ -106,9 +106,9 @@ namespace TableZero.EditorTools
             // night window through the blinds: cool, low, shadowed (blind stripes on the wall/back)
             var win = Spot(rig, "L_Window_Night", U(0.1f, 2.9f, 1.75f), Quaternion.LookRotation(U(0f, 0.6f, 1.0f) - U(0.1f, 2.9f, 1.75f)), new Color(0.55f, 0.66f, 0.85f), 2.2f, 5f, 70f, 40f, LightShadows.Soft);
             // table bounce: what the lit tabletop throws up under the chin/hands (no shadows, very low)
-            var bounce = Point(rig, "L_TableBounce", U(0f, 0.15f, 0.82f), new Color(1f, 0.78f, 0.60f), 0.32f, 1.25f, LightShadows.None);
+            var bounce = Point(rig, "L_TableBounce", U(0f, 0.05f, 0.76f), new Color(1f, 0.78f, 0.60f), 0.14f, 0.9f, LightShadows.None);
             // detective-side spill so the near props and hands read (the pendant's rim falls off before the near edge)
-            var near = Point(rig, "L_NearSpill", U(0.0f, -0.55f, 1.45f), new Color(1f, 0.84f, 0.66f), 0.45f, 1.6f, LightShadows.None);
+            var near = Point(rig, "L_NearSpill", U(0.0f, -0.70f, 0.98f), new Color(1f, 0.84f, 0.66f), 0.30f, 0.95f, LightShadows.None);
             // recording camera tally: tiny red practical
             Point(rig, "L_RecTally", U(-1.24f, 1.32f, 1.48f), new Color(1f, 0.08f, 0.05f), 0.05f, 0.35f, LightShadows.None);
 
@@ -123,7 +123,7 @@ namespace TableZero.EditorTools
 
             // ---------------------------------------------------- suspect seat anchor
             var seat = new GameObject("SuspectSeat").transform; seat.SetParent(room.transform, false);
-            seat.position = U(0f, 0.80f, 0.455f); seat.rotation = Quaternion.Euler(0f, 0f, 0f);   // Blender -Y facing = Unity +Z (toward the detective)
+            seat.position = U(0f, 0.64f, 0.455f); seat.rotation = Quaternion.Euler(0f, 0f, 0f);   // Blender -Y facing = Unity +Z (toward the detective)
 
             // ---------------------------------------------------- ambient + post
             RenderSettings.ambientMode = AmbientMode.Trilight;

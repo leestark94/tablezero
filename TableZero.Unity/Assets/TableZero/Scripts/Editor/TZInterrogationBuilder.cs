@@ -27,7 +27,8 @@ namespace TableZero.EditorTools
             camGo.AddComponent<UniversalAdditionalCameraData>();
             camGo.AddComponent<AudioListener>();
             camGo.name = "DetectiveCamera";
-            TZInterrogationRoomBuilder.AddRoom(cam);
+            var room3d = TZInterrogationRoomBuilder.AddRoom(cam);
+            TZSuspectCharacterBuilder.Place(room3d);
             new GameObject("TZServer").AddComponent<TZServer>();
 
             var ui = new GameObject("InterrogationUI");

@@ -73,3 +73,5 @@ assets_src/3d/hand/a_a666640a.glb,Higgsfield job a666640a-3eb5-4ce7-952e-9e75b5a
 assets_src/3d/hand/b_02c6c736.glb,Higgsfield job 02c6c736-d321-40e7-8d87-c9c59a5cc7a0,"Higgsfield Starter 유료 플랜 생성물 — 상업 이용 조건은 Higgsfield/Tripo 약관 원문 확인 필요(미확인)","사용자 승인 초안(references_images) 기반 생성",1인칭 손 3D 예비(중복 생성분, 미사용),2026-11-21
 TableZero.Unity/Assets/TableZero/Art/Interrogation/paper_ledger.png,(자체 생성 코드),자체 제작,"제3자 권리 없음",호출 대장 종이 질감,2026-11-21
 TableZero.Unity/Assets/TableZero/Scripts/Runtime/TZProcAudio.cs,(자체 생성 코드),자체 제작,"제3자 권리 없음",절차 합성 효과음(룸톤·종이·발소리·문·녹음기) — 임시,2026-11-21
+seoyeon_base_mesh_rig,MPFB2 (MakeHuman) base mesh + mixamo_unity rig + expression units,extensions.blender.org/add-ons/mpfb (build 20261010),CC0 (MakeHuman assets; MPFB code GPL — code not shipped),blender/scripts/build_seoyeon.py,USED
+makehuman_system_assets_cc0,young_asian_female skin / low-poly eyes / eyebrow010 / eyelashes02 / long01 hair / female_casualsuit01 mesh,files2.makehumancommunity.org/asset_packs/makehuman_system_assets/makehuman_system_assets_cc0.zip (280.7 MB),CC0,assets_src/mpfb_packs,USED

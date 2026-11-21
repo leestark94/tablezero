@@ -352,7 +352,11 @@ namespace TableZero
 
         IEnumerator AskCo(string q, string evidence)
         {
-            Say("형사", q); RecordTurn(cur.id, "형사", q); yield return new WaitForSecondsRealtime(0.6f);
+            var actor = TZInterrogationRoom3D.Instance ? TZInterrogationRoom3D.Instance.ActiveActor : null;
+            Say("형사", q); RecordTurn(cur.id, "형사", q);
+            if (actor) actor.SetState(TZSuspectActor.State.Listen);
+            yield return new WaitForSecondsRealtime(0.6f);
+            if (actor) actor.SetState(TZSuspectActor.State.Think);
             Say(cur.name, ""); thinking.style.display = DisplayStyle.Flex;
             var body = JsonUtility.ToJson(new AskReq { question = q, action_id = TZServer.NewActionId(), input_mode = "typed", evidence_id = evidence });
             AskResp resp = null; string raw = "";
@@ -360,12 +364,13 @@ namespace TableZero
             thinking.style.display = DisplayStyle.None; busy = false;
             if (resp == null || !resp.ok || resp.data == null)
             {
-                Say(cur.name, "……");
+                Say(cur.name, "……"); if (actor) actor.SetState(TZSuspectActor.State.Silence);
                 Toast(raw != null && raw.Contains("503") ? "로컬 AI가 응답하지 않습니다 (Ollama 실행 확인)" : "답변을 받지 못했습니다: " + (resp?.error ?? raw));
                 yield break;
             }
             asked++; if (evidence != null) presented++;
             secondsLeft = resp.data.seconds_left; RefreshState();
+            if (actor) { actor.Speak(resp.data.suspect_text, resp.data.reply_mode, resp.data.motion_proposal); yield return new WaitForSecondsRealtime(0.45f); }
             TypeLine(cur.name, resp.data.suspect_text); RecordTurn(cur.id, cur.name, resp.data.suspect_text);
             if (!string.IsNullOrEmpty(resp.data.motion_proposal) && MotionKo.TryGetValue(resp.data.motion_proposal, out var m)) AddMemo(m);
             if (secondsLeft <= 0) { metaStatus.text = "면담 시간 종료"; Toast("면담 시간이 끝났습니다"); }

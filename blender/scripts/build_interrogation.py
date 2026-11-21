@@ -155,7 +155,7 @@ boxes('fix_table_feet', [((sx * (TX - 0.06) - 0.025, sy * (TY - 0.06) - 0.025, 0
                          for sx in (-1, 1) for sy in (-1, 1)], M['rubber'], collection=C, bevel=0.003)
 
 # ---------------------------------------------------------------- suspect chair (padded seat/back, black steel sled frame)
-CY = 0.80          # chair centre (seat) — she sits facing -Y
+CY = 0.64          # chair centre (seat) — she sits facing -Y
 def chair(prefix, cx, cy, face=-1, rot=0.0):
     s = face
     seat_z = 0.455
@@ -177,8 +177,8 @@ def chair(prefix, cx, cy, face=-1, rot=0.0):
 chair('fix_chair_suspect', 0.0, CY, face=-1)
 
 # ---------------------------------------------------------------- pendant lamp (key light) + caged wall bulb (rim)
-LZ = 1.58
-LY = 0.42                                            # slightly over her side: eyes fall under the shade's cut-off
+LZ = 1.64
+LY = 0.62                                            # over her brow line: the shade's cut-off puts her eyes in shadow, lights mouth/hands/table
 tube('fix_pendant_cord', [(0.0, LY, H), (0.0, LY, LZ + 0.16)], 0.003, M['cord'], C)
 lathe('fix_pendant_shade', [(0.012, 0.17), (0.035, 0.165), (0.05, 0.12), (0.12, 0.05), (0.19, 0.0), (0.192, -0.004)], M['shade'], 64, C, location=(0, LY, LZ))
 lathe('fix_pendant_inner', [(0.188, -0.001), (0.118, 0.046), (0.048, 0.116), (0.034, 0.158)], M['shadein'], 64, C, location=(0, LY, LZ))

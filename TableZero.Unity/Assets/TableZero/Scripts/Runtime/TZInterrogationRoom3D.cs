@@ -37,6 +37,9 @@ namespace TableZero
             if (probe) { probe.refreshMode = UnityEngine.Rendering.ReflectionProbeRefreshMode.ViaScripting; probe.RenderProbe(); }
         }
 
+        /// <summary>The acting component of the suspect currently shown in 3D (null in 2D mode).</summary>
+        public TZSuspectActor ActiveActor => activeCharacter ? activeCharacter.GetComponent<TZSuspectActor>() : null;
+
         public bool HasCharacter(string id)
         {
             foreach (var c in cast) if (c.suspectId == id && c.character) return true;
