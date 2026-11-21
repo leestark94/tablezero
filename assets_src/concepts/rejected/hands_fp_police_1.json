@@ -1,0 +1,34 @@
+[
+ {
+  "created_at": "2026-11-21T03:12:58.213435Z",
+  "display_name": "Nano Banana Pro",
+  "id": "57116d04-24a8-4c3d-acb9-e72ca88a9264",
+  "job_type": "nano_banana_pro",
+  "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3LtsUhYHzwWRjml6K3aoYirKxqC/hf_20261121_031258_57116d04-24a8-4c3d-acb9-e72ca88a9264_min.webp",
+  "params": {
+   "application": null,
+   "aspect_ratio": "16:9",
+   "batch_size": 1,
+   "height": 1536,
+   "input_image": null,
+   "input_images": [
+    {
+     "id": "9e435126-cc41-4d70-8765-1c47f12f5b20",
+     "type": "media_input",
+     "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3LtsUhYHzwWRjml6K3aoYirKxqC/9e435126-cc41-4d70-8765-1c47f12f5b20.png"
+    },
+    {
+     "id": "1e7e2939-5cb9-441a-9ef9-c5f2889a14e1",
+     "type": "media_input",
+     "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3LtsUhYHzwWRjml6K3aoYirKxqC/1e7e2939-5cb9-441a-9ef9-c5f2889a14e1.png"
+    }
+   ],
+   "prompt": "Close first-person view model: the detective own two hands are the subject and fill the lower half of the frame. Korean police detective, man in his late 30s: natural slightly tanned Korean skin, short clean nails, visible knuckles and veins, a simple steel wristwatch on the left wrist, dark navy plain-clothes jacket sleeves with a little white shirt cuff. Right hand grips a black tactical flashlight like image[1], beam pointing forward; left hand half-open, raised, about to push a door. Background: a dark Korean one-room at night, heavily out of focus, same darkness and colour grade as image[2], do not copy its layout. No gloves. Anatomically correct hands, five fingers each. No interface, no text, no logos, no brand names, no watermark. 16:9 cinematic still.",
+   "resolution": "2k",
+   "surface": null,
+   "width": 2752
+  },
+  "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3LtsUhYHzwWRjml6K3aoYirKxqC/hf_20261121_031258_57116d04-24a8-4c3d-acb9-e72ca88a9264.png",
+  "status": "completed"
+ }
+]

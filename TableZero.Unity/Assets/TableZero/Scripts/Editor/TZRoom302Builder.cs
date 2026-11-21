@@ -739,6 +739,8 @@ namespace TableZero.EditorTools
             flash.transform.localRotation = Quaternion.Euler(1.5f, -2f, 0);
             flash.innerSpotAngle = 18;
             var pc = player.AddComponent<TZPlayerController>(); pc.cam = cam; pc.flashlight = flash;
+            TZViewModelSetup.Attach(cam);   // generated first-person hand (Higgsfield/Tripo, decimated)
+            flash.transform.localPosition = TZViewModelSetup.RestPos + new Vector3(0f, 0.02f, 0.16f);   // beam leaves the lens, not the eye
             var steps = player.AddComponent<AudioSource>(); steps.spatialBlend = 0; steps.playOnAwake = false; pc.footsteps = steps;
             var dir = player.AddComponent<TZInteractionDirector>(); dir.cam = cam; dir.player = pc;
             dir.uiAudio = player.AddComponent<AudioSource>();

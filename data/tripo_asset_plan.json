@@ -7,29 +7,51 @@
       "tier": "A",
       "for": "game-pc",
       "replaces": "first-person hands (RELEASE_BLOCKED_ASSET)",
-      "prompt": "right forearm and hand of an adult man in a blue nitrile glove gripping a black tactical flashlight, dark navy jacket sleeve, first-person game view model, static pose",
-      "note": "static pose mesh parented to the camera; a forearm is not a humanoid rig target"
+      "prompt": "adult man right forearm and bare hand gripping a black tactical flashlight, dark navy jacket sleeve, first-person view model, static pose",
+      "note": "static pose mesh parented to the camera; a forearm is not a humanoid rig target",
+      "refs": [
+        "assets_src/tripo/refs/ref_hand_flashlight.png",
+        "assets_src/tripo/refs/ref_hand_left_door.png"
+      ],
+      "pipeline": "image-to-image (clean isolated view model) -> review -> image-to-model (static, parented to camera)",
+      "clean_prompt": "Isolate the right forearm and bare hand from image[1] gripping the black tactical flashlight, dark navy jacket sleeve, same skin tone and lighting style, three-quarter view on a plain neutral grey background, remove all UI text and the room"
     },
     {
       "id": "char_s1",
       "tier": "A",
       "for": "anim",
       "replaces": "suspect s1 (RELEASE_BLOCKED_ASSET)",
-      "prompt": "Korean man age 31, logistics center day-shift supervisor, short black hair, plain grey work jacket over t-shirt, jeans, tired expression, full body A-pose"
+      "prompt": "Korean man age 31, logistics center day-shift supervisor, short black hair, plain grey work jacket over t-shirt, jeans, tired expression, full body A-pose",
+      "refs": [
+        "<approved char_s2 sheet as style reference>"
+      ],
+      "pipeline": "image-to-image from the approved s2 sheet (style match) -> review -> multiview -> model -> texture, rig",
+      "clean_prompt": "Same realistic rendering style and A-pose framing as image[1] but a different person: Korean man age 31, logistics center day-shift supervisor, short black hair, grey work jacket over a t-shirt, jeans, tired, plain neutral grey background"
     },
     {
       "id": "char_s2",
       "tier": "A",
       "for": "anim",
       "replaces": "suspect s2 (RELEASE_BLOCKED_ASSET)",
-      "prompt": "Korean woman age 29, cosmetics company marketing assistant manager, shoulder-length dark hair, beige trench coat over office blouse, slacks, full body A-pose"
+      "prompt": "Korean woman age 29, long dark centre-parted hair, dark brown cable-knit sweater, silver wristwatch, dark slacks, full body A-pose",
+      "refs": [
+        "assets_src/tripo/refs/ref_s2_seoyeon.png",
+        "assets_src/tripo/refs/ref_s2_portrait.png"
+      ],
+      "pipeline": "image-to-image (full-body A-pose sheet) -> review -> image-to-multiview -> multiview-to-model -> texture, rig",
+      "clean_prompt": "Full-body front view in a relaxed A-pose of the same Korean woman as image[1] and image[2], face visible and calm, same long dark centre-parted hair, same dark brown cable-knit sweater, same silver wristwatch on the left wrist, dark slacks, flat shoes, plain neutral grey background, realistic, remove all UI text"
     },
     {
       "id": "char_s3",
       "tier": "A",
       "for": "anim",
       "replaces": "suspect s3 (RELEASE_BLOCKED_ASSET)",
-      "prompt": "Korean man age 46, food delivery motorbike rider, weathered face, short greying hair, black padded rider jacket, cargo pants, sneakers, full body A-pose"
+      "prompt": "Korean man age 46, food delivery motorbike rider, weathered face, short greying hair, black padded rider jacket, cargo pants, sneakers, full body A-pose",
+      "refs": [
+        "<approved char_s2 sheet as style reference>"
+      ],
+      "pipeline": "image-to-image from the approved s2 sheet (style match) -> review -> multiview -> model -> texture, rig",
+      "clean_prompt": "Same realistic rendering style and A-pose framing as image[1] but a different person: Korean man age 46, food delivery motorbike rider, weathered face, short greying hair, black padded rider jacket, cargo pants, sneakers, plain neutral grey background"
     },
     {
       "id": "prop_rice_cooker",
@@ -226,5 +248,6 @@
     "char_s1",
     "char_s2",
     "char_s3"
-  ]
+  ],
+  "concept_source": "references_images/ (user-supplied initial concept art): SCENE_302_TARGET_VISUAL.png for the first-person hands, INTERROGATION_TARGET_VISUAL.png for 이서연 (s2)"
 }

@@ -218,7 +218,7 @@ class EpisodeController:
         return {'case_id':p['case_id'],'title':p['title'],'scene':self.state.scene,
                 'act':self.state.act,'active_interview':self.state.interview_active,
                 'evidence_ids':p['evidence_ids'],'visible_events':p['events'],
-                'statements':p['statements'],'known_people':[{'id':sid,'name':self.world.suspects[sid]['name']} for sid in sorted(self.state.interviewed)], 'case_closed':self.state.closed}
+                'statements':p['statements'],'clock':self.clock_text(),'known_people':[{'id':sid,'name':self.world.suspects[sid]['name']} for sid in sorted(self.state.interviewed)], 'case_closed':self.state.closed}
 
     def _log(self,kind,data):
         self.logs.append({'type':kind,'time_monotonic':time.monotonic(),**data})

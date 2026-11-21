@@ -7,9 +7,12 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/TableZero/Scenes/Case001_Room302.unity
-    guid: 00000000000000000000000000000000
+    guid: 0e2c81108b3f3884c8f07edc44b0ef7a
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/TableZero/Scenes/Case001_Interrogation.unity
+    guid: 179bfe076bed9d34cafa23f5178737ca
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

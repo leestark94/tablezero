@@ -1,0 +1,41 @@
+[
+  {
+    "created_at": "2026-11-21T05:23:05.990604Z",
+    "display_name": "Seedream 5.0 Pro",
+    "id": "92485640-719c-4154-84d3-a07d2ec3f30b",
+    "job_type": "seedream_v5_pro",
+    "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3LtsUhYHzwWRjml6K3aoYirKxqC/hf_20261121_052305_92485640-719c-4154-84d3-a07d2ec3f30b_min.webp",
+    "params": {
+      "aspect_ratio": "2:3",
+      "batch_size": 1,
+      "height": 2496,
+      "is_inpaint": false,
+      "medias": [
+        {
+          "data": {
+            "id": "a15e3fa5-0fc8-4a79-85d8-5efbebdc2077",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3LtsUhYHzwWRjml6K3aoYirKxqC/a15e3fa5-0fc8-4a79-85d8-5efbebdc2077_resize.jpg"
+          },
+          "role": "image"
+        },
+        {
+          "data": {
+            "id": "5596fb0f-f659-4f8f-abad-296362a8ec59",
+            "type": "media_input",
+            "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3LtsUhYHzwWRjml6K3aoYirKxqC/5596fb0f-f659-4f8f-abad-296362a8ec59.png"
+          },
+          "role": "image"
+        }
+      ],
+      "prompt": "Full-body photo of the same Korean woman as image[1] and image[2], for 3D reconstruction: standing straight, facing the camera, relaxed A-pose with arms slightly away from the body, feet shoulder-width apart, whole body from head to shoes in frame. Keep exactly: long dark centre-parted hair below the chest, oversized dark brown cable-knit sweater, silver metal wristwatch on the LEFT wrist. Dark grey slacks, black flat shoes. Calm neutral face, age 29, natural Korean features. Soft even studio light from the front, no harsh shadows, plain light grey seamless background. No text, no logo.",
+      "reference_elements": [],
+      "remove_bg": false,
+      "resolution": "2k",
+      "seed": 905831,
+      "width": 1664
+    },
+    "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3LtsUhYHzwWRjml6K3aoYirKxqC/hf_20261121_052305_92485640-719c-4154-84d3-a07d2ec3f30b.png",
+    "status": "completed"
+  }
+]

@@ -1,0 +1,34 @@
+[
+ {
+  "created_at": "2026-11-21T03:08:47.349228Z",
+  "display_name": "Nano Banana Pro",
+  "id": "e2542406-0a3a-47a6-b93f-f6cfb65c799e",
+  "job_type": "nano_banana_pro",
+  "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3LtsUhYHzwWRjml6K3aoYirKxqC/hf_20261121_030847_e2542406-0a3a-47a6-b93f-f6cfb65c799e_min.webp",
+  "params": {
+   "application": null,
+   "aspect_ratio": "16:9",
+   "batch_size": 1,
+   "height": 1536,
+   "input_image": null,
+   "input_images": [
+    {
+     "id": "97e4eb4b-ced9-464a-8979-1e785077d5d0",
+     "type": "media_input",
+     "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3LtsUhYHzwWRjml6K3aoYirKxqC/97e4eb4b-ced9-464a-8979-1e785077d5d0.png"
+    },
+    {
+     "id": "6d3d917f-b92b-48f7-bc79-25aa19262377",
+     "type": "media_input",
+     "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3LtsUhYHzwWRjml6K3aoYirKxqC/6d3d917f-b92b-48f7-bc79-25aa19262377.png"
+    }
+   ],
+   "prompt": "Same Korean police interrogation room as image[1], with the same dark, moody cinematic lighting, camera angle, colour grade and photographic realism: dim room, cold blue light from the barred window behind, a warm practical lamp glow, a dark metal table in the foreground with faint reflections. The suspect sits at the table and the face must NOT be clearly visible: head lowered, features lost in shadow and hair, only fragments of the jaw or hands catch light. No interface, no subtitles, no text, no logos, no watermark. 16:9 cinematic still. The same Korean woman as image[2]: 29, long dark centre-parted hair falling over her face, oversized dark brown cable-knit sweater, silver wristwatch on the left wrist, one hand covering her mouth, exactly the mood of image[1].",
+   "resolution": "2k",
+   "surface": null,
+   "width": 2752
+  },
+  "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3LtsUhYHzwWRjml6K3aoYirKxqC/hf_20261121_030847_e2542406-0a3a-47a6-b93f-f6cfb65c799e.png",
+  "status": "completed"
+ }
+]

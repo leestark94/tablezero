@@ -1,0 +1,465 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.TextCore.Text;
+using UnityEngine.UIElements;
+
+namespace TableZero
+{
+    /// <summary>
+    /// 진술녹화실 심문 화면 (user concept INTERROGATION_TARGET_VISUAL). The suspect is a dark cinematic shot whose face is
+    /// never readable; the camera breathes slowly, the lamp flickers, film grain + vignette sit on top. Everything the
+    /// panels show comes from the authoritative server (time left, questions asked, motions observed) — no invented
+    /// percentages. Free typing goes to /v1/interview/ask and the local LLM answers in character.
+    /// </summary>
+    [RequireComponent(typeof(UIDocument))]
+    public sealed partial class TZInterrogationScreen : MonoBehaviour
+    {
+        [Serializable] public class Suspect { public string id, name, age, job, relation, room; public string[] statements; public Texture2D background, portrait, feed; }
+
+        public FontAsset koreanFont;
+        public FontAsset serifFont;
+        public Texture2D paper;
+        public bool legacyPicker = false;   // V1 card picker kept for reference; the call ledger replaces it
+        public Suspect[] suspects;
+        public Texture2D grain;
+        public int interviewSeconds = 900;
+
+        // ---------------------------------------------------------------- server DTOs
+        [Serializable] class StartReq { public string suspect_id; }
+        [Serializable] class SceneReq { public string scene; }
+        [Serializable] class AskReq { public string question, action_id, input_mode, evidence_id; }
+        [Serializable] class StartData { public string actor_id, clock; public int budget_left; }
+        [Serializable] class StartResp { public bool ok; public StartData data; public string error; }
+        [Serializable] class Receipt { public string actor_id, suspect_text, motion_proposal, reply_mode, provider; public int seconds_left, seconds_spent; public float latency_ms; }
+        [Serializable] class AskResp { public bool ok; public Receipt data; public string error, detail; }
+        [Serializable] class EvidenceCard { public string id, name, detail, source, limitation, strength; }
+        [Serializable] class EvidenceList { public EvidenceCard[] evidence; }
+        [Serializable] class EvidenceResp { public bool ok; public EvidenceList data; }
+        [Serializable] class StateData { public string scene, clock; }
+        [Serializable] class StateResp { public string mode; public StateData state; }   // GET /v1/state = {mode, state}
+
+        static readonly Dictionary<string, string> MotionKo = new Dictionary<string, string>
+        {
+            {"look_down", "질문 뒤 시선을 아래로 떨군다"}, {"lean_forward", "몸을 앞으로 기울인다"}, {"jaw_tight", "턱에 힘이 들어간다"},
+            {"still", "한동안 움직이지 않는다"}, {"cup_touch", "물컵을 만지작거린다"}, {"hand_stop", "손을 만지던 동작을 멈춘다"},
+            {"back_in_chair", "의자 등받이로 몸을 뺀다"}, {"avert_gaze", "특정 질문에서 시선을 피한다"},
+        };
+        static readonly string[] Suggested = { "그날의 동선에 대해", "피해자와의 관계", "통화 기록에 대해", "현장에 있었던 이유", "마지막으로 본 시간" };
+        static readonly Dictionary<string, string> SuggestedQ = new Dictionary<string, string>
+        {
+            {"그날의 동선에 대해", "그날 저녁 몇 시부터 몇 시까지 어디에 있었는지 순서대로 말해 주세요."},
+            {"피해자와의 관계", "정수연 씨와는 어떤 사이였습니까?"},
+            {"통화 기록에 대해", "그날 정수연 씨와 통화하거나 연락한 적이 있습니까?"},
+            {"현장에 있었던 이유", "그날 302호 근처에 간 적이 있습니까? 있다면 왜 갔습니까?"},
+            {"마지막으로 본 시간", "정수연 씨를 마지막으로 본 게 언제입니까?"},
+        };
+
+        // ---------------------------------------------------------------- UI
+        VisualElement root, bg, flicker, grainEl, vignette, picker, evidencePanel, memoList, thinking, topBar, leftCol, rightCol, dock;
+        float bgZoom = 1f, bgShiftY = 0f;
+        Label nameLbl, metaJob, metaRel, metaStatus, clockLbl, recLbl, subName, subText, timeVal, qVal, eVal, toast;
+        VisualElement timeBar, portrait, subtitleBox;
+        TextField input;
+        Suspect cur;
+        int asked, presented;
+        float recStart, secondsLeft;
+        bool busy, started;
+        string pendingEvidence;
+        Coroutine typeCo, toastCo;
+
+        static readonly Color Red = new Color(0.86f, 0.18f, 0.20f), Ink = new Color(0.93f, 0.93f, 0.92f), Dim = new Color(0.62f, 0.63f, 0.66f),
+                              Panel = new Color(0.07f, 0.075f, 0.085f, 0.82f), Line = new Color(1, 1, 1, 0.10f);
+
+        void OnEnable()
+        {
+            root = GetComponent<UIDocument>().rootVisualElement;
+            root.Clear(); root.style.flexGrow = 1;
+            if (koreanFont) root.style.unityFontDefinition = FontDefinition.FromSDFFont(koreanFont);
+            BuildStage(); BuildTopBar(); BuildLeft(); BuildRight(); BuildBottom(); BuildPicker(); BuildEvidencePanel();
+            toast = L("", 16, Ink); toast.style.position = Position.Absolute; toast.style.top = 80; toast.style.alignSelf = Align.Center;
+            toast.style.left = Length.Percent(30); toast.style.right = Length.Percent(30); toast.style.unityTextAlign = TextAnchor.MiddleCenter;
+            toast.style.backgroundColor = new Color(0, 0, 0, 0.6f); Pad(toast, 8); toast.style.opacity = 0; root.Add(toast);
+            SetChrome(false, true);
+            if (legacyPicker) ShowPicker(true); else { ShowPicker(false); BuildCallScreen(); }
+        }
+
+        void Update()
+        {
+            CallScreenUpdate();
+            if (bg != null)
+            {   // slow "camera breathing": push-in drift, never still
+                float t = Time.time;
+                float s = (1.045f + 0.012f * Mathf.Sin(t * 0.21f)) * bgZoom;
+                bg.style.scale = new Scale(new Vector3(s, s, 1));
+                bg.style.translate = new Translate(Mathf.Sin(t * 0.13f) * 9f, Mathf.Sin(t * 0.17f + 1) * 6f + bgShiftY);
+                float f = 0.02f * Mathf.PerlinNoise(t * 3.1f, 0.3f) + (Mathf.PerlinNoise(t * 0.7f, 5f) > 0.86f ? 0.06f : 0f);
+                flicker.style.opacity = bg.style.backgroundImage.value.texture != null ? f : 0f;
+                grainEl.style.translate = new Translate(UnityEngine.Random.Range(-40, 40), UnityEngine.Random.Range(-40, 40));
+            }
+            if (started)
+            {
+                float el = Time.unscaledTime - recStart;
+                recLbl.text = $"REC  {(int)(el / 3600):00}:{(int)(el / 60) % 60:00}:{(int)el % 60:00}";
+            }
+            if (thinking != null && thinking.style.display == DisplayStyle.Flex)
+                thinking.style.opacity = 0.45f + 0.45f * Mathf.Abs(Mathf.Sin(Time.time * 2.4f));
+            if (input != null && input.focusController?.focusedElement == input && UnityEngine.InputSystem.Keyboard.current != null &&
+                UnityEngine.InputSystem.Keyboard.current.enterKey.wasPressedThisFrame) Send();
+        }
+
+        // ---------------------------------------------------------------- build
+        void BuildStage()
+        {
+            var stage = new VisualElement(); Abs(stage, 0, 0, 0, 0); stage.style.overflow = Overflow.Hidden; stage.style.backgroundColor = Color.black;
+            bg = new VisualElement(); Abs(bg, 0, 0, 0, 0);
+            bg.style.backgroundSize = new BackgroundSize(BackgroundSizeType.Cover);
+            stage.Add(bg);
+            flicker = new VisualElement(); Abs(flicker, 0, 0, 0, 0); flicker.pickingMode = PickingMode.Ignore;
+            flicker.style.backgroundColor = Color.black; stage.Add(flicker);   // lamp flicker = brief brightness dips, never a colour wash
+            grainEl = new VisualElement(); Abs(grainEl, -60, -60, -60, -60); grainEl.pickingMode = PickingMode.Ignore;
+            if (grain) { grainEl.style.backgroundImage = grain; grainEl.style.backgroundRepeat = new BackgroundRepeat(Repeat.Repeat, Repeat.Repeat); }
+            grainEl.style.opacity = 0.010f; stage.Add(grainEl);
+            vignette = new VisualElement(); Abs(vignette, 0, 0, 0, 0); vignette.pickingMode = PickingMode.Ignore;
+            vignette.style.backgroundImage = Resources.Load<Texture2D>("TZ_Vignette"); vignette.style.backgroundSize = new BackgroundSize(Length.Percent(100), Length.Percent(100));
+            stage.Add(vignette);
+            root.Add(stage);
+        }
+
+        void BuildTopBar()
+        {
+            var bar = new VisualElement(); topBar = bar; Abs(bar, 0, 0, float.NaN, 0); bar.style.height = 64; bar.style.flexDirection = FlexDirection.Row;
+            bar.style.alignItems = Align.Center; bar.style.backgroundColor = new Color(0.03f, 0.03f, 0.035f, 0.92f);
+            bar.style.borderBottomWidth = 1; bar.style.borderBottomColor = Line; bar.style.paddingLeft = 28; bar.style.paddingRight = 24;
+            var logo = new VisualElement(); logo.style.width = 300;
+            var l1 = L("TABLE//ZERO", 22, Ink); l1.style.letterSpacing = 6; l1.style.unityFontStyleAndWeight = FontStyle.Bold;
+            logo.Add(l1); logo.Add(L("CASE 001 — 정수연 살인사건", 13, Dim)); bar.Add(logo);
+            var tabs = new VisualElement(); tabs.style.flexDirection = FlexDirection.Row; tabs.style.flexGrow = 1; tabs.style.justifyContent = Justify.Center;
+            foreach (var (t, on) in new[] { ("심문", true), ("현장조사", false), ("증거분석", false), ("인물관계도", false), ("사건 타임라인", false), ("수사보고", false) })
+            {
+                var b = L(t, 16, on ? Ink : Dim); b.style.paddingLeft = 22; b.style.paddingRight = 22; b.style.height = 64; b.style.unityTextAlign = TextAnchor.MiddleCenter;
+                if (on) { b.style.backgroundColor = new Color(0.45f, 0.06f, 0.08f, 0.55f); b.style.borderBottomWidth = 3; b.style.borderBottomColor = Red; }
+                tabs.Add(b);
+            }
+            bar.Add(tabs);
+            var right = new VisualElement(); right.style.flexDirection = FlexDirection.Row; right.style.alignItems = Align.Center;
+            clockLbl = L("2024. 03. 16 (토)", 15, Ink); clockLbl.style.marginRight = 28; right.Add(clockLbl);
+            recLbl = L("REC  00:00:00", 15, Ink); recLbl.style.color = new Color(1, 0.45f, 0.45f); right.Add(recLbl);
+            bar.Add(right);
+            root.Add(bar);
+        }
+
+        void BuildLeft()
+        {
+            var col = new VisualElement(); leftCol = col; Abs(col, 88, float.NaN, float.NaN, 24); col.style.width = 360;
+            var card = Box(); card.style.flexDirection = FlexDirection.Row;
+            portrait = new VisualElement(); portrait.style.width = 112; portrait.style.height = 140; portrait.style.marginRight = 16;
+            portrait.style.backgroundSize = new BackgroundSize(BackgroundSizeType.Cover); Radius(portrait, 4);
+            card.Add(portrait);
+            var info = new VisualElement(); info.style.flexGrow = 1;
+            info.Add(L("용의자", 13, Dim));
+            nameLbl = L("—", 28, Ink); nameLbl.style.unityFontStyleAndWeight = FontStyle.Bold; nameLbl.style.marginTop = 2; nameLbl.style.marginBottom = 8; info.Add(nameLbl);
+            metaJob = Meta(info, "직업"); metaRel = Meta(info, "관계"); metaStatus = Meta(info, "진술");
+            card.Add(info); col.Add(card);
+
+            var st = Box(); st.style.marginTop = 14;
+            st.Add(Header("면담 상태"));
+            var tr = Row(st, "남은 면담 시간"); timeVal = tr.Item2;
+            var track = new VisualElement(); track.style.height = 6; track.style.backgroundColor = new Color(1, 1, 1, 0.12f); Radius(track, 3); track.style.marginBottom = 10;
+            timeBar = new VisualElement(); timeBar.style.height = 6; timeBar.style.width = Length.Percent(100); timeBar.style.backgroundColor = Red; Radius(timeBar, 3);
+            track.Add(timeBar); st.Add(track);
+            qVal = Row(st, "한 질문").Item2; eVal = Row(st, "제시한 증거").Item2;
+            col.Add(st);
+
+            var memo = Box(); memo.style.marginTop = 14;
+            memo.Add(Header("관찰 메모"));
+            memoList = new VisualElement(); memo.Add(memoList);
+            var hint = L("심문 중 관찰된 행동이 여기에 기록됩니다", 13, Dim); hint.name = "memo-hint"; memoList.Add(hint);
+            col.Add(memo);
+            root.Add(col);
+        }
+
+        void BuildRight()
+        {
+            var col = new VisualElement(); rightCol = col; Abs(col, 88, 24, float.NaN, float.NaN); col.style.width = 330;
+            ActionBtn(col, "직접 질문", "자유롭게 질문을 입력합니다.", true, () => input?.Focus());
+            ActionBtn(col, "증거 제시", "확보한 증거를 보여줍니다.", true, OpenEvidence);
+            ActionBtn(col, "분석 / 대조", "데스크에서 진술과 기록을 대조합니다.", false, () => Toast("분석·대조는 데스크(TABLE INDEX)에서 진행합니다"));
+            ActionBtn(col, "심리 압박", "침묵, 반복 추궁 등 — 녹화되며 진술 신빙성에 영향", false, () => Toast("심리 압박 전술은 아직 연결되지 않았습니다"));
+            ActionBtn(col, "심문 종료", "면담을 끝내고 다른 사람을 부릅니다.", true, EndInterview);
+            root.Add(col);
+        }
+
+        void BuildBottom()
+        {
+            subtitleBox = new VisualElement(); Abs(subtitleBox, float.NaN, Length.Percent(24), 214, Length.Percent(31)); subtitleBox.style.flexDirection = FlexDirection.Row;
+            subtitleBox.style.alignItems = Align.FlexStart; subtitleBox.style.opacity = 0;
+            var bar = new VisualElement(); bar.style.width = 2; bar.style.height = 54; bar.style.backgroundColor = Red; bar.style.marginRight = 16; subtitleBox.Add(bar);
+            subName = L("", 22, new Color(1f, 0.35f, 0.38f)); subName.style.width = 92; subName.style.unityFontStyleAndWeight = FontStyle.Bold; subtitleBox.Add(subName);
+            subText = L("", 23, Ink); subText.style.whiteSpace = WhiteSpace.Normal; subText.style.flexShrink = 1; subText.style.flexGrow = 1;
+            subText.style.textShadow = new TextShadow { offset = new Vector2(0, 2), blurRadius = 6, color = new Color(0, 0, 0, 0.9f) };
+            subtitleBox.Add(subText);
+            thinking = L("· · ·", 26, Ink); thinking.style.display = DisplayStyle.None; subtitleBox.Add(thinking);
+            root.Add(subtitleBox);
+
+            dock = new VisualElement(); Abs(dock, float.NaN, 24, 24, 24); dock.style.backgroundColor = new Color(0.04f, 0.04f, 0.045f, 0.9f);
+            Radius(dock, 8); dock.style.borderTopWidth = dock.style.borderBottomWidth = dock.style.borderLeftWidth = dock.style.borderRightWidth = 1;
+            dock.style.borderTopColor = dock.style.borderBottomColor = dock.style.borderLeftColor = dock.style.borderRightColor = Line; Pad(dock, 16);
+            var row = new VisualElement(); row.style.flexDirection = FlexDirection.Row; row.style.alignItems = Align.Center;
+            var mic = new VisualElement(); mic.style.width = 250; mic.style.height = 64; Radius(mic, 6); mic.style.backgroundColor = new Color(0.30f, 0.05f, 0.07f, 0.8f);
+            mic.style.justifyContent = Justify.Center; mic.style.paddingLeft = 20; mic.style.marginRight = 16;
+            mic.Add(L("직접 질문하기", 19, Ink)); mic.Add(L("텍스트 입력 (음성은 준비 중)", 13, Dim)); row.Add(mic);
+            input = new TextField { maxLength = 300 }; input.style.flexGrow = 1; input.style.height = 64; input.style.fontSize = 18;
+            input.textEdition.placeholder = "질문할 내용을 입력하세요..."; input.textEdition.hidePlaceholderOnFocus = true;
+            row.Add(input);
+            var send = new Button(Send) { text = "보내기" }; send.style.width = 110; send.style.height = 64; send.style.marginLeft = 12; send.style.fontSize = 17;
+            send.style.backgroundColor = Red; send.style.color = Color.white; Radius(send, 6); row.Add(send);
+            dock.Add(row);
+            var chips = new VisualElement(); chips.style.flexDirection = FlexDirection.Row; chips.style.marginTop = 12; chips.style.alignItems = Align.Center;
+            chips.Add(L("추천 질문", 16, Ink)); chips.ElementAt(0).style.width = 120;
+            foreach (var s in Suggested)
+            {
+                var key = s;
+                var c = new Button(() => { input.value = SuggestedQ[key]; input.Focus(); }) { text = s };
+                c.style.flexGrow = 1; c.style.height = 40; c.style.fontSize = 15; c.style.color = Ink; c.style.backgroundColor = new Color(1, 1, 1, 0.05f);
+                Radius(c, 4); c.style.marginLeft = 8; chips.Add(c);
+            }
+            dock.Add(chips);
+            root.Add(dock);
+        }
+
+        void BuildPicker()
+        {
+            picker = new VisualElement(); Abs(picker, 0, 0, 0, 0); picker.style.backgroundColor = new Color(0, 0, 0, 0.86f);
+            picker.style.alignItems = Align.Center; picker.style.justifyContent = Justify.Center;
+            var t = L("진술녹화실", 34, Ink); t.style.unityFontStyleAndWeight = FontStyle.Bold; picker.Add(t);
+            var st = L("누구를 부르시겠습니까? 면담마다 사건 시간이 흐릅니다.", 17, Dim); st.style.marginBottom = 30; picker.Add(st);
+            var row = new VisualElement(); row.style.flexDirection = FlexDirection.Row;
+            foreach (var s in suspects ?? new Suspect[0])
+            {
+                var sus = s;
+                var c = new Button(() => Begin(sus)); c.style.width = 330; c.style.height = 420; c.style.marginLeft = c.style.marginRight = 14;
+                c.style.backgroundColor = new Color(0.08f, 0.08f, 0.09f); Radius(c, 6); c.style.paddingTop = c.style.paddingBottom = c.style.paddingLeft = c.style.paddingRight = 0;
+                c.style.flexDirection = FlexDirection.Column; c.style.overflow = Overflow.Hidden;
+                var img = new VisualElement(); img.style.height = 290; img.style.backgroundImage = s.portrait; img.style.backgroundSize = new BackgroundSize(BackgroundSizeType.Cover);
+                c.Add(img);
+                var n = L($"{s.name} ({s.age})", 24, Ink); n.style.marginTop = 14; n.style.marginLeft = 18; n.style.unityTextAlign = TextAnchor.MiddleLeft; c.Add(n);
+                var j = L(s.job, 14, Dim); j.style.marginLeft = 18; j.style.unityTextAlign = TextAnchor.MiddleLeft; j.style.whiteSpace = WhiteSpace.Normal; c.Add(j);
+                var r = L(s.relation, 14, Dim); r.style.marginLeft = 18; r.style.unityTextAlign = TextAnchor.MiddleLeft; c.Add(r);
+                row.Add(c);
+            }
+            picker.Add(row);
+            root.Add(picker);
+        }
+
+        void BuildEvidencePanel()
+        {
+            evidencePanel = new VisualElement(); Abs(evidencePanel, 88, 380, 240, 380); evidencePanel.style.backgroundColor = new Color(0.05f, 0.05f, 0.06f, 0.96f);
+            Radius(evidencePanel, 8); Pad(evidencePanel, 20); evidencePanel.style.display = DisplayStyle.None;
+            root.Add(evidencePanel);
+        }
+
+        // ---------------------------------------------------------------- flow
+        void ShowPicker(bool on) { picker.style.display = on ? DisplayStyle.Flex : DisplayStyle.None; }
+
+        void Begin(Suspect s)
+        {
+            if (busy) return;
+            if (TZServer.I == null || !TZServer.I.Online) { Toast("로컬 수사 서버에 연결 중입니다. 잠시 후 다시 시도하세요"); return; }
+            busy = true;
+            StartCoroutine(BeginCo(s));
+        }
+
+        IEnumerator BeginCo(Suspect s)
+        {
+            // scene chain on the server: whatever we are in -> desk -> interview (illegal hops are rejected and ignored)
+            string scene = "";
+            yield return Call("GET", "/v1/state", null, (ok, t) => { var r = JsonUtility.FromJson<StateResp>(t); scene = r?.state?.scene ?? ""; });
+            if (scene != "interview")
+            {
+                if (scene != "desk") yield return Call("POST", "/v1/scene", JsonUtility.ToJson(new SceneReq { scene = "desk" }), null);
+                yield return Call("POST", "/v1/scene", JsonUtility.ToJson(new SceneReq { scene = "interview" }), null);
+            }
+            bool ok = false; string err = "";
+            yield return Call("POST", "/v1/interview/start", JsonUtility.ToJson(new StartReq { suspect_id = s.id }), (o, t) =>
+            {
+                var r = JsonUtility.FromJson<StartResp>(t); ok = o && r != null && r.ok; err = r?.error ?? t;
+                if (ok && r.data != null && !string.IsNullOrEmpty(r.data.clock)) clockLbl.text = r.data.clock;
+            });
+            busy = false;
+            if (!ok) { Toast("면담을 시작하지 못했습니다: " + err); yield break; }
+            cur = s; asked = 0; presented = 0; secondsLeft = interviewSeconds; started = true; recStart = Time.unscaledTime;
+            bg.style.backgroundImage = s.feed ? s.feed : s.background; portrait.style.backgroundImage = s.portrait;
+            nameLbl.text = $"{s.name} ({s.age})"; metaJob.text = s.job; metaRel.text = s.relation; metaStatus.text = "면담 진행 중";
+            memoList.Clear(); memoList.Add(L("심문 중 관찰된 행동이 여기에 기록됩니다", 13, Dim));
+            RefreshState(); ShowPicker(false);
+            Say("", "");
+            yield return EnterRoom(s);
+            SetChrome(true, false);
+            input.Focus();
+        }
+
+        void Send()
+        {
+            if (busy || cur == null) return;
+            var q = (input.value ?? "").Trim();
+            if (q.Length < 2 && pendingEvidence == null) return;
+            busy = true; input.value = "";
+            StartCoroutine(AskCo(q.Length < 2 ? "이걸 보세요. 설명해 보시겠습니까?" : q, pendingEvidence));
+            pendingEvidence = null;
+        }
+
+        IEnumerator AskCo(string q, string evidence)
+        {
+            Say("형사", q); yield return new WaitForSecondsRealtime(0.6f);
+            Say(cur.name, ""); thinking.style.display = DisplayStyle.Flex;
+            var body = JsonUtility.ToJson(new AskReq { question = q, action_id = TZServer.NewActionId(), input_mode = "typed", evidence_id = evidence });
+            AskResp resp = null; string raw = "";
+            yield return Call("POST", "/v1/interview/ask", body, (o, t) => { raw = t; try { resp = JsonUtility.FromJson<AskResp>(t); } catch { } }, 240);
+            thinking.style.display = DisplayStyle.None; busy = false;
+            if (resp == null || !resp.ok || resp.data == null)
+            {
+                Say(cur.name, "……");
+                Toast(raw != null && raw.Contains("503") ? "로컬 AI가 응답하지 않습니다 (Ollama 실행 확인)" : "답변을 받지 못했습니다: " + (resp?.error ?? raw));
+                yield break;
+            }
+            asked++; if (evidence != null) presented++;
+            secondsLeft = resp.data.seconds_left; RefreshState();
+            TypeLine(cur.name, resp.data.suspect_text);
+            if (!string.IsNullOrEmpty(resp.data.motion_proposal) && MotionKo.TryGetValue(resp.data.motion_proposal, out var m)) AddMemo(m);
+            if (secondsLeft <= 0) { metaStatus.text = "면담 시간 종료"; Toast("면담 시간이 끝났습니다"); }
+        }
+
+        void EndInterview()
+        {
+            if (busy || cur == null) { SetChrome(false, false); OnInterviewEnded(null); return; }
+            busy = true;
+            StartCoroutine(Call("POST", "/v1/interview/end", "{}", (o, t) =>
+            {
+                busy = false; started = false; var ended = cur; cur = null; Say("", ""); SetChrome(false, false); OnInterviewEnded(ended);
+                StartCoroutine(Call("POST", "/v1/scene", JsonUtility.ToJson(new SceneReq { scene = "desk" }), null));
+            }));
+        }
+
+        void OpenEvidence()
+        {
+            if (cur == null) return;
+            StartCoroutine(Call("POST", "/v1/evidence/list", "{}", (o, t) =>
+            {
+                evidencePanel.Clear();
+                var h = L("증거 제시", 22, Ink); h.style.marginBottom = 12; evidencePanel.Add(h);
+                var r = JsonUtility.FromJson<EvidenceResp>(t);
+                var list = r?.data?.evidence ?? new EvidenceCard[0];
+                if (list.Length == 0) evidencePanel.Add(L("아직 확보한 증거가 없습니다. 현장에서 채취·봉인하거나 데스크에서 기록을 요청하세요.", 15, Dim));
+                foreach (var e in list)
+                {
+                    var ev = e;
+                    var b = new Button(() => { pendingEvidence = ev.id; evidencePanel.style.display = DisplayStyle.None; input.value = $"이 {ev.name}, 설명해 보시겠습니까?"; input.Focus(); });
+                    b.style.flexDirection = FlexDirection.Column; b.style.alignItems = Align.FlexStart; b.style.marginBottom = 8; Pad(b, 10);
+                    b.style.backgroundColor = new Color(1, 1, 1, 0.05f); b.Add(L(ev.name, 17, Ink)); var d = L($"출처: {ev.source} · 한계: {ev.limitation}", 13, Dim);
+                    d.style.whiteSpace = WhiteSpace.Normal; b.Add(d); evidencePanel.Add(b);
+                }
+                var close = new Button(() => evidencePanel.style.display = DisplayStyle.None) { text = "닫기" }; close.style.marginTop = 8; evidencePanel.Add(close);
+                evidencePanel.style.display = DisplayStyle.Flex;
+            }));
+        }
+
+        // ---------------------------------------------------------------- helpers
+        IEnumerator Call(string method, string path, string body, Action<bool, string> done, int timeout = 30)
+        {
+            bool fin = false; bool ok = false; string text = "";
+            if (method == "GET") TZServer.I.Get(path, (o, t) => { ok = o; text = t; fin = true; });
+            else TZServer.I.Post(path, body ?? "{}", (o, t) => { ok = o; text = t; fin = true; }, timeout);
+            while (!fin) yield return null;
+            done?.Invoke(ok, text);
+        }
+
+        void RefreshState()
+        {
+            int s = Mathf.Max(0, (int)secondsLeft);
+            timeVal.text = $"{s / 60:00}:{s % 60:00}";
+            timeBar.style.width = Length.Percent(100f * s / Mathf.Max(1, interviewSeconds));
+            qVal.text = asked.ToString(); eVal.text = presented.ToString();
+        }
+
+        void AddMemo(string m)
+        {
+            if (memoList.childCount == 1 && memoList[0] is Label l0 && l0.text.StartsWith("심문 중")) memoList.Clear();
+            var l = L("•  " + m, 15, Ink); l.style.marginBottom = 6; l.style.whiteSpace = WhiteSpace.Normal; memoList.Add(l);
+            while (memoList.childCount > 6) memoList.RemoveAt(0);
+        }
+
+        void Say(string who, string text)
+        {
+            if (typeCo != null) StopCoroutine(typeCo);
+            subName.text = who; subText.text = text;
+            subName.style.color = who == "형사" ? new Color(0.70f, 0.78f, 0.92f) : new Color(1f, 0.35f, 0.38f);
+            subtitleBox.style.opacity = string.IsNullOrEmpty(who) && string.IsNullOrEmpty(text) ? 0 : 1;
+        }
+
+        void TypeLine(string who, string text)
+        {
+            if (typeCo != null) StopCoroutine(typeCo);
+            typeCo = StartCoroutine(TypeCo(who, text ?? ""));
+        }
+
+        IEnumerator TypeCo(string who, string text)
+        {
+            Say(who, "");
+            for (int i = 1; i <= text.Length; i++) { subText.text = text.Substring(0, i); yield return new WaitForSecondsRealtime(text[i - 1] == ' ' ? 0.02f : 0.045f); }
+        }
+
+        void Toast(string m)
+        {
+            if (toastCo != null) StopCoroutine(toastCo);
+            toastCo = StartCoroutine(ToastCo(m));
+        }
+
+        IEnumerator ToastCo(string m) { toast.text = m; toast.style.opacity = 1; yield return new WaitForSecondsRealtime(3.2f); toast.style.opacity = 0; }
+
+        static Label L(string t, int size, Color c) { var l = new Label(t); l.style.fontSize = size; l.style.color = c; return l; }
+        static void Abs(VisualElement e, float top, float right, float bottom, float left)
+        {
+            e.style.position = Position.Absolute;
+            if (!float.IsNaN(top)) e.style.top = top; if (!float.IsNaN(right)) e.style.right = right;
+            if (!float.IsNaN(bottom)) e.style.bottom = bottom; if (!float.IsNaN(left)) e.style.left = left;
+        }
+        static void Abs(VisualElement e, float top, Length right, float bottom, Length left)
+        {
+            e.style.position = Position.Absolute; if (!float.IsNaN(top)) e.style.top = top; e.style.right = right; e.style.bottom = bottom; e.style.left = left;
+        }
+        static void Radius(VisualElement e, float r) { e.style.borderTopLeftRadius = e.style.borderTopRightRadius = e.style.borderBottomLeftRadius = e.style.borderBottomRightRadius = r; }
+        static void Pad(VisualElement e, float p) { e.style.paddingTop = e.style.paddingBottom = e.style.paddingLeft = e.style.paddingRight = p; }
+        VisualElement Box()
+        {
+            var b = new VisualElement(); b.style.backgroundColor = Panel; Radius(b, 8); Pad(b, 16);
+            b.style.borderTopWidth = b.style.borderBottomWidth = b.style.borderLeftWidth = b.style.borderRightWidth = 1;
+            b.style.borderTopColor = b.style.borderBottomColor = b.style.borderLeftColor = b.style.borderRightColor = Line;
+            return b;
+        }
+        static Label Header(string t) { var h = L(t, 17, Ink); h.style.marginBottom = 12; h.style.unityFontStyleAndWeight = FontStyle.Bold; return h; }
+        static Label Meta(VisualElement parent, string key)
+        {
+            var r = new VisualElement(); r.style.flexDirection = FlexDirection.Row; r.style.marginBottom = 4;
+            var k = L(key, 14, Dim); k.style.width = 44; r.Add(k);
+            var v = L("", 14, Ink); v.style.whiteSpace = WhiteSpace.Normal; v.style.flexShrink = 1; r.Add(v);
+            parent.Add(r); return v;
+        }
+        static (Label, Label) Row(VisualElement parent, string key)
+        {
+            var r = new VisualElement(); r.style.flexDirection = FlexDirection.Row; r.style.justifyContent = Justify.SpaceBetween; r.style.marginBottom = 6;
+            var k = L(key, 15, Ink); var v = L("—", 15, Ink); r.Add(k); r.Add(v); parent.Add(r); return (k, v);
+        }
+        void ActionBtn(VisualElement col, string title, string sub, bool enabled, Action click)
+        {
+            var b = new Button(click); b.style.flexDirection = FlexDirection.Column; b.style.alignItems = Align.FlexStart; b.style.marginBottom = 10;
+            b.style.height = 70; b.style.justifyContent = Justify.Center; b.style.paddingLeft = 20; Radius(b, 6);
+            b.style.backgroundColor = new Color(0.07f, 0.075f, 0.085f, enabled ? 0.86f : 0.6f);
+            b.style.borderTopWidth = b.style.borderBottomWidth = b.style.borderLeftWidth = b.style.borderRightWidth = 1;
+            b.style.borderTopColor = b.style.borderBottomColor = b.style.borderLeftColor = b.style.borderRightColor = new Color(1, 1, 1, enabled ? 0.16f : 0.06f);
+            var t = L(title, 19, enabled ? Ink : Dim); var s = L(sub, 13, Dim); s.style.whiteSpace = WhiteSpace.Normal;
+            b.Add(t); b.Add(s); col.Add(b);
+        }
+    }
+}

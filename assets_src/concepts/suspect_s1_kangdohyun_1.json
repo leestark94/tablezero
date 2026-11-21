@@ -1,0 +1,29 @@
+[
+ {
+  "created_at": "2026-11-21T03:09:47.096409Z",
+  "display_name": "Nano Banana Pro",
+  "id": "e0f88dd9-9790-4c48-847e-654b477d9220",
+  "job_type": "nano_banana_pro",
+  "min_result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3LtsUhYHzwWRjml6K3aoYirKxqC/hf_20261121_030947_e0f88dd9-9790-4c48-847e-654b477d9220_min.webp",
+  "params": {
+   "application": null,
+   "aspect_ratio": "16:9",
+   "batch_size": 1,
+   "height": 1536,
+   "input_image": null,
+   "input_images": [
+    {
+     "id": "97e4eb4b-ced9-464a-8979-1e785077d5d0",
+     "type": "media_input",
+     "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3LtsUhYHzwWRjml6K3aoYirKxqC/97e4eb4b-ced9-464a-8979-1e785077d5d0.png"
+    }
+   ],
+   "prompt": "Same Korean police interrogation room as image[1], with the same dark, moody cinematic lighting, camera angle, colour grade and photographic realism: dim room, cold blue light from the barred window behind, a warm practical lamp glow, a dark metal table in the foreground with faint reflections. The suspect sits at the table and the face must NOT be clearly visible: head lowered, features lost in shadow and hair, only fragments of the jaw or hands catch light. No interface, no subtitles, no text, no logos, no watermark. 16:9 cinematic still. A Korean man, 31, logistics-centre day-shift supervisor: short black hair, grey work jacket over a dark t-shirt, broad shoulders, elbows on the table, hands clasped in front of his mouth, head bowed so the brow and eyes fall into deep shadow.",
+   "resolution": "2k",
+   "surface": null,
+   "width": 2752
+  },
+  "result_url": "https://d8j0ntlcm91z4.cloudfront.net/user_3LtsUhYHzwWRjml6K3aoYirKxqC/hf_20261121_030947_e0f88dd9-9790-4c48-847e-654b477d9220.png",
+  "status": "completed"
+ }
+]

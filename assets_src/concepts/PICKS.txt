@@ -1,0 +1,4 @@
+이서연: suspect_s2_leeseoyeon_1.png
+강도현: suspect_s1_kangdohyun_2.png
+박현수: suspect_s3_parkhyunsoo_2.png
+1인칭 손: hands_fp_police_2.png
