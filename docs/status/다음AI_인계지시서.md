@@ -1,4 +1,34 @@
-# 다음 AI 인계지시서 (Claude Code / Codex 공통) — 2026-11-21 V14 기준
+# 다음 AI 인계지시서 (Claude Code / Codex 공통)
+
+## ★ 최신 상태 — 2026-11-22 세션 종료 시점 (여기부터 읽어라)
+브랜치 `dev/v11-integration`. 최신 커밋은 `git log --oneline -5`로 확인.
+
+**사용자 현재 최우선 요구 (원문 요지):**
+1. **이서연 3D 외형을 "사람처럼"** — 지금은 "고무찰흙/고무인간 같다", 10점 중 2점 → 9점 목표. 다른 작업보다 먼저.
+2. AI가 아직 덜 똑똑하고 **이서연의 성격이 드러나지 않음**. 다른 용의자(강도현·박현수)를 만들 때도 같은 실수 금지.
+3. 302호 소품·증거 배치를 진짜처럼 전부 재배치, 302 조명 눈부심(복도 센서등 `L_HallSensor` 아직 밝음) — 아직 미착수.
+
+**이번 세션에 끝난 것 (검증됨):**
+- 용의자 AI 전략 엔진 `server/strategy.py` + 서버 전용 dossier `tools/v21_dossiers.py` (증거가 기억을 "해제"하지 않음; DENY/CHALLENGE/CONCEDE_MIN/DEMAND_PROOF/STONEWALL/REBUKE). 말하는 모델엔 허용된 사실만 들어감.
+- **스트리밍**: 서버 `/v1/interview/ask_start` → `{job_id}`, `/v1/interview/ask_poll` → `{partial,done,ok,error,receipt}`. Unity `TZInterrogationScreen.AskCo`가 생성되는 대로 타이핑, 기다리는 동안 용의자 Think 연기. 실측(Unity 꺼짐, 8B 예열): **첫 글자 0.6~0.7초**, 한 줄 완성 2.4~3초.
+- 예열(warm-up)이 질문과 같은 로드 옵션(`line_load_options()`: num_ctx 2048 등)을 쓰도록 수정 — 전에는 첫 질문에서 모델 재로드로 약 150초 걸렸음.
+- `TZFramePacing`: 평소 60fps, AI 생성 중 30fps (무제한 렌더가 GPU 100%를 먹어 답변이 40~170초 걸리던 원인).
+- 모욕·성적 발언 → 공손한 거절문이 아니라 화내며 항의(REBUKE), 두 번째부터 변호인 요구. "죄송합니다만…응할 수 없습니다/개인정보 보호" 같은 상담원 말투는 가드가 거부.
+- 서버 테스트 144개 통과 (`python -m unittest discover -s tests`).
+
+**정직한 한계 / 주의:**
+- RTX 2070 SUPER 8GB: **Unity 에디터 Play 중에는 VRAM이 약 3GB 사용 → Kanana 8B(약 5GB)가 GPU에 다 안 올라감** → 매우 느려짐. 빌드된 플레이어에선 VRAM 사용이 적어 들어갈 가능성 있음(**미검증 — Windows 빌드로 측정 필요**).
+- 테스트 중 에디터에 열린 `Case001_Interrogation` 씬의 TZServer `ollamaModel`을 **임시로 2.1B로 바꿔 둠(저장 안 함)**. 씬을 저장하지 말고 다시 열어 버려라(원래 값: `hf.co/DevQuasar/kakaocorp.kanana-1.5-8b-instruct-2505-GGUF:Q4_K_M`). 2.1B는 상담원 말투·사실 지어냄으로 품질 나쁨.
+- Kanana 1.5 상업 이용 라이선스 미확인.
+
+**이서연 "사람처럼" — 다음 담당자 출발점:**
+- 현재 모델: MPFB2(MakeHuman) 기반 `blender/scripts/build_seoyeon.py` → `TZSuspectCharacterBuilder` (Humanoid, 얼굴 키 17종). 고무처럼 보이는 주원인 후보: 피부 셰이더(SSS 없음·스펙/러프니스 균일·노멀/모공 디테일 없음), 머리카락이 덩어리 메시(카드/알파 없음), 눈(각막 굴절·습기·속눈썹 부족), 옷 주름 없음, 조명이 평면적.
+- 무료 경로: 피부 디테일 노멀/러프니스 맵 생성 + URP 피부 근사(SSS 랩 라이팅) + 헤어 카드 + 눈 셰이더 + 림/키 조명. 
+- 사실적 품질(9점)을 확실히 원하면 고품질 인물 에셋 필요 — MetaHuman(현재 라이선스상 타 엔진 사용 가능 여부 확인 필요, Epic 계정 필요), Character Creator(유료). **비용·계정 필요한 건 사용자 승인 먼저.**
+
+---
+
+## (이전 기록) 2026-11-21 V14 기준
 
 > **2026-11-22 V21.1 적용 시작 — 사건 정본이 바뀌었다.** 진범은 박현수(s3, 21:57 치명상). 구 정본(이서연 진범)은 `reference/legacy_v04/`에 보관만, 로드 금지.
 > 최상위 지시: `references_images/V21_PACKAGE/TABLE_ZERO_V21_ULTIMATE_HANDOFF/01_CLAUDE_CODE_ULTIMATE_PROMPT.md` (+ `00_START_HERE.md`). 진행 상황: `docs/v21/P0_CONFLICT_REPORT.md`.
