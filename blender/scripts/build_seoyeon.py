@@ -35,7 +35,7 @@ bpy.ops.wm.read_homefile(use_empty=True)
 
 # ------------------------------------------------------------ body: 29-year-old Korean woman, 163 cm, slim-average
 macro = TargetService.get_default_macro_info_dict()
-macro.update({'gender': 0.0, 'age': 0.53, 'muscle': 0.42, 'weight': 0.40, 'proportions': 0.62, 'height': 0.42,
+macro.update({'gender': 0.0, 'age': 0.53, 'muscle': 0.28, 'weight': 0.30, 'proportions': 0.62, 'height': 0.42,
               'cupsize': 0.42, 'firmness': 0.55})
 macro['race'] = {'asian': 1.0, 'caucasian': 0.0, 'african': 0.0}
 human = HumanService.create_human(mask_helpers=True, detailed_helpers=True, extra_vertex_groups=True, feet_on_ground=True,
@@ -165,12 +165,15 @@ else:
 # ------------------------------------------------------------ fringe/side strands over the eyes + left-wrist watch
 # (textures from tools/gen_cloth_textures.py — run it first)
 import seoyeon_extras
+if suit:
+    seoyeon_extras.add_sleeves(human, rig, suit)
 hair_obj = next((o for o in bpy.data.objects if 'long01' in o.name), None)
 fringe_tex = os.path.join(tex_dir, 'seoyeon_fringe_diffuse.png')
 if hair_obj and os.path.exists(fringe_tex):
     seoyeon_extras.add_fringe(human, hair_obj, rig, fringe_tex)
 else:
     print('FRINGE_SKIPPED hair', bool(hair_obj), 'tex', os.path.exists(fringe_tex))
+seoyeon_extras.add_hair_cap(human, rig)
 seoyeon_extras.add_watch(human, rig)
 
 # ------------------------------------------------------------ export
