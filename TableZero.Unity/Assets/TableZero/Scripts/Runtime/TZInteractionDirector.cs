@@ -86,19 +86,27 @@ namespace TableZero
                 var c = hit.collider.GetComponentInParent<TZInspectableProp>();
                 if (c && c.CanTarget() && hit.distance <= c.interactionDistanceMeters) next = c;
             }
-            if (next == current) return;
-            current = next;
+            // same target but its state changed (door closed/opened, switch toggled): the prompt must follow at once, not on the next retarget
+            string label = next != null ? PromptFor(next) : null;
+            if (next == current && label == lastPrompt) return;
+            current = next; lastPrompt = label;
             if (TZHud.I)
             {
                 if (current == null) TZHud.I.SetFocus(null, null);
                 else
                 {
-                    string extra = current.kind == TZPropKind.Inspect || current.kind == TZPropKind.EvidenceAnchor ? "" : "   Q 자세히";
-                    // same verbs for mundane and case-relevant objects: the HUD never hints which matters
-                    string collect = current.kind == TZPropKind.Move || current.kind == TZPropKind.EvidenceAnchor || current.handheld ? "   X 길게 채취" : "";
-                    TZHud.I.SetFocus(current.KoreanLabel, VerbKo(current) + extra + "   C 촬영" + collect);
+                    TZHud.I.SetFocus(current.KoreanLabel, label);
                 }
             }
+        }
+
+        string lastPrompt;
+        static string PromptFor(TZInspectableProp p)
+        {
+            string extra = p.kind == TZPropKind.Inspect || p.kind == TZPropKind.EvidenceAnchor ? "" : "   Q 자세히";
+            // same verbs for mundane and case-relevant objects: the HUD never hints which matters
+            string collect = p.kind == TZPropKind.Move || p.kind == TZPropKind.EvidenceAnchor || p.handheld ? "   X 길게 채취" : "";
+            return VerbKo(p) + extra + "   C 촬영" + collect;
         }
 
         void OnRequested(TZInspectableProp p, TZPropAction a) => Send(p, a);

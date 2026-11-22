@@ -58,7 +58,7 @@ namespace TableZero
         void Start()
         {
             if (startActive) isActive = true;
-            if (startOpen) { isOpen = true; if (motion) motion.SnapPartial(0.32f); }
+            if (startOpen) { isOpen = true; if (motion) motion.SnapPartial(0.62f); }
             if (switchTargets != null) foreach (var b in switchTargets) if (b) b.enabled = isActive;
             if (switchObjects != null) foreach (var g in switchObjects) if (g) g.SetActive(isActive);
         }

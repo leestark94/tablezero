@@ -33,13 +33,19 @@ namespace TableZero
         [Serializable] class Reaction { public string variant_id; public Beat[] beats; }
         [Serializable] class ReportData { public string ending_code, result; public bool report_accepted, may_continue; public string[] missing_proof_axes; public Beat[] beats; public Reaction reaction; }
         [Serializable] class ReportResp { public bool ok; public ReportData data; public string error; }
-        [Serializable] class ReportReq { public string accused_id; public string[] evidence_ids; public bool confirm; }
-
+        
         // draft survives scene hops inside one run (save/load is P2)
         static string draftNote = "", draftAccused = "";
         static readonly Dictionary<string, HashSet<string>> draftAxes = new Dictionary<string, HashSet<string>>();
         static readonly Dictionary<string, string> draftClaims = new Dictionary<string, string>();
         static bool reportSubmitted;
+        static Vector2 keepScroll;   // scroll offset to restore after an in-place rebuild (report evidence picks, request list)
+
+        /// <summary>Drop everything that belongs to the previous investigation (called when the server session changes / Play starts).</summary>
+        public static void ResetDraft()
+        {
+            draftNote = ""; draftAccused = ""; draftAxes.Clear(); draftClaims.Clear(); reportSubmitted = false; keepScroll = Vector2.zero;
+        }
 
         static readonly (string id, string title, string hint)[] Axes =
         {
@@ -69,7 +75,8 @@ namespace TableZero
         IEnumerator Enter()
         {
             float w = 0; while (TZServer.I == null || !TZServer.I.Online) { w += Time.unscaledDeltaTime; if (w > 20) break; yield return null; }
-            yield return Post("/v1/scene", JsonUtility.ToJson(new SceneReq { scene = "desk" }), null);   // already at desk → refused harmlessly
+            bool synced = false; TZSession.Sync(() => synced = true); while (!synced) yield return null;   // adopt the server's session (drops a stale draft/submitted flag)
+            yield return Post("/v1/scene", JsonUtility.ToJson(new SceneReq { scene = "desk" }), null);   // already at desk → idempotent
             yield return Refresh();
             Hub();
         }
@@ -105,6 +112,16 @@ namespace TableZero
         }
 
         void Show(VisualElement v) { page.Clear(); page.Add(v); }
+
+        ScrollView curScroll;
+        /// <summary>Remember/restore a ScrollView's offset across the rebuilds this screen does after every action.</summary>
+        void KeepScroll(ScrollView sv)
+        {
+            curScroll = sv;
+            var want = keepScroll;
+            sv.RegisterCallback<GeometryChangedEvent>(_ => { if (want != Vector2.zero) { sv.scrollOffset = want; want = Vector2.zero; } });
+            sv.verticalScroller.valueChanged += v => { keepScroll = new Vector2(0, v); };
+        }
 
         // ------------------------------------------------------------------ hub
         void Hub()
@@ -143,9 +160,9 @@ namespace TableZero
             var right = Box(Panel); right.style.width = 330;
             right.Add(L("수사 행동", 20, Ink, true));
             right.Add(Btn("용의자 호출 → 진술녹화실", () => SceneManager.LoadScene(InterrogationScene), primary: true));
-            right.Add(Btn("기록 요청 · 감식 의뢰", Requests));
+            right.Add(Btn("기록 요청 · 감식 의뢰", () => { keepScroll = Vector2.zero; Requests(); }));
             right.Add(Btn("302호 현장 재방문", () => StartCoroutine(Revisit())));
-            right.Add(Btn("최종 수사보고서", Report, enabled: !reportSubmitted, whyDisabled: "보고서는 이미 제출됐습니다"));
+            right.Add(Btn("최종 수사보고서", () => { keepScroll = Vector2.zero; Report(); }, enabled: !reportSubmitted, whyDisabled: "보고서는 이미 제출됐습니다"));
             right.Add(Divider());
             right.Add(L("현장 재방문은 이동·서류 처리로 사건 시각이 흐른다. 기록 요청은 수사 자원을 쓴다", 13, Dim));
             cols.Add(right);
@@ -170,18 +187,20 @@ namespace TableZero
             var s = Shell("기록 요청 · 감식 의뢰");
             s.Add(L("확인되지 않은 사실은 요청과 감식으로만 검증한다", 26, Ink));
             var sub = L("각 요청은 수사 자원을 쓰고, 실제 회신까지 걸리는 시간이 있다. 대상·절차 요건이 안 되면 이유가 표시된다", 14, Dim); sub.style.marginBottom = 14; s.Add(sub);
-            var sv = new ScrollView(); sv.style.flexGrow = 1; sv.style.marginBottom = 16;
+            var sv = new ScrollView(); sv.style.flexGrow = 1; sv.style.marginBottom = 16; KeepScroll(sv);
             foreach (var r in opts?.requests ?? new ReqOpt[0])
             {
+                bool afford = opts == null || r.cost <= opts.budget_left;
                 var row = new VisualElement(); row.style.flexDirection = FlexDirection.Row; row.style.alignItems = Align.Center;
                 row.style.backgroundColor = Panel; Pad(row, 12); Radius(row, 5); row.style.marginBottom = 8;
                 var info = new VisualElement(); info.style.flexGrow = 1;
                 info.Add(L(r.label, 17, Ink, true));
                 var meta = L($"수사 자원 {r.cost}  ·  회신까지 약 {r.minutes}분 (사건 시각 기준)", 13, Dim); info.Add(meta);
                 if (!string.IsNullOrEmpty(r.blocked_reason)) info.Add(L("요건 미충족: " + r.blocked_reason, 13, Warn));
+                else if (!r.done && !afford) info.Add(L($"수사 자원이 부족합니다 (필요 {r.cost}, 남음 {opts.budget_left}). 확보한 기록만으로 보고서를 쓸 수 있습니다", 13, Warn));
                 row.Add(info);
-                var id = r.request_id;
-                Button b = r.done ? Btn("확보됨", null, enabled: false) : Btn("요청", () => StartCoroutine(DoRequest(id)), primary: r.available, enabled: r.available, whyDisabled: r.blocked_reason);
+                var id = r.request_id; bool can = r.available && afford;
+                Button b = r.done ? Btn("확보됨", null, enabled: false) : Btn(!afford && r.available ? "자원 부족" : "요청", () => { keepScroll = curScroll != null ? curScroll.scrollOffset : keepScroll; StartCoroutine(DoRequest(id)); }, primary: can, enabled: can, whyDisabled: r.blocked_reason ?? "수사 자원 부족");
                 b.style.width = 120; row.Add(b);
                 sv.Add(row);
             }
@@ -207,38 +226,44 @@ namespace TableZero
         void Report()
         {
             var s = Shell("최종 수사보고서 — 초안은 언제든 수정, 정식 제출은 1회");
-            var sv = new ScrollView(); sv.style.flexGrow = 1; sv.style.marginBottom = 20;
+            var sv = new ScrollView(); sv.style.flexGrow = 1; sv.style.marginBottom = 20; KeepScroll(sv);
             var who = Box(Panel); who.style.marginBottom = 12;
             who.Add(L("피의자 가설", 18, Ink, true));
             var choices = new[] { ("s1", "강도현"), ("s2", "이서연"), ("s3", "박현수"), ("", "지목 보류") };
             var row = new VisualElement(); row.style.flexDirection = FlexDirection.Row; row.style.marginTop = 8;
             foreach (var (id, nm) in choices)
             {
-                var b = Btn((draftAccused == id ? "● " : "○ ") + nm, () => { draftAccused = id; Report(); }, primary: draftAccused == id);
+                var b = Btn((draftAccused == id ? "● " : "○ ") + nm, () => { keepScroll = new Vector2(0, sv.verticalScroller.value); draftAccused = id; Report(); }, primary: draftAccused == id);
                 b.style.width = 150; b.style.marginRight = 10; row.Add(b);
             }
             who.Add(row); sv.Add(who);
+            var hold = L("지목 보류도 유효한 선택이다. 보류하면 네 축의 주장과 근거 없이 제출할 수 있다", 13, Dim); hold.style.marginBottom = 10; sv.Add(hold);
             foreach (var (axis, title, hint) in Axes)
             {
                 if (!draftAxes.ContainsKey(axis)) draftAxes[axis] = new HashSet<string>();
                 var box = Box(Panel); box.style.marginBottom = 10;
                 box.Add(L(title, 18, Ink, true)); box.Add(L(hint, 13, Dim));
-                var claim = DarkInput(new TextField { value = draftClaims.TryGetValue(axis, out var c) ? c : "" }); claim.style.marginTop = 8;
-                claim.textEdition.placeholder = "주장: 이 축을 어떻게 설명하는가"; var ax = axis;
+                var claim = DarkInput(new TextField { multiline = true, value = draftClaims.TryGetValue(axis, out var c) ? c : "" }); claim.style.marginTop = 8;
+                claim.style.minHeight = 74; claim.style.whiteSpace = WhiteSpace.Normal;
+                claim.textEdition.placeholder = "주장: 이 축을 어떻게 설명하는가 (여러 줄 가능)"; var ax = axis;
                 claim.RegisterValueChangedCallback(ev => draftClaims[ax] = ev.newValue); box.Add(claim);
                 var picks = new VisualElement(); picks.style.flexDirection = FlexDirection.Row; picks.style.flexWrap = Wrap.Wrap; picks.style.marginTop = 8;
                 if (evidence.Length == 0) picks.Add(L("근거로 붙일 확보 기록이 없다", 13, Warn));
+                var summary = L("", 13, Dim); summary.style.marginTop = 6;
+                void Refresh() { summary.text = draftAxes[ax].Count == 0 ? "붙인 근거 없음" : "붙인 근거 " + draftAxes[ax].Count + "건: " + string.Join(" · ", evidence.Where(x => draftAxes[ax].Contains(x.id)).Select(x => x.name)); }
                 foreach (var e in evidence)
                 {
-                    var eid = e.id; bool on = draftAxes[axis].Contains(eid);
-                    var t = Btn((on ? "✓ " : "") + e.name, () => { if (!draftAxes[ax].Remove(eid)) draftAxes[ax].Add(eid); Report(); }, primary: on);
-                    t.style.fontSize = 13; t.style.height = 34; t.style.marginRight = 8; picks.Add(t);
+                    var eid = e.id; var ename = e.name;
+                    var t = Btn(ename, null); t.style.fontSize = 13; t.style.height = 34; t.style.marginRight = 8;
+                    void Paint() { bool on = draftAxes[ax].Contains(eid); t.text = (on ? "✓ " : "") + ename; t.style.backgroundColor = on ? Accent : new Color(0.11f, 0.14f, 0.17f); t.style.color = on ? new Color(0.05f, 0.05f, 0.05f) : Ink; }
+                    t.clicked += () => { if (!draftAxes[ax].Remove(eid)) draftAxes[ax].Add(eid); Paint(); Refresh(); };   // in place: no rebuild, so the scroll position and the text focus stay
+                    Paint(); picks.Add(t);
                 }
-                box.Add(picks); sv.Add(box);
+                box.Add(picks); Refresh(); box.Add(summary); sv.Add(box);
             }
             s.Add(sv);
             var bar = new VisualElement(); bar.style.flexDirection = FlexDirection.Row; bar.style.marginBottom = 26;
-            var sub = Btn("정식 제출 (사건당 1회)", ConfirmSubmit, primary: true); sub.style.width = 260; sub.style.marginRight = 12; bar.Add(sub);
+            var sub = Btn("검토하고 제출", () => { keepScroll = Vector2.zero; ConfirmSubmit(); }, primary: true); sub.style.width = 260; sub.style.marginRight = 12; bar.Add(sub);
             var back = Btn("초안 저장하고 수사본부로", Hub); back.style.width = 260; bar.Add(back);
             s.Add(bar);
             Show(s);
@@ -248,23 +273,57 @@ namespace TableZero
         {
             var s = Shell("정식 제출 확인");
             var who = string.IsNullOrEmpty(draftAccused) ? "지목 보류" : draftAccused == "s1" ? "강도현" : draftAccused == "s2" ? "이서연" : "박현수";
-            int n = draftAxes.Values.SelectMany(x => x).Distinct().Count();
-            var box = Box(Panel); box.style.maxWidth = 820;
+            var sv = new ScrollView(); sv.style.flexGrow = 1; sv.style.marginBottom = 12;
+            var box = Box(Panel); box.style.maxWidth = 980;
             box.Add(L("정식 제출은 사건당 한 번뿐이다. 제출하면 수사는 이 보고서로 종결된다", 22, Ink, true));
-            var d = L($"피의자 가설: {who}\n첨부한 근거 기록: {n}건\n이름이 맞아도 네 축이 서로 다른 근거로 입증되지 않으면 성공으로 판정되지 않는다", 16, Ink); d.style.marginTop = 12; box.Add(d);
-            var row = new VisualElement(); row.style.flexDirection = FlexDirection.Row; row.style.marginTop = 18;
-            var yes = Btn("제출한다", () => StartCoroutine(Submit()), primary: true); yes.style.width = 200; yes.style.marginRight = 12; row.Add(yes);
+            var d = L($"피의자 가설: {who}\n이름이 맞아도 네 축이 각각 자기 근거로 입증되지 않으면 성공으로 판정되지 않는다. 한 축에 붙인 근거는 다른 축에서 대신 쓰이지 않는다", 15, Ink); d.style.marginTop = 10; box.Add(d);
+            var missing = new List<string>();
+            if (!string.IsNullOrEmpty(draftAccused))
+                foreach (var (axis, title, _) in Axes)
+                {
+                    var line = new VisualElement(); line.style.marginTop = 12; line.style.borderLeftWidth = 2; line.style.borderLeftColor = Accent; line.style.paddingLeft = 12;
+                    line.Add(L(title, 15, Accent, true));
+                    string cl = draftClaims.TryGetValue(axis, out var cc) ? cc.Trim() : "";
+                    bool noClaim = cl.Length == 0, noEv = !draftAxes.ContainsKey(axis) || draftAxes[axis].Count == 0;
+                    line.Add(L(noClaim ? "(주장 없음)" : cl, 14, noClaim ? Warn : Ink));
+                    line.Add(L(noEv ? "(붙인 근거 없음)" : "근거: " + string.Join(" · ", evidence.Where(x => draftAxes[axis].Contains(x.id)).Select(x => x.name)), 13, noEv ? Warn : Dim));
+                    if (noClaim || noEv) missing.Add(title);
+                    box.Add(line);
+                }
+            if (missing.Count > 0) { var w = L("제출할 수 없습니다. 주장과 근거가 비어 있는 축: " + string.Join(", ", missing) + "  (지목을 보류하면 이 항목 없이 제출할 수 있다)", 14, Warn); w.style.marginTop = 14; box.Add(w); }
+            sv.Add(box); s.Add(sv);
+            var row = new VisualElement(); row.style.flexDirection = FlexDirection.Row; row.style.marginBottom = 26;
+            var yes = Btn("제출한다", () => StartCoroutine(Submit()), primary: true, enabled: missing.Count == 0, whyDisabled: "비어 있는 축이 있습니다"); yes.style.width = 200; yes.style.marginRight = 12; row.Add(yes);
             var no = Btn("보고서로 돌아가기", Report); no.style.width = 220; row.Add(no);
-            box.Add(row); s.Add(box);
+            s.Add(row);
             Show(s);
+        }
+
+        static string Q(string v) => "\"" + (v ?? "").Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\r", "").Replace("\n", "\\n").Replace("\t", " ") + "\"";
+
+        /// <summary>Report schema v1: per-axis claim + the evidence attached to THAT axis, bound to the server session. No union.</summary>
+        static string ReportJson()
+        {
+            var sb = new System.Text.StringBuilder();
+            sb.Append("{\"schema_version\":1,\"session_id\":").Append(Q(TZSession.Id)).Append(",\"accused_id\":");
+            sb.Append(string.IsNullOrEmpty(draftAccused) ? "null" : Q(draftAccused)).Append(",\"confirm\":true,\"axes\":{");
+            bool first = true;
+            foreach (var (axis, _, _) in Axes)
+            {
+                if (!first) sb.Append(','); first = false;
+                draftClaims.TryGetValue(axis, out var cl);
+                var ids = draftAxes.TryGetValue(axis, out var set) ? set.OrderBy(x => x).ToArray() : new string[0];
+                sb.Append(Q(axis)).Append(":{\"claim\":").Append(Q((cl ?? "").Trim())).Append(",\"evidence_ids\":[").Append(string.Join(",", ids.Select(Q))).Append("]}");
+            }
+            sb.Append("}}");
+            return sb.ToString();
         }
 
         IEnumerator Submit()
         {
             if (busy) yield break; busy = true;
-            var ids = draftAxes.Values.SelectMany(x => x).Distinct().ToArray();
-            var body = JsonUtility.ToJson(new ReportReq { accused_id = draftAccused, evidence_ids = ids, confirm = true });
-            if (string.IsNullOrEmpty(draftAccused)) body = body.Replace("\"accused_id\":\"\"", "\"accused_id\":null");
+            bool synced = false; TZSession.Sync(() => synced = true); while (!synced) yield return null;   // a stale session id must never submit
+            var body = ReportJson();
             string text = ""; yield return Post("/v1/report", body, (o, t) => text = t);
             busy = false;
             ReportResp r = null; try { r = JsonUtility.FromJson<ReportResp>(text); } catch { }

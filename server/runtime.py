@@ -144,17 +144,24 @@ class World:
                 'camera_impulse':min(event['camera_impulse'],0.15),'physics_event':event['physics_event'],
                 'subtitle':event['subtitle']}
 
-    def evaluate_report(self, accused_id, submitted_evidence):
-        """Game-only evidence-axis sufficiency; not a legal guilt determination."""
+    def evaluate_report(self, accused_id, submitted_evidence, axis_evidence=None):
+        """Game-only evidence-axis sufficiency; not a legal guilt determination.
+        axis_evidence: {axis: [evidence ids attached to THAT axis]}. When given, each axis is judged only from the evidence the
+        player attached to it (no union across axes), and physical_link needs two different source families."""
         if accused_id not in self.suspects: raise GuardError('Unknown accused person')
         if not isinstance(submitted_evidence,(list,set,tuple)): raise GuardError('Invalid evidence list')
         submitted=set(submitted_evidence)
         if not submitted.issubset(self.available_evidence): raise GuardError('Evidence not acquired')
         logic=self._canon['case_result_logic']
+        fam={e['id']:e.get('source_family','') for e in self._canon['evidence']}
         axes={}
         for axis in logic['must_prove']:
             key=axis+'_evidence_sets'
-            axes[axis]=any(set(s).issubset(submitted) for s in logic[key])
+            pool=submitted if axis_evidence is None else set(axis_evidence.get(axis,[]))
+            ok=any(set(s).issubset(pool) for s in logic[key])
+            if ok and axis=='physical_link' and axis_evidence is not None:
+                ok=len({fam.get(e,'') for e in pool if fam.get(e)})>=2
+            axes[axis]=ok
         return {'accused_id':accused_id,'axes':axes,'sufficient_for_game_report':
                 accused_id==logic['identity'] and all(axes.values()),
                 'disclaimer':'게임 내부 입증 기준이며 실제 형사재판의 판결이 아닙니다.'}

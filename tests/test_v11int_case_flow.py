@@ -1,4 +1,5 @@
 """V11 integration tests: playable case flow, knowledge isolation and AI guards (no live model)."""
+from tests.report_util import rp
 import os, unittest, uuid
 from server.episode_controller import EpisodeController
 from server.interview_service import InterviewService
@@ -66,7 +67,8 @@ class CaseFlowTests(unittest.TestCase):
         self.c.state.interviewed.update({'s1', 's2', 's3'}); self.c.state.flags.add('phone_seized')
         for e in ('V21-E07', 'V21-E18', 'V21-E10', 'V21-E16', 'V21-E15', 'V21-E13', 'V21-E19'):
             self.c.desk.request(e)
-        r = self.c.file_report('s3', ['V21-E17', 'V21-E07', 'V21-E18', 'V21-E10', 'V21-E16', 'V21-E15', 'V21-E13', 'V21-E19'], final=True)
+        _ev = ['V21-E17', 'V21-E07', 'V21-E18', 'V21-E10', 'V21-E16', 'V21-E15', 'V21-E13', 'V21-E19']
+        r = self.c.file_report('s3', _ev, final=True, report=rp(self.c, 's3', _ev))
         self.assertFalse(r['report_accepted'])
 
     def test_photo_marker_numbers_follow_first_photo_order(self):
@@ -95,7 +97,8 @@ class CaseFlowTests(unittest.TestCase):
         self.c.state.interviewed.update({'s1', 's2', 's3'}); self.c.state.flags.add('phone_seized')
         for e in ('V21-E07', 'V21-E18', 'V21-E10', 'V21-E16', 'V21-E15', 'V21-E13', 'V21-E19'):
             self.c.desk.request(e)
-        r = self.c.file_report('s3', ['V21-E17', 'V21-E07', 'V21-E18', 'V21-E10', 'V21-E16', 'V21-E15', 'V21-E13', 'V21-E19'], final=True)
+        _ev = ['V21-E17', 'V21-E07', 'V21-E18', 'V21-E10', 'V21-E16', 'V21-E15', 'V21-E13', 'V21-E19']
+        r = self.c.file_report('s3', _ev, final=True, report=rp(self.c, 's3', _ev))
         self.assertTrue(r['report_accepted'])
 
     def test_desk_prerequisites_and_budget(self):

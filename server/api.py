@@ -14,7 +14,7 @@ from .speech_adapter import choose_speech_provider,SpeechNotReady,validate_wav
 class LocalBridgeHandler(BaseHTTPRequestHandler):
     controller:EpisodeController=EpisodeController()
     local_token:str=''
-    max_body:int=16384
+    max_body:int=65536
     interview_service:InterviewService|None=None
     server_version='TableZeroPreview/0.8'
     def _send(self,code,obj):
@@ -112,7 +112,16 @@ class LocalBridgeHandler(BaseHTTPRequestHandler):
                 # Local preview test route, not a production final-submission service
                 result=self.controller.file_report(value.get('accused_id'),value.get('evidence_ids',[]),
                                                    chain_defects=value.get('chain_defects',[]),
-                                                   final=value.get('confirm') is True)
+                                                   final=value.get('confirm') is True,report=value)
+            elif path=='/v1/case/new':
+                # A brand-new investigation: new session id, evidence, budget, interview memory, scene (provider and model stay loaded).
+                provider=self.controller.provider.provider if hasattr(self.controller.provider,'provider') else None
+                LocalBridgeHandler.controller=EpisodeController(provider=provider)
+                LocalBridgeHandler.interview_service=InterviewService(LocalBridgeHandler.controller)
+                _JOBS.clear()
+                self.__class__.controller=LocalBridgeHandler.controller
+                result={'session_id':LocalBridgeHandler.controller.session_id,'scene':LocalBridgeHandler.controller.state.scene,
+                        'state':LocalBridgeHandler.controller.public_state()}
             elif path=='/v1/evidence/preview-grant':
                 if os.environ.get('TABLEZERO_DEV_ALLOW_EVIDENCE_GRANT')!='1':
                     raise GuardError('Preview grant disabled; production needs server-side authorization')

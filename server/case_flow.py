@@ -70,6 +70,15 @@ REQUESTS = {
                 'why_blocked': '현장에서 머그컵을 채취·봉인해야 감정을 의뢰할 수 있습니다'},
 }
 
+PROP_EVIDENCE = {'living_food_bag': 'V21-E01', 'living_phone': 'V21-E06', 'living_photo_frame': 'V21-E08'}
+PROP_LABEL_KO = {'living_food_bag': '배달 음식 봉투·영수증', 'living_phone': '피해자 휴대전화', 'living_photo_frame': '깨진 사진 액자',
+                 'kitchen_mug': '머그컵', 'xprop_delivery_receipt': '배달 영수증'}
+WHY_KO = {'Physical evidence requires scene': '302호 안에서만 채취할 수 있습니다',
+          'Evidence provenance/photo record required': '먼저 사진 촬영(C)으로 현장 기록을 남기세요',
+          'Physical evidence requires packaging/chain log': '봉인 절차가 필요합니다', 'Unknown item': '등록되지 않은 물건입니다',
+          'Starting record already present': '이미 확보된 기록입니다', 'Case closed': '이미 종결된 사건입니다'}
+
+
 class PropAuthority:
     def __init__(self, episode):
         self.episode = episode
@@ -176,17 +185,38 @@ class PropAuthority:
         rec = {'prop_id': prop_id, 'collected': True, 'sealed': True, 'defects': defects,
                'note': '채취·봉인 완료' + (' · 절차 누락 기록됨' if defects else '')}
         self.collected[prop_id] = rec
-        canon = d.get('canonical_evidence_id')
-        if prop_id == 'living_food_bag' and canon:
-            self.episode.acquire(canon, authorized=True, photo_logged=True, sealed=True)
+        # V21 canon ids (the interaction manifest still carries pre-V21 ids such as e04, which are not evidence in this case)
+        v21 = PROP_EVIDENCE.get(prop_id)
+        if v21:
+            try:
+                self.episode.acquire(v21, authorized=True, photo_logged=True, sealed=True)
+            except GuardError as e:
+                # never leave a half-collected item: undo, tell the player what is missing and how to fix it
+                self.collected.pop(prop_id, None)
+                raise GuardError('채취하지 못했습니다: ' + self._why_ko(str(e)))
+        if prop_id == 'living_phone':
+            st.flags.add('phone_seized'); st.flags.add('phone_seizure_logged')
         elif prop_id == 'kitchen_mug':
             st.flags.add('mug_collected')
-        elif prop_id == 'living_phone':
-            st.flags.add('phone_seized'); st.flags.add('phone_seizure_logged')
         for x in defects:
             st.chain_defects.add(f'{prop_id}:{x}')
         self.episode._log('scene_collect', {'prop': prop_id, 'defects': defects})
         return rec
+
+    @staticmethod
+    def _why_ko(msg):
+        return WHY_KO.get(msg, '조건이 맞지 않습니다')
+
+    def custody(self):
+        """Player-facing chain of custody: physical items taken from the scene, kept apart from verified facts."""
+        out = []
+        for pid, rec in self.collected.items():
+            ev = PROP_EVIDENCE.get(pid)
+            out.append({'prop_id': pid, 'label': PROP_LABEL_KO.get(pid, pid), 'sealed': rec.get('sealed', False),
+                        'photographed': pid in self.photos, 'defects': list(rec.get('defects', [])),
+                        'status': '봉인 · 현장 기록 확보' if ev else '봉인 · 감식 의뢰 대기',
+                        'evidence_id': ev})
+        return out
 
     def set_gloves(self, on: bool):
         self.gloves_on = bool(on)

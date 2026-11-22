@@ -41,9 +41,10 @@ namespace TableZero
             b.style.fontSize = 17; b.style.height = 46; b.style.marginTop = 6; b.style.marginBottom = 6; b.style.unityTextAlign = TextAnchor.MiddleLeft;
             b.style.paddingLeft = 16; b.style.paddingRight = 16; Radius(b, 5);
             b.style.backgroundColor = primary ? Accent : new Color(0.11f, 0.14f, 0.17f);
-            b.style.color = primary ? new Color(0.09f, 0.1f, 0.11f) : Ink;
+            b.style.color = primary ? new Color(0.04f, 0.045f, 0.05f) : Ink;
+            if (primary) b.style.unityFontStyleAndWeight = FontStyle.Bold;   // active gold buttons must never read as the thin grey 'disabled' look
             Border(b, primary ? Accent : new Color(0.33f, 0.38f, 0.42f));
-            if (!enabled) { b.style.opacity = 0.42f; if (!string.IsNullOrEmpty(whyDisabled)) b.tooltip = whyDisabled; }
+            if (!enabled) { b.style.opacity = 0.42f; b.style.backgroundColor = new Color(0.08f, 0.09f, 0.10f); b.style.color = new Color(0.70f, 0.70f, 0.70f); b.style.unityFontStyleAndWeight = FontStyle.Normal; if (!string.IsNullOrEmpty(whyDisabled)) b.tooltip = whyDisabled; }
             b.RegisterCallback<MouseEnterEvent>(_ => { if (enabled && !primary) b.style.backgroundColor = new Color(0.17f, 0.20f, 0.23f); });
             b.RegisterCallback<MouseLeaveEvent>(_ => { if (enabled && !primary) b.style.backgroundColor = new Color(0.11f, 0.14f, 0.17f); });
             return b;

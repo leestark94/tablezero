@@ -18,7 +18,12 @@ namespace TableZero
         public static string ServerScene = "hall";
         [Serializable] class SceneReq { public string scene; }
 
-        void OnTriggerExit(Collider other)
+        void Start() { TZSession.Sync(); }   // the zone cache follows the server's real scene (new Play / new case / reconnect)
+
+        void OnTriggerEnter(Collider other) => Reconcile(other);
+        void OnTriggerExit(Collider other) => Reconcile(other);
+
+        void Reconcile(Collider other)
         {
             if (!other.GetComponent<CharacterController>() || !roomCenter) return;
             bool inside = Vector3.Distance(other.transform.position, roomCenter.position) <
@@ -28,7 +33,7 @@ namespace TableZero
             TZServer.I.Post("/v1/scene", JsonUtility.ToJson(new SceneReq { scene = want }), (ok, text) =>
             {
                 if (ok) { ServerScene = want; TZEventLog.Record("scene", want); }
-                else Debug.Log("[scene] server refused: " + text);
+                else { Debug.Log("[scene] server refused: " + text); TZSession.Sync(); }   // refused => our cache was wrong: take the server's scene
             });
             if (hallAmbience) hallAmbience.volume = inside ? 0.12f : 0.5f;
             if (roomAmbience) roomAmbience.volume = inside ? 0.5f : 0.08f;

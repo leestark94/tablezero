@@ -122,7 +122,7 @@ namespace TableZero
                 if (kb.tabKey.wasPressedThisFrame) TogglePanel(leftCol);
                 if (kb.rKey.wasPressedThisFrame) TogglePanel(rightCol);
                 if (kb.eKey.wasPressedThisFrame) OpenEvidence();
-                if (kb.escapeKey.wasPressedThisFrame) EndInterview();
+                if (kb.escapeKey.wasPressedThisFrame) { if (evidencePanel != null && evidencePanel.style.display == DisplayStyle.Flex) evidencePanel.style.display = DisplayStyle.None; else EndInterview(); }
             }
         }
 
@@ -308,7 +308,7 @@ namespace TableZero
 
         void BuildEvidencePanel()
         {
-            evidencePanel = new VisualElement(); Abs(evidencePanel, 88, 380, 240, 380); evidencePanel.style.backgroundColor = new Color(0.05f, 0.05f, 0.06f, 0.96f);
+            evidencePanel = new VisualElement(); Abs(evidencePanel, 88, 380, 252, 380); evidencePanel.style.backgroundColor = new Color(0.05f, 0.05f, 0.06f, 0.96f);
             Radius(evidencePanel, 8); Pad(evidencePanel, 20); evidencePanel.style.display = DisplayStyle.None;
             root.Add(evidencePanel);
         }
@@ -460,19 +460,39 @@ namespace TableZero
             StartCoroutine(Call("POST", "/v1/evidence/list", "{}", (o, t) =>
             {
                 evidencePanel.Clear();
-                var h = L("증거 제시", 22, Ink); h.style.marginBottom = 12; evidencePanel.Add(h);
+                // bounded modal: title + scrolling list + a close bar that can never leave the panel (7+ records no longer spill over the dialogue)
+                evidencePanel.style.flexDirection = FlexDirection.Column;
+                var head = new VisualElement(); head.style.flexDirection = FlexDirection.Row; head.style.alignItems = Align.Center; head.style.flexShrink = 0;
+                var h = L("증거 제시", 22, Ink); h.style.flexGrow = 1; head.Add(h);
+                var x = new Button(() => evidencePanel.style.display = DisplayStyle.None) { text = "닫기 (Esc)" }; x.style.height = 34; x.style.fontSize = 15; head.Add(x);
+                evidencePanel.Add(head);
+                var hint = L("기록을 고르면 질문에 첨부됩니다. 아래 조각을 고르면 그 부분을 짚어 묻습니다", 13, Dim); hint.style.marginTop = 4; hint.style.marginBottom = 8; hint.style.flexShrink = 0; evidencePanel.Add(hint);
+                var sv = new ScrollView(); sv.style.flexGrow = 1; sv.style.flexShrink = 1; sv.style.minHeight = 0; evidencePanel.Add(sv);
                 var r = JsonUtility.FromJson<EvidenceResp>(t);
                 var list = r?.data?.evidence ?? new EvidenceCard[0];
-                if (list.Length == 0) evidencePanel.Add(L("아직 확보한 증거가 없습니다. 현장에서 채취·봉인하거나 데스크에서 기록을 요청하세요.", 15, Dim));
+                if (list.Length == 0) sv.Add(L("아직 확보한 증거가 없습니다. 현장에서 채취·봉인하거나 데스크에서 기록을 요청하세요.", 15, Dim));
                 foreach (var e in list)
                 {
                     var ev = e;
-                    var b = new Button(() => { pendingEvidence = ev.id; evidencePanel.style.display = DisplayStyle.None; input.value = $"이 {ev.name}, 설명해 보시겠습니까?"; input.Focus(); });
-                    b.style.flexDirection = FlexDirection.Column; b.style.alignItems = Align.FlexStart; b.style.marginBottom = 8; Pad(b, 10);
-                    b.style.backgroundColor = new Color(1, 1, 1, 0.05f); b.Add(L(ev.name, 17, Ink)); var d = L($"출처: {ev.source} · 한계: {ev.limitation}", 13, Dim);
-                    d.style.whiteSpace = WhiteSpace.Normal; b.Add(d); evidencePanel.Add(b);
+                    var card = new VisualElement(); card.style.backgroundColor = new Color(1, 1, 1, 0.05f); card.style.marginBottom = 8; Pad(card, 10); Radius(card, 4);
+                    var b2 = new Button(() => { pendingEvidence = ev.id; evidencePanel.style.display = DisplayStyle.None; input.value = $"이 {ev.name}, 설명해 보시겠습니까?"; input.Focus(); });
+                    b2.style.flexDirection = FlexDirection.Column; b2.style.alignItems = Align.FlexStart; b2.style.backgroundColor = new Color(0, 0, 0, 0); b2.style.borderTopWidth = b2.style.borderBottomWidth = b2.style.borderLeftWidth = b2.style.borderRightWidth = 0; b2.style.paddingLeft = 0;
+                    b2.Add(L(ev.name, 17, Ink));
+                    var d = L($"출처: {ev.source} · 한계: {ev.limitation}", 13, Dim); d.style.whiteSpace = WhiteSpace.Normal; b2.Add(d);
+                    card.Add(b2);
+                    if (!string.IsNullOrEmpty(ev.detail))
+                    {
+                        var chips = new VisualElement(); chips.style.flexDirection = FlexDirection.Row; chips.style.flexWrap = Wrap.Wrap; chips.style.marginTop = 4;
+                        foreach (var seg in ev.detail.Split(new[] { ',', '·', ';', '/' }, StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            var sg = seg.Trim(); if (sg.Length < 3 || sg.Length > 40) continue;
+                            var c = new Button(() => { pendingEvidence = ev.id; evidencePanel.style.display = DisplayStyle.None; input.value = $"이 {ev.name}에서 '{sg}' 부분은 어떻게 설명하시겠습니까?"; input.Focus(); }) { text = sg };
+                            c.style.fontSize = 13; c.style.marginRight = 6; c.style.marginTop = 4; c.style.height = 28; chips.Add(c);
+                        }
+                        card.Add(chips);
+                    }
+                    sv.Add(card);
                 }
-                var close = new Button(() => evidencePanel.style.display = DisplayStyle.None) { text = "닫기" }; close.style.marginTop = 8; evidencePanel.Add(close);
                 evidencePanel.style.display = DisplayStyle.Flex;
             }));
         }

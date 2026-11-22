@@ -138,8 +138,8 @@ namespace TableZero
                 var nm = P(s.name, 28, PaperInk); nm.style.unityFontStyleAndWeight = FontStyle.Bold; nameBox.Add(nm);
                 var ag = P($"{s.age}세", 17, PaperMid); ag.style.marginLeft = 8; ag.style.marginBottom = 4; nameBox.Add(ag);
                 r.Add(nameBox);
-                var rel = P(ShortRelation(s.relation), 18, PaperInk); rel.style.width = 150; r.Add(rel);
-                var state = P("", 17, OkInk); state.name = "state"; state.style.flexGrow = 1; r.Add(state);
+                var rel = P(ShortRelation(s.relation), 16, PaperInk); rel.style.width = 214; rel.style.flexShrink = 0; rel.style.whiteSpace = WhiteSpace.Normal; r.Add(rel);
+                var state = P("", 16, OkInk); state.name = "state"; state.style.flexGrow = 1; state.style.flexShrink = 1; state.style.flexBasis = 0; state.style.whiteSpace = WhiteSpace.Normal; r.Add(state);
                 var mark = new VisualElement(); mark.name = "mark"; Abs(mark, 10, float.NaN, 10, -4); mark.style.width = 4; mark.style.backgroundColor = StampRed; mark.style.opacity = 0;
                 r.Add(mark);
                 var called = P("호출", 17, StampRed); called.name = "called"; Abs(called, 16, 6, float.NaN, float.NaN); Border(called, 2, StampRed); Pad(called, 2);

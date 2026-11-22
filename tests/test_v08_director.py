@@ -1,3 +1,4 @@
+from tests.report_util import rp
 import json, pathlib, unittest
 from server.runtime import World,GuardError
 from server.beat_director import BeatDirector,TrustedSignal,AssetManifest
@@ -53,25 +54,25 @@ class DirectorV08Tests(unittest.TestCase):
   for e in self.world._canon['evidence']:self.world.expose_evidence(e['id'])
  def test_14_correct_full_report(self):
   self._all_evidence();self.ctrl.transition('desk')
-  r=self.ctrl.file_report('s3',sorted(self.world.available_evidence),final=True)
+  r=self.ctrl.file_report('s3',sorted(self.world.available_evidence),final=True,report=rp(self.ctrl,'s3',sorted(self.world.available_evidence)))
   self.assertEqual(r['ending_code'],'SOLVED_PROVEN')
   self.assertFalse(r['may_continue'])
  def test_15_wrong_accusation_not_accepted(self):
   self._all_evidence();self.ctrl.transition('desk')
-  r=self.ctrl.file_report('s1',sorted(self.world.available_evidence),final=True)
+  r=self.ctrl.file_report('s1',sorted(self.world.available_evidence),final=True,report=rp(self.ctrl,'s1',sorted(self.world.available_evidence)))
   self.assertEqual(r['ending_code'],'WRONG_ACCUSATION')
   self.assertFalse(r['may_continue'])
   self.assertNotIn('correct_identity',r)
  def test_16_correct_but_missing_axis_no_spoiler(self):
   self.ctrl.transition('desk')
-  r=self.ctrl.file_report('s3',['V21-E17'],final=True)
+  r=self.ctrl.file_report('s3',['V21-E17'],final=True,report=rp(self.ctrl,'s3',['V21-E17']))
   # V21: 이름만 맞힌 단 한 번의 제출은 미입증 결말로 닫힌다 (재시도로 찍기 불가)
   self.assertEqual(r['ending_code'],'CORRECT_UNPROVEN')
   self.assertFalse(r['may_continue'])
   self.assertFalse(r['report_accepted'])
  def test_17_chain_defect(self):
   self._all_evidence();self.ctrl.transition('desk')
-  r=self.ctrl.file_report('s3',sorted(self.world.available_evidence),final=True,chain_defects=['V21-E16'])
+  r=self.ctrl.file_report('s3',sorted(self.world.available_evidence),final=True,chain_defects=['V21-E16'],report=rp(self.ctrl,'s3',sorted(self.world.available_evidence)))
   self.assertFalse(r['report_accepted'])
  def test_18_no_reverse_route(self):
   self.ctrl.set_act('pressure')
@@ -127,7 +128,7 @@ class DirectorV08Tests(unittest.TestCase):
   self.assertEqual(len(ENDING_SCRIPTS),5)
   self.assertFalse(any(line.endswith('.') for v in ENDING_SCRIPTS.values() for a,b,line in v))
  def test_33_public_report_never_includes_identity_correct(self):
-  self.ctrl.transition('desk');r=self.ctrl.file_report('s1',['V21-E17'],final=True)
+  self.ctrl.transition('desk');r=self.ctrl.file_report('s1',['V21-E17'],final=True,report=rp(self.ctrl,'s1',['V21-E17']))
   self.assertFalse('correct_identity' in r)
  def test_34_no_evidence_name_auto_leak(self):
   from server.api import page_projection

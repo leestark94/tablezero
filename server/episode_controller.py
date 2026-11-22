@@ -63,6 +63,7 @@ class EpisodeController:
 
     def transition(self, scene:str):
         if self.state.closed:raise GuardError('The submitted report has closed this session')
+        if scene==self.state.scene:return self.public_state()   # idempotent: the client may re-assert where the player already is
         if scene not in SCENES or scene not in SCENE_TRANSITIONS[self.state.scene]:
             raise GuardError('Invalid scene transition')
         if self.state.interview_active:raise GuardError('Finish interview before leaving')
@@ -199,7 +200,9 @@ class EpisodeController:
             self.state.cue_history.append({'id':decision['playback']['beat_id'],'at':time.monotonic()})
         return decision
 
-    def file_report(self, accused_id, submitted_evidence, *, chain_defects=(), final=False):
+    def file_report(self, accused_id, submitted_evidence, *, chain_defects=(), final=False, report=None):
+        """report: v1 payload {schema_version, session_id, accused_id, axes:{axis:{claim,evidence_ids}}, confirm}. When present, each axis
+        is judged from its own claim+evidence (no union). A bare evidence list (no axes) can still HOLD (accused None) but cannot prove."""
         if self.state.scene!='desk' or self.state.interview_active:
             raise GuardError('Report must be filed from investigation desk')
         if not final:raise GuardError('Explicit final confirmation required')
@@ -207,7 +210,15 @@ class EpisodeController:
         prop_to_evidence={'kitchen_mug':'V21-E19','living_phone':'V21-E06','living_food_bag':'V21-E01','xprop_delivery_receipt':'V21-E01'}
         relevant=[d for d in self.state.chain_defects
                   if prop_to_evidence.get(d.split(':')[0]) in set(submitted_evidence or [])]
-        outcome=self.outcomes.submit(accused_id,submitted_evidence,chain_defects=list(chain_defects)+relevant)
+        axis_evidence=None
+        if accused_id is not None:
+            from . import report_review
+            checked=report_review.validate(report,session_id=self.session_id,acquired=set(self.world.available_evidence))
+            axis_evidence=checked['axes']
+            submitted_evidence=sorted({e for v in axis_evidence.values() for e in v})
+            relevant=[d for d in self.state.chain_defects if prop_to_evidence.get(d.split(':')[0]) in set(submitted_evidence)]
+            self._log('report_claims',{'claims':checked['claims']})
+        outcome=self.outcomes.submit(accused_id,submitted_evidence,chain_defects=list(chain_defects)+relevant,axis_evidence=axis_evidence)
         self.state.closed=not outcome.can_continue
         self._log('report_submitted',{'accepted':outcome.report_accepted,'missing_axis_count':len(outcome.missing_axes)})
         return OutcomeDirector.public_projection(outcome,self.outcomes.reaction(outcome,accused_id))
@@ -218,7 +229,7 @@ class EpisodeController:
         return {'case_id':p['case_id'],'title':p['title'],'scene':self.state.scene,
                 'act':self.state.act,'active_interview':self.state.interview_active,
                 'evidence_ids':p['evidence_ids'],'visible_events':p['events'],
-                'statements':p['statements'],'clock':self.clock_text(),'known_people':[{'id':sid,'name':self.world.suspects[sid]['name']} for sid in sorted(self.state.interviewed)], 'case_closed':self.state.closed}
+                'statements':p['statements'],'clock':self.clock_text(),'session_id':self.session_id,'custody':self.props.custody(),'known_people':[{'id':sid,'name':self.world.suspects[sid]['name']} for sid in sorted(self.state.interviewed)], 'case_closed':self.state.closed}
 
     def _log(self,kind,data):
         self.logs.append({'type':kind,'time_monotonic':time.monotonic(),**data})

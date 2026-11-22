@@ -50,11 +50,11 @@ class Outcome:
 
 class OutcomeDirector:
     def __init__(self, world):self.world=world
-    def submit(self, accused_id: str | None, evidence_ids, *, chain_defects=(), submit_final=True) -> Outcome:
+    def submit(self, accused_id: str | None, evidence_ids, *, chain_defects=(), submit_final=True, axis_evidence=None) -> Outcome:
         # Missing record cannot turn into valid evidence by raising emotion/suspicion
         if accused_id is None:
             return self._compose('no_accusation',False,False,True,())
-        report=self.world.evaluate_report(accused_id,evidence_ids)
+        report=self.world.evaluate_report(accused_id,evidence_ids,axis_evidence)
         missing=tuple(axis for axis,ok in report['axes'].items() if not ok)
         canon_identity=self.world._canon['case_result_logic']['identity']
         identity_correct=accused_id==canon_identity

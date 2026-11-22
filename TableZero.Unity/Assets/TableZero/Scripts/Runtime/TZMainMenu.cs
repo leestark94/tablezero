@@ -120,6 +120,12 @@ namespace TableZero
             var cap = L("빌라 302호 · 00:10", 22, Ink); cap.style.alignSelf = Align.Center; cap.style.marginTop = Length.Percent(24); fade.Add(cap);
             float t = 0; while (t < 0.8f) { t += Time.unscaledDeltaTime; fade.style.opacity = t / 0.8f; yield return null; }
             yield return new WaitForSecondsRealtime(0.8f);
+            // a NEW case is a new investigation: the server issues a new session (evidence, budget, memory, report all fresh)
+            bool started = false, okNew = false; float wait = 0;
+            while (TZServer.I != null && !TZServer.I.Online && wait < 20f) { wait += Time.unscaledDeltaTime; yield return null; }
+            TZSession.StartNewCase(g => { okNew = g; started = true; });
+            while (!started) yield return null;
+            if (!okNew && TZServer.I != null) Debug.LogWarning("[case] server did not start a new session; continuing with the current one");
             TZCaseFlow.SkipBriefing = true;   // the assignment brief was just read; the room shows only the short objective
             SceneManager.LoadScene(RoomScene);
         }
