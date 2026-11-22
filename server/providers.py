@@ -72,6 +72,19 @@ def _schema_for(context):
     schema['properties']['asserted_claim_ids']['items']={'type':'string','enum':own} if own else {'type':'string'}
     return schema
 
+def _clean_line(t):
+    t=re.sub(r'<\|[^|>]*\|>|<end_of_turn>','',t or '').strip().strip('"“”').strip()
+    if t.startswith('{'):return ''
+    return t
+
+def line_load_options():
+    """Options that decide how Ollama LOADS the model (context size, GPU layers, threads). The warm-up must send exactly
+    these, or the first real question forces a full reload (measured: ~150 s while Unity holds the GPU)."""
+    o={'num_ctx':2048}
+    if os.environ.get('TABLEZERO_OLLAMA_NUM_GPU') not in (None,''):o['num_gpu']=int(os.environ['TABLEZERO_OLLAMA_NUM_GPU'])
+    if os.environ.get('TABLEZERO_OLLAMA_THREADS'):o['num_thread']=int(os.environ['TABLEZERO_OLLAMA_THREADS'])
+    return o
+
 class OllamaProvider:
     """Local, zero-API-cost provider (dev + candidate shipping path via bundled runtime).
     Uses server-built per-suspect messages (suspect_mind) when present."""
@@ -91,15 +104,27 @@ class OllamaProvider:
     def _plain_line(self,context):
         payload={'model':self.model,'stream':False,'think':False,'keep_alive':'60m','messages':context['llm_messages'],
                  'options':{'temperature':context.get('temperature',self.temperature),'top_p':0.9,'repeat_penalty':1.15,
-                            'num_predict':int(os.environ.get('TABLEZERO_LINE_TOKENS','56')),'num_ctx':2048,'stop':['\n\n','<|eot_id|>','<|im_end|>','<end_of_turn>']}}
+                            'num_predict':int(os.environ.get('TABLEZERO_LINE_TOKENS','56')),'stop':['\n\n','<|eot_id|>','<|im_end|>','<end_of_turn>'],
+                            **line_load_options()}}
         if context.get('seed') is not None:payload['options']['seed']=context['seed']
-        if os.environ.get('TABLEZERO_OLLAMA_NUM_GPU') not in (None,''):
-            payload['options']['num_gpu']=int(os.environ['TABLEZERO_OLLAMA_NUM_GPU'])
-        if os.environ.get('TABLEZERO_OLLAMA_THREADS'):
-            payload['options']['num_thread']=int(os.environ['TABLEZERO_OLLAMA_THREADS'])
+        on_partial=context.get('on_partial')
+        if on_partial:payload['stream']=True
         req=urllib.request.Request(self.url,data=json.dumps(payload,ensure_ascii=False).encode('utf-8'),headers={'Content-Type':'application/json'})
         try:
-            with urllib.request.urlopen(req,timeout=self.timeout_s) as r:obj=json.loads(r.read(1_000_000).decode('utf-8'))
+            with urllib.request.urlopen(req,timeout=self.timeout_s) as r:
+                if not on_partial:
+                    obj=json.loads(r.read(1_000_000).decode('utf-8'))
+                else:
+                    acc='';obj={}
+                    for raw in r:   # NDJSON: one chunk per token group
+                        if not raw.strip():continue
+                        ch=json.loads(raw.decode('utf-8'))
+                        acc+=(ch.get('message') or {}).get('content','')
+                        shown=_clean_line(acc.split('\n')[0])
+                        if shown:on_partial(shown)
+                        if ch.get('done'):obj=ch;break
+                        if '\n' in acc.strip():break   # one line is all we need
+                    obj=dict(obj);obj['message']={'content':acc}
         except (ValueError,KeyError,urllib.error.URLError,TimeoutError,OSError) as e:
             raise ProviderError('Local model unavailable') from e
         self.last_stats={k:obj.get(k) for k in ('total_duration','load_duration','prompt_eval_count','prompt_eval_duration','eval_count','eval_duration')}

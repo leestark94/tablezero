@@ -21,6 +21,9 @@ from pathlib import Path
 
 ACCUSE = re.compile(r'(범인|죽였|죽인|살인|네가\s*했|당신이\s*했|니가\s*했|너지|자백|밀었지|거짓말\s*하지)')
 BLUFF = re.compile(r'(증거\s*(다|도)?\s*있|다\s*알고|다\s*알아|이미\s*(다\s*)?(알|확인)|목격자|CCTV에\s*다)')
+# Degrading / sexual / abusive remarks. A real person under questioning does not answer these politely like a help desk:
+# they take offence, point out the room is being recorded, and stop cooperating if it continues.
+ABUSE = re.compile(r'(가슴|젖|엉덩이|옷\s*(을|좀)?\s*벗|벗어|몸\s*(좀)?\s*보여|섹스|성관계|모텔|자자|씨발|시발|ㅅㅂ|병신|ㅂㅅ|개새|좆|존나\s*못|미친\s*년|년아|창녀|꺼져)')
 PRESSURE = re.compile(r'(빨리\s*말해|말\s*안\s*해|똑바로|어디서\s*거짓|감옥|평생|인생\s*끝)')
 
 
@@ -31,6 +34,7 @@ class SuspectState:
     conceded: set = field(default_factory=set)        # fact ids admitted (become part of the allowed story)
     accusations: int = 0
     repeats: dict = field(default_factory=dict)       # fact id -> times the detective pushed on it
+    abused: int = 0                                   # degrading remarks by the detective in this interview
 
 
 def _dossier(personas: dict, sid: str) -> dict:
@@ -65,6 +69,19 @@ def plan_turn(personas: dict, sid: str, state: SuspectState, question: str, pres
 
     say, avoid, directives, counter = [], [], [], None
     tactic, mode = 'ANSWER', 'answer'
+
+    # 0) degrading / sexual remark: in-character offence, never a polite refusal; repeated -> stop talking
+    if ABUSE.search(q):
+        state.abused += 1
+        state.tactic_history.append('REBUKE')
+        allowed = list(dict.fromkeys(d.get('public', []) + [facts[x]['concede'] for x in sorted(state.conceded)]))
+        if state.abused >= 2:
+            return {'tactic': 'STONEWALL', 'mode': 'request_counsel', 'allowed': allowed, 'this_turn': [],
+                    'directives': ['또 그런 말을 들었다. 차갑게, 이 면담은 더 못 하겠다, 변호인 불러 달라, 방금 말 다 녹화됐다고 말한다'],
+                    'counter_question': None, 'relevant': [], 'accused': False, 'bluff': False, 'pressed': True, 'abuse': True}
+        return {'tactic': 'REBUKE', 'mode': 'angry', 'allowed': allowed, 'this_turn': [],
+                'directives': ['형사가 방금 모욕적이고 부적절한 말을 했다. 그 말을 되풀이하지 않는다. 정색하고 따진다: 지금 녹화되고 있다, 형사가 할 말이냐, 사과하라. 사건 얘기는 하지 않는다'],
+                'counter_question': None, 'relevant': [], 'accused': False, 'bluff': False, 'pressed': True, 'abuse': True}
 
     # 1) accused / bluffed with nothing on the table: deny and make the detective show it
     if (accused or bluff) and not presented_now:
@@ -138,7 +155,17 @@ TACTIC_KO = {
     'CONCEDE_MIN': '이미 드러난 그 사실 하나만 최소한으로 인정하고, 그 이상은 인정하지 않는다',
     'DEMAND_PROOF': '부인하고, 근거를 보여 달라고 되묻는다',
     'STONEWALL': '대답을 거부하거나 변호인을 요구한다. 아주 짧게',
+    'REBUKE': '모욕을 당한 사람으로서 화를 내며 항의한다. 공손한 거절문이 아니라 감정이 실린 말',
 }
+
+
+def habit_hint(habits: list, recent_lines: list) -> str:
+    """Offer at most one verbal habit, on roughly one turn in three, and never one used in the last lines.
+    (Listing all habits every turn made the model glue them onto every answer.)"""
+    if not habits or len(recent_lines) % 3 != 1:
+        return ' / 이번에는 입버릇을 쓰지 않는다'
+    fresh = [h for h in habits if not any(h in r for r in recent_lines[-4:])]
+    return (' / 입버릇 하나를 써도 된다: ' + fresh[len(recent_lines) % len(fresh)]) if fresh else ' / 이번에는 입버릇을 쓰지 않는다'
 
 
 def speaker_messages(personas: dict, sid: str, plan: dict, question: str, presented_evidence: dict | None,
@@ -149,7 +176,7 @@ def speaker_messages(personas: dict, sid: str, plan: dict, question: str, presen
         f"너는 '{p.get('name', sid)}'({p['age']}세, {p['job']})다. 경찰서 진술녹화실에서 너를 의심하는 형사와 마주 앉아 있다.",
         '너는 상담원이나 비서가 아니다. 공손한 안내 문구("말씀해 주시길 바랍니다", "확인해 주시길")를 쓰지 않는다. 너 자신에 대해 1인칭(저, 제가)으로만 말한다. 너를 이름이나 3인칭으로 부르지 않는다',
         '너는 자기를 지키려는 사람이다. 불리한 건 먼저 말하지 않고, 짧게 끊어 말하거나 되묻거나 불쾌함을 드러낸다',
-        '[말투] ' + p['register'] + ' / 입버릇(가끔): ' + ', '.join(p.get('verbal_habits', [])),
+        '[말투] ' + p['register'] + habit_hint(p.get('verbal_habits', []), recent_lines),
         '[성격] ' + d.get('temperament', ''),
         '[이번 대응] ' + TACTIC_KO[plan['tactic']],
     ]
@@ -166,7 +193,7 @@ def speaker_messages(personas: dict, sid: str, plan: dict, question: str, presen
     if recent_lines:
         lines.append('[네가 직전에 한 말, 반복 금지] ' + ' / '.join(recent_lines[-3:]))
     lines += [
-        '[주의] 형사가 보여준 자료 내용을 그대로 읽어 주지 않는다. 자료에 나온 다른 사람 이야기를 네 일처럼 말하지 않는다. 입버릇은 한 번에 하나, 매번 쓰지 않는다',
+        '[주의] 형사가 보여준 자료 내용을 그대로 읽어 주지 않는다. 자료에 나온 다른 사람 이야기를 네 일처럼 말하지 않는다. 매번 같은 말로 끝맺지 않는다',
         '[규칙] 대사 한 줄만 쓴다(JSON·따옴표·설명 없이). 한국어 구어 1~2문장, 50자 안팎. 대사만. 문장 끝 마침표 금지. 질문을 되풀이하지 않는다. 자신이 범인이라고 말하지 않는다. 다른 사람을 범인으로 단정하지 않는다',
     ]
     return [{'role': 'system', 'content': '\n'.join(lines)}, {'role': 'user', 'content': question}]
@@ -179,6 +206,7 @@ MOTION_PREF = {
     'CONCEDE_MIN': ['exhale', 'look_down', 'deep_breath', 'hand_stop'],
     'DEMAND_PROOF': ['lean_forward', 'jaw_tight', 'cross_arms', 'still'],
     'STONEWALL': ['cross_arms', 'back_in_chair', 'lean_back', 'still'],
+    'REBUKE': ['lean_back', 'jaw_tight', 'back_in_chair', 'cross_arms'],
 }
 
 
@@ -196,6 +224,7 @@ FALLBACK = {
     'CONCEDE_MIN': '…그건 맞아요 그 이상은 없어요',
     'DEMAND_PROOF': '무슨 근거로 그러시는 거예요 있으면 보여주세요',
     'STONEWALL': '더는 말 안 하겠습니다',
+    'REBUKE': '지금 그게 형사가 할 말이에요? 이거 다 녹화되고 있어요',
 }
 
 

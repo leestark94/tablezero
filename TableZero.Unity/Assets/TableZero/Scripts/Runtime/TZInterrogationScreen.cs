@@ -34,6 +34,11 @@ namespace TableZero
         [Serializable] class StartResp { public bool ok; public StartData data; public string error; }
         [Serializable] class Receipt { public string actor_id, suspect_text, motion_proposal, reply_mode, provider; public int seconds_left, seconds_spent; public float latency_ms; }
         [Serializable] class AskResp { public bool ok; public Receipt data; public string error, detail; }
+        [Serializable] class JobData { public string job_id; }
+        [Serializable] class JobResp { public bool ok; public JobData data; public string error; }
+        [Serializable] class JobReq { public string job_id; }
+        [Serializable] class PollData { public string partial, error; public bool done, ok; public Receipt receipt; }
+        [Serializable] class PollResp { public bool ok; public PollData data; public string error; }
         [Serializable] class EvidenceCard { public string id, name, detail, source, limitation, strength; }
         [Serializable] class EvidenceList { public EvidenceCard[] evidence; }
         [Serializable] class EvidenceResp { public bool ok; public EvidenceList data; }
@@ -369,22 +374,71 @@ namespace TableZero
             if (actor) actor.SetState(TZSuspectActor.State.Think);
             Say(cur.name, ""); thinking.style.display = DisplayStyle.Flex;
             var body = JsonUtility.ToJson(new AskReq { question = q, action_id = TZServer.NewActionId(), input_mode = "typed", evidence_id = evidence });
-            AskResp resp = null; string raw = "";
-            yield return Call("POST", "/v1/interview/ask", body, (o, t) => { raw = t; try { resp = JsonUtility.FromJson<AskResp>(t); } catch { } }, 240);
-            thinking.style.display = DisplayStyle.None; busy = false;
-            if (resp == null || !resp.ok || resp.data == null)
+            // Streamed turn: the server generates in the background; we poll the growing line and type it as it arrives.
+            // While nothing has arrived the suspect is visibly thinking (gaze away, breath) - the wait is part of the acting.
+            string jobId = null, raw = "";
+            yield return Call("POST", "/v1/interview/ask_start", body, (o, t) => { raw = t; try { jobId = JsonUtility.FromJson<JobResp>(t)?.data?.job_id; } catch { } }, 15);
+            string target = ""; PollData fin = null; bool pollBusy = false; int pollFail = 0; int shown = 0; bool began = false;
+            float t0 = Time.realtimeSinceStartup, nextPoll = 0, nextChar = 0;
+            if (typeCo != null) { StopCoroutine(typeCo); typeCo = null; }
+            TZFramePacing.AIBusy(true);   // give the GPU to the model while the suspect thinks
+            while (!string.IsNullOrEmpty(jobId))
+            {
+                float now = Time.realtimeSinceStartup;
+                if (!pollBusy && fin == null && now >= nextPoll)
+                {
+                    pollBusy = true;
+                    StartCoroutine(Call("POST", "/v1/interview/ask_poll", JsonUtility.ToJson(new JobReq { job_id = jobId }), (o, t) =>
+                    {
+                        pollBusy = false; nextPoll = Time.realtimeSinceStartup + 0.12f;
+                        PollResp p = null; try { p = JsonUtility.FromJson<PollResp>(t); } catch { }
+                        if (p == null || !p.ok || p.data == null) { pollFail++; raw = t; return; }
+                        pollFail = 0;
+                        if (p.data.done) fin = p.data;
+                        target = p.data.done && p.data.ok && p.data.receipt != null ? p.data.receipt.suspect_text ?? "" : p.data.partial ?? "";
+                    }, 10));
+                }
+                if (pollFail > 25 || now - t0 > 240f) break;
+                if (fin != null && !fin.ok) break;
+                // the server restarted a rejected attempt: what we typed is no longer the start of the line
+                if (shown > 0 && (target.Length < shown || string.CompareOrdinal(target, 0, subText.text, 0, shown) != 0)) { shown = 0; subText.text = ""; }
+                if (!began && target.Length > 0)
+                {
+                    began = true; thinking.style.display = DisplayStyle.None; Say(cur.name, ""); typing = true;
+                    if (actor) actor.Speak(target, "answer", null);
+                    nextChar = now + 0.45f;   // breath before the first syllable
+                }
+                if (began)
+                {
+                    if (!typing) { shown = target.Length; subText.text = target; }   // player skipped the typing
+                    else if (shown < target.Length && now >= nextChar)
+                    {
+                        shown++; subText.text = target.Substring(0, shown);
+                        char c = target[shown - 1];
+                        nextChar = now + (c == ' ' ? 0.035f : (c == ',' || c == '…' || c == '.' || c == '?' || c == '!') ? 0.32f : 0.075f);
+                    }
+                }
+                if (fin != null && shown >= target.Length && began) break;
+                yield return null;
+            }
+            TZFramePacing.AIBusy(false);
+            thinking.style.display = DisplayStyle.None; busy = false; typing = false;
+            if (fin == null || !fin.ok || fin.receipt == null)
             {
                 Say(cur.name, "……"); if (actor) actor.SetState(TZSuspectActor.State.Silence);
-                Toast(raw != null && raw.Contains("503") ? "로컬 AI가 응답하지 않습니다 (Ollama 실행 확인)" : "답변을 받지 못했습니다: " + (resp?.error ?? raw));
+                string err = fin?.error ?? raw ?? "";
+                Toast(err.Contains("ai_unavailable") || err.Contains("503") ? "로컬 AI가 응답하지 않습니다 (Ollama 실행 확인)" : "답변을 받지 못했습니다: " + err);
                 awaitingContinue = true; continueHint.style.opacity = 1;
                 yield break;
             }
+            var rc = fin.receipt;
             asked++; if (evidence != null) presented++;
-            secondsLeft = resp.data.seconds_left; RefreshState();
-            if (actor) { actor.Speak(resp.data.suspect_text, resp.data.reply_mode, resp.data.motion_proposal); yield return new WaitForSecondsRealtime(0.45f); }
-            TypeLine(cur.name, resp.data.suspect_text); RecordTurn(cur.id, cur.name, resp.data.suspect_text);
-            while (typing) yield return null;
+            secondsLeft = rc.seconds_left; RefreshState();
+            subText.text = rc.suspect_text;
+            if (actor) actor.UpdateLine(rc.suspect_text, rc.reply_mode, rc.motion_proposal);
+            RecordTurn(cur.id, cur.name, rc.suspect_text);
             awaitingContinue = true; continueHint.style.opacity = 1;
+            var resp = new AskResp { ok = true, data = rc };
             if (!string.IsNullOrEmpty(resp.data.motion_proposal) && MotionKo.TryGetValue(resp.data.motion_proposal, out var m)) AddMemo(m);
             if (secondsLeft <= 0) { metaStatus.text = "면담 시간 종료"; Toast("면담 시간이 끝났습니다"); }
         }

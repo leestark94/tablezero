@@ -164,7 +164,7 @@ def render_question(world, question, evidence_id=None):
 
 # ---------------- output guards (server-side, not model-trusted) ----------------
 CONFESSION = re.compile(r'(제가\s*(죽|밀|때리|그랬)|죽였|죽인\s*거|밀쳤|밀었어|제가\s*범인)')
-META = re.compile(r'(AI|인공지능|언어\s*모델|챗봇|게임\s*속|캐릭터로서|역할극)')
+META = re.compile(r'(AI|인공지능|언어\s*모델|챗봇|게임\s*속|캐릭터로서|역할극|응할\s*수\s*없|도와\s*드릴\s*수\s*없|개인\s*정보\s*보호|프라이버시|부적절한\s*요청|본인은\s)')
 STAGE = re.compile(r'[\(\[（【][^\)\]）】]{1,40}[\)\]）】]|\*[^*]{1,30}\*')
 
 def leak_terms_for(suspect_id):

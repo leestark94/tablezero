@@ -139,8 +139,22 @@ namespace TableZero
             speakText = line ?? ""; speakStart = Time.time + 0.45f;   // breath in before the first syllable
             int syll = 0; foreach (var c in speakText) if (c >= 0xAC00 && c <= 0xD7A3 || char.IsLetterOrDigit(c)) syll++;
             speakUntil = speakStart + Mathf.Clamp(syll * 0.16f, 0.6f, 14f);
-            SetState(replyMode == "silence" ? State.Silence : replyMode == "angry" || replyMode == "counter" ? State.Resist :
-                     replyMode == "request_counsel" ? State.RequestCounsel : State.Speak);
+            SetState(ModeState(replyMode));
+            if (!string.IsNullOrEmpty(motion)) PlayMotion(motion);
+        }
+
+        static State ModeState(string replyMode) =>
+            replyMode == "silence" ? State.Silence : replyMode == "angry" || replyMode == "counter" ? State.Resist :
+            replyMode == "request_counsel" ? State.RequestCounsel : State.Speak;
+
+        /// <summary>Streaming: the line grew or is final. Keep the original start; stretch the mouth rhythm to the whole line,
+        /// then apply the final reply mode / motion chosen by the server.</summary>
+        public void UpdateLine(string line, string replyMode, string motion)
+        {
+            speakText = line ?? "";
+            int syll = 0; foreach (var c in speakText) if (c >= 0xAC00 && c <= 0xD7A3 || char.IsLetterOrDigit(c)) syll++;
+            speakUntil = Mathf.Max(Time.time + 0.3f, speakStart + Mathf.Clamp(syll * 0.16f, 0.6f, 14f));
+            if (!string.IsNullOrEmpty(replyMode)) SetState(ModeState(replyMode));
             if (!string.IsNullOrEmpty(motion)) PlayMotion(motion);
         }
 

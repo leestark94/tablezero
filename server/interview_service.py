@@ -70,13 +70,13 @@ class InterviewService:
         return self.episode.autonomy_after_interview(actor) if actor else None
 
     def ask(self,text,*,input_mode,action_id, presented_evidence=None,
-            transcript_confirmed=True):
+            transcript_confirmed=True, on_partial=None):
         with self._lock:
             return self._ask_locked(text,input_mode=input_mode,action_id=action_id,
-                presented_evidence=presented_evidence,transcript_confirmed=transcript_confirmed)
+                presented_evidence=presented_evidence,transcript_confirmed=transcript_confirmed,on_partial=on_partial)
 
     def _ask_locked(self,text,*,input_mode,action_id, presented_evidence=None,
-            transcript_confirmed=True):
+            transcript_confirmed=True, on_partial=None):
         if not isinstance(action_id,str) or len(action_id)<12 or len(action_id)>100:
             raise GuardError('Invalid idempotency key')
         if input_mode not in INPUT_MODES:raise GuardError('Unsupported question source')
@@ -127,7 +127,21 @@ class InterviewService:
             memories=list(memories)+plan['allowed']   # what the plan allows may be voiced (gated-term check)
             self.last_plan={k:plan[k] for k in ('tactic','mode','relevant','accused','bluff')}
         base_messages=list(ctx['llm_messages'])
+        if on_partial and plan is not None:
+            gate=dict(blocked=False)
+            def forward(t):
+                # a partial is shown only while it passes the same leak/confession/concealment checks as a final line
+                if gate['blocked']:return
+                if len(t.strip())<4:return   # too short to judge yet; wait for more tokens
+                # length/echo checks are only meaningful for a finished line; partials are screened for leaks only
+                probs=set(guard_utterance(actor,t,presented=presented_now,detective_text=detective_text,memories=memories,question=text,recent=[],mode=plan['mode']))
+                if probs-{'empty_or_non_korean_line','echoed_question','near_repeat'}:
+                    gate['blocked']=True;on_partial('');return
+                on_partial(t)
+            ctx['on_partial']=forward
         for attempt in range(self.max_attempts):
+            if on_partial and plan is not None:
+                gate['blocked']=False;on_partial('')
             if attempts and attempts[-1] not in ('provider_error',):
                 # Bounded server-side redo with the reason; never shown to the player, never charged
                 ctx['llm_messages']=base_messages+[{'role':'system','content':RETRY_HINTS.get(attempts[-1].split(',')[0],RETRY_HINTS['default'])}]

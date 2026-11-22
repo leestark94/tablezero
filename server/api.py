@@ -95,6 +95,14 @@ class LocalBridgeHandler(BaseHTTPRequestHandler):
                     transcript_confirmed=value.get('transcript_confirmed',True) is True)
                 result={k:getattr(receipt,k) for k in receipt.__dataclass_fields__}
 
+            elif path=='/v1/interview/ask_start':
+                if self.interview_service is None:raise GuardError('Interview service unavailable')
+                job=_start_job(self.interview_service,value)
+                result={'job_id':job}
+            elif path=='/v1/interview/ask_poll':
+                j=_JOBS.get(value.get('job_id',''))
+                if not j:raise GuardError('Unknown job')
+                result={k:j[k] for k in ('partial','done','ok','error','receipt')}
             elif path=='/v1/interview/end':
                 if self.interview_service:self.interview_service.close()
                 else:self.controller.finish_interview()
@@ -125,6 +133,30 @@ class LocalBridgeHandler(BaseHTTPRequestHandler):
             self._send(500,{'ok':False,'error':'internal_error'})
     def log_message(self,format,*args):pass
 
+_JOBS={}
+
+def _start_job(service,value):
+    """Run one interview turn in the background; the client polls the growing line (streamed tokens) and the receipt.
+    Same rules as /v1/interview/ask: idempotent action id, no charge unless the turn is accepted."""
+    import threading
+    job_id=uuid.uuid4().hex
+    j=_JOBS[job_id]={'partial':'','done':False,'ok':False,'error':'','receipt':None}
+    def set_partial(t):j['partial']=t
+    def run():
+        try:
+            r=service.ask(value.get('question',''),input_mode=value.get('input_mode','typed'),
+                          action_id=value.get('action_id') or uuid.uuid4().hex,
+                          presented_evidence=value.get('evidence_id') or None,
+                          transcript_confirmed=value.get('transcript_confirmed',True) is True,on_partial=set_partial)
+            j['receipt']={k:getattr(r,k) for k in r.__dataclass_fields__};j['partial']=r.suspect_text;j['ok']=True
+        except ProviderError:j['error']='ai_unavailable'
+        except Exception as e:j['error']=str(e) if isinstance(e,(GuardError,ValueError)) else 'internal_error'
+        finally:j['done']=True
+    threading.Thread(target=run,daemon=True).start()
+    if len(_JOBS)>64:
+        for k in [k for k,v in _JOBS.items() if v['done']][:32]:_JOBS.pop(k,None)
+    return job_id
+
 def _warm_model():
     """Load the local model into memory in the background while the player is still in the menu / at the scene."""
     import threading, urllib.request
@@ -132,9 +164,10 @@ def _warm_model():
     if not model or provider!='ollama':return
     def go():
         try:
-            body={'model':model,'prompt':'안녕','stream':False,'keep_alive':'60m','options':{'num_predict':1}}
-            if os.environ.get('TABLEZERO_OLLAMA_NUM_GPU') not in (None,''):body['options']['num_gpu']=int(os.environ['TABLEZERO_OLLAMA_NUM_GPU'])
-            urllib.request.urlopen(urllib.request.Request('http://127.0.0.1:11434/api/generate',json.dumps(body).encode(),{'Content-Type':'application/json'}),timeout=180).read()
+            from .providers import line_load_options
+            body={'model':model,'messages':[{'role':'user','content':'안녕'}],'stream':False,'think':False,'keep_alive':'60m',
+                  'options':{'num_predict':1,**line_load_options()}}
+            urllib.request.urlopen(urllib.request.Request('http://127.0.0.1:11434/api/chat',json.dumps(body).encode(),{'Content-Type':'application/json'}),timeout=300).read()
             print('model warm: '+model,flush=True)
         except Exception as e:print('model warm failed: '+type(e).__name__,flush=True)
     threading.Thread(target=go,daemon=True).start()
