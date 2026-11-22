@@ -78,7 +78,7 @@ namespace TableZero.EditorTools
                     string sn = src ? src.name.ToLower() : "";
                     m.SetTextureScale("_BaseMap", Vector2.one); m.SetFloat("_BumpScale", 1f);
                     if (n.Contains("haircap")) { smooth = 0.1f; tint = new Color(0.07f, 0.055f, 0.048f); matte = true; }
-                    else if (n.Contains("fringe")) { d = Tex("seoyeon_fringe"); smooth = 0.12f; cut = true; tint = new Color(0.7f, 0.66f, 0.64f); matte = true; }
+                    else if (n.Contains("fringe")) { d = Tex("seoyeon_fringe"); smooth = 0.12f; cut = true; tint = new Color(0.5f, 0.47f, 0.45f); matte = true; }
                     else if (n.Contains("watch"))
                     {
                         if (sn.Contains("dial")) { tint = new Color(0.05f, 0.05f, 0.06f); smooth = 0.92f; metal = 0f; }
@@ -99,7 +99,7 @@ namespace TableZero.EditorTools
                     else if (n.Contains("eyebrow")) { d = Tex("eyebrow"); cut = true; smooth = 0.2f; tint = new Color(0.35f, 0.3f, 0.28f); }
                     else if (n.Contains("eyelash")) { d = Tex("eyelash"); cut = true; smooth = 0.2f; tint = new Color(0.3f, 0.3f, 0.3f); }
                     else if (n.Contains("eye") || n.Contains("high-poly") || n.Contains("low-poly") || n.Contains("_poly")) { d = Tex("brown_eye") ?? Tex("eye"); smooth = 0.9f; }
-                    else { d = Tex("seoyeon_skin_diffuse") ?? Tex("lightskinned_female", "diffuse") ?? Tex("skin"); smooth = 0.36f; }
+                    else { d = Tex("seoyeon_skin_diffuse") ?? Tex("lightskinned_female", "diffuse") ?? Tex("skin"); smooth = 0.36f; tint = new Color(0.80f, 0.74f, 0.70f); }   // slightly darker/warmer: arms and hands no longer blow out under the pendant
                     m.SetTexture("_BaseMap", d);
                     m.SetColor("_BaseColor", tint);
                     m.SetTexture("_BumpMap", nm);

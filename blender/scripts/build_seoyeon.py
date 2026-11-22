@@ -173,6 +173,7 @@ if hair_obj and os.path.exists(fringe_tex):
     seoyeon_extras.add_fringe(human, hair_obj, rig, fringe_tex)
 else:
     print('FRINGE_SKIPPED hair', bool(hair_obj), 'tex', os.path.exists(fringe_tex))
+if hair_obj: seoyeon_extras.trim_hair_crown(hair_obj)
 seoyeon_extras.add_hair_cap(human, rig)
 seoyeon_extras.add_watch(human, rig)
 

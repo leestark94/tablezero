@@ -218,6 +218,8 @@ def plan_turn(personas: dict, sid: str, state: SuspectMemory, question: str, pre
         if pub and not (fr.accuse and not p.topics):
             line = pub.get(p.ask) or pub.get('what')
             parts_out.append({'text': p.text, 'ask': p.ask, 'fact': None, 'kind': 'public', 'line': line})
+        elif not p.topics and p.ask in ('what', 'yesno') and not (fr.accuse or fr.bluff) and len(fr.parts) == 1:
+            continue    # an open invitation ("기억나는 순서대로 말해 주세요"): answered below with the suspect's own account
         elif p.text and (p.topics or p.ask != 'yesno') and not (fr.accuse or fr.bluff):
             tu = next((TOPIC_UNKNOWN.get(sid, {}).get(t) for t in p.topics if TOPIC_UNKNOWN.get(sid, {}).get(t)), None)
             u = UNKNOWN.get(sid, ['모르겠습니다']); n = len(state.unanswered)

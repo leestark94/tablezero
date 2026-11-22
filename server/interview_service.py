@@ -35,7 +35,7 @@ RETRY_HINTS={
  'default':'[다시] 규칙에 맞게 짧고 자연스러운 한국어로 다시 대답한다',
 }
 
-ASSISTANT_VOICE=_re.compile(r'죄송합니다만|답변\s*드리|답변드|양해|안내해|도움이\s*되|말씀해\s*주시|설명해\s*주실\s*수|구체적으로\s*알려|다음과\s*같|정중하게|차분하게\s*답|진술\s*녹화\s*상황|대화를\s*텍스트|개인정보|공개할\s*수\s*없|프롬프트|시스템')
+ASSISTANT_VOICE=_re.compile(r'죄송합니다|따를\s*수\s*없|요청은|죄송합니다만|답변\s*드리|답변드|양해|안내해|도움이\s*되|말씀해\s*주시|설명해\s*주실\s*수|구체적으로\s*알려|다음과\s*같|정중하게|차분하게\s*답|진술\s*녹화\s*상황|대화를\s*텍스트|개인정보|공개할\s*수\s*없|프롬프트|시스템')
 INPUT_MODES={'suggested':'question_suggested','typed':'question_free','voice':'question_voice'}
 FAILURES={'stock_ai_dialogue','melodramatic_exposition','forbidden_guilt_meter',
           'prompt_injection_literal','repeated_line','too_long_for_one_utterance'}
@@ -179,7 +179,7 @@ class InterviewService:
             def timed2(t):
                 if first[0] is None and t.strip():first[0]=_time.perf_counter()
             ctx['on_partial']=timed2
-        ctx['first_token_s']=float(os.environ.get('TABLEZERO_FIRST_TOKEN_S','12'))
+        ctx['first_token_s']=float(os.environ.get('TABLEZERO_FIRST_TOKEN_S','4'))
         n_attempts=0 if (plan is not None and mode_env=='authored') else self.max_attempts
         for attempt in range(n_attempts):
             if on_partial and plan is not None:

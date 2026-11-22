@@ -28,7 +28,7 @@ namespace TableZero.EditorTools
         {
             {"M_IRFloor", S("worn_tile_floor", 0.9f, C(0.46f,0.46f,0.45f), 0.30f)},
             {"M_IRWainscot", S("oak_veneer_01", 1.2f, C(0.20f,0.19f,0.19f), 0.42f, 0, false, 0, 0.5f)},
-            {"M_IRAcoustic", S("plastered_wall", 0.8f, C(0.50f,0.48f,0.45f), 0.08f)},
+            {"M_IRAcoustic", S("plastered_wall", 1.7f, C(0.46f,0.44f,0.41f), 0.08f, 0, false, 0, 0.3f)},
             {"M_IRSeam", S(null, 1, C(0.04f,0.04f,0.04f), 0.05f)},
             {"M_IRCeilTile", S("white_plaster_02", 1.2f, C(0.55f,0.55f,0.53f), 0.05f)},
             {"M_IRCeilGrid", S(null, 1, C(0.62f,0.62f,0.60f), 0.45f, 0.5f)},

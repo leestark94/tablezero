@@ -48,7 +48,8 @@ def add_fringe(body, hair, rig, tex_path, seed=29):
             z = z0 + (z1 - z0) * t
             fy = _front_y(tree, x, z)
             if fy is None:
-                fy = pts[-1].y + 0.004 if pts else -0.10
+                fy = pts[-1].y + 0.004 if pts else None
+                if fy is None: continue   # a root that would float in the air (off the skull) is dropped
             pts.append(Vector((x, fy - (off0 + (off1 - off0) * t ** 1.4), z)))
         u0 = rnd.uniform(0.0, 0.6); u1 = u0 + rnd.uniform(0.25, 0.4)
         base = len(verts)
@@ -72,10 +73,10 @@ def add_fringe(body, hair, rig, tex_path, seed=29):
     # face-framing side strands: temple -> jaw/shoulder, a little in front of the cheeks
     for side in (-1, 1):
         for k in range(12):
-            x0 = side * rnd.uniform(0.035, 0.065)
-            x1 = side * rnd.uniform(0.058, 0.09)
+            x0 = side * rnd.uniform(0.060, 0.080)
+            x1 = side * rnd.uniform(0.066, 0.092)
             z1 = rnd.uniform(1.17, 1.26)
-            strand(x0, 1.44, x1, z1, side * rnd.uniform(-0.006, 0.008), 0.004, rnd.uniform(0.010, 0.02), rnd.uniform(0.014, 0.024), segs=18)
+            strand(x0, 1.395, x1, z1, side * rnd.uniform(-0.006, 0.008), 0.004, rnd.uniform(0.010, 0.02), rnd.uniform(0.014, 0.024), segs=18)
 
     me = bpy.data.meshes.new('Seoyeon_Hair_Fringe')
     me.from_pydata([tuple(v) for v in verts], [], faces)
@@ -251,3 +252,14 @@ def add_hair_cap(body, rig, offset=0.005):
     _skin_to(obj, rig, 'mixamorig:Head')
     print('HAIRCAP faces', len(me.polygons))
     return obj
+
+
+def trim_hair_crown(hair, z_cut=1.432):
+    """The pack's hair shell has a notched, bright top edge. Remove its crown faces; the smooth dark scalp cap covers that area."""
+    mw = hair.matrix_world
+    bm = bmesh.new(); bm.from_mesh(hair.data)
+    kill = [f for f in bm.faces if (mw @ f.calc_center_median()).z > z_cut]
+    bmesh.ops.delete(bm, geom=kill, context='FACES')
+    for v in [v for v in bm.verts if not v.link_faces]: bm.verts.remove(v)
+    bm.to_mesh(hair.data); bm.free(); hair.data.update()
+    print('HAIR_CROWN_TRIMMED faces', len(kill))
