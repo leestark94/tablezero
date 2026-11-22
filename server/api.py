@@ -207,7 +207,6 @@ def page_projection(ctrl, tab):
             '로컬 환경설정', '설정', kind='guidance')
     return {'tab': tab, 'records': records, 'context': '', 'connection': 'LOCAL PREVIEW — 실제 게임 미검증'}
 
-if __name__=='__main__':serve()
 
 
 def evidence_cards(ctrl):
@@ -219,3 +218,7 @@ def evidence_cards(ctrl):
                         'limitation':e['limitations'],'strength':e['strength'],
                         'chain':ctrl.state.acquired_chain.get(e['id'],[])})
     return out
+
+
+# keep last: with 'python -m server.api' everything above must be defined before the server starts serving
+if __name__=='__main__':serve()

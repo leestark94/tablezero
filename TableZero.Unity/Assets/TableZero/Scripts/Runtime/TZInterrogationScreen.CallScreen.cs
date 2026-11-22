@@ -173,6 +173,13 @@ namespace TableZero
             callCta.RegisterCallback<PointerLeaveEvent>(_ => { ctaBar.style.width = Length.Percent(28); ctaTitle.style.color = Ink; });
             callCta.RegisterCallback<PointerDownEvent>(_ => CallSelected());
             ledgerLayer.Add(callCta);
+            // back to the HQ desk (records, forensics, report) — the ledger is reached from there
+            var back = L("← 수사본부   Backspace", 16, new Color(1, 1, 1, 0.75f)); Abs(back, float.NaN, float.NaN, 40, 760);
+            back.pickingMode = PickingMode.Position; Pad(back, 8);
+            back.RegisterCallback<PointerEnterEvent>(_ => back.style.color = Color.white);
+            back.RegisterCallback<PointerLeaveEvent>(_ => back.style.color = new Color(1, 1, 1, 0.75f));
+            back.RegisterCallback<PointerDownEvent>(_ => BackToHQ());
+            ledgerLayer.Add(back);
         }
 
         // ------------------------------------------------------------------ state
@@ -311,6 +318,13 @@ namespace TableZero
             if (Keyboard.current.upArrowKey.wasPressedThisFrame) Select((sel + suspects.Length - 1) % suspects.Length);
             if (Keyboard.current.downArrowKey.wasPressedThisFrame) Select((sel + 1) % suspects.Length);
             if (Keyboard.current.enterKey.wasPressedThisFrame || Keyboard.current.numpadEnterKey.wasPressedThisFrame) CallSelected();
+            if (Keyboard.current.backspaceKey.wasPressedThisFrame) BackToHQ();
+        }
+
+        public void BackToHQ()
+        {
+            if (!ledgerOpen || entering || busy) return;
+            UnityEngine.SceneManagement.SceneManager.LoadScene("Case001_HQ");
         }
 
         void CallSelected()

@@ -4,38 +4,39 @@ from dataclasses import dataclass
 from typing import Literal
 
 ENDING_SCRIPTS = {
+ # V21: the formal report closes the case. Lines never name the accused (accused-specific acting comes from reaction_selector)
  'substantiated': [
    ('desk','수사보고서에 마지막 자료를 첨부한다','검토 요청'),
+   ('desk','정정서 뒷장 사본이 보고서 맨 뒤에 철해진다','이게 그날 고치던 거였네요'),
    ('corridor','복도 끝에서 낮은 통화음이 들린다','자료는 다 정리됐습니다'),
-   ('interview','이서연이 보고서를 한 번 내려다본다','그게… 다 남아 있었네요'),
-   ('interview','그는 아니에요, 라고 말하려다 멈춘다','그 사람은 아니에요'),
-   ('desk','사건 파일 상태가 변경된다','입증 요건 충족 · 검토 단계'),
-   ('stinger','인쇄기에서 다음 장이 천천히 밀려나온다','사건은 여기서 끝난 게 아니다'),
+   ('desk','사건 파일 상태가 바뀐다','입증 요건 충족 · 수사 의견 송치 검토'),
+   ('stinger','인쇄기에서 다음 장이 천천히 밀려나온다','판결이 아니라 수사 의견이다'),
  ],
  'wrong_accusation': [
-   ('interview','강도현의 의자 다리가 바닥을 긁는다','제가 뭘 더 해야 믿으실 건데요'),
-   ('interview','그가 말을 고르다 결국 고개를 든다','사람 죽은 거, 저도 압니다 근데 왜 제 말은 안 들어요'),
-   ('desk','보고서에 보완 요청 표시가 남는다','입증 불충분 · 혐의 재검토'),
-   ('corridor','같은 빌라에서 온 새 제보가 묻힌 채 쌓인다','아까 그쪽이 아니라니까요'),
-   ('stinger','사건 파일을 다시 열 수 있다','끝난 게 아니다'),
+   ('desk','보고서에 반려 표시가 남는다','지목한 사람과 치명상이 이어지지 않습니다'),
+   ('corridor','조사실 문이 닫히고 복도 생활 소음이 돌아온다','그날 밤 다른 잘못이 있었다고 다 같은 건 아니죠'),
+   ('stinger','사건 파일이 다른 팀으로 넘어간다','이 보고서로는 끝낼 수 없다'),
  ],
  'underproved_true_person': [
-   ('interview','이서연이 잠시 말을 멈추고 의자에 기대 앉는다','더 하실 말씀 없으시면 가도 될까요'),
-   ('desk','현장 연결과 대안 배제 항목 중 누락된 축을 확인한다','심증은 있지만 입증은 부족합니다'),
-   ('corridor','출입문이 닫히며 복도 생활 소음이 돌아온다','그 사람을 그냥 보낼 겁니까'),
-   ('stinger','수사 파일이 미종결 상태로 남는다','확인되지 않은 사실이 남아 있다'),
+   ('desk','현장 연결과 대안 배제 항목 중 비어 있는 축을 확인한다','심증은 있지만 입증은 부족합니다'),
+   ('corridor','출입문이 닫히며 복도 생활 소음이 돌아온다','이대로는 송치 못 합니다'),
+   ('stinger','사건 파일이 재수사 대기로 넘어간다','이름만으로는 사건이 닫히지 않는다'),
  ],
  'no_accusation': [
    ('desk','빈 지목란이 화면에 남는다','오늘은 지목하지 않겠습니다'),
    ('corridor','야간 근무자가 커피 자판기 버튼을 누른다','확인 안 된 걸로 밀어붙일 순 없죠'),
-   ('stinger','자료 수집 동선이 다시 열린다','수사 계속'),
+   ('stinger','사건이 미제로 분류된다','열린 채로 남는다'),
  ],
  'procedural_defect': [
    ('desk','증거 봉인 일련번호가 맞지 않는다','이거 접수 기록이랑 다릅니다'),
    ('desk','해당 증거가 입증 경로에서 보류 처리된다','자료 적격성 확인 필요'),
-   ('stinger','다시 현장 기록으로 돌아간다','흔적도 기록이 없으면 증거가 되기 어렵다'),
+   ('stinger','사건이 재검증을 위해 보류된다','흔적도 절차가 없으면 증거가 되기 어렵다'),
  ],
 }
+
+# V21 result types (the case is closed when the report is filed, so the category may be shown)
+V21_RESULT={'substantiated':'SOLVED_PROVEN','underproved_true_person':'CORRECT_UNPROVEN','wrong_accusation':'WRONG_ACCUSATION',
+            'procedural_defect':'PROCEDURAL_HOLD','no_accusation':'UNRESOLVED'}
 
 @dataclass(frozen=True)
 class Outcome:
@@ -66,7 +67,8 @@ class OutcomeDirector:
         return self._compose('substantiated',True,True,False,())
     @staticmethod
     def _compose(code, sufficient,correct,continue_case,missing):
-        return Outcome(code,sufficient,correct,sufficient and correct,continue_case,
+        # V21: the formal report is submitted once; every final submission closes the case (no guess-and-retry)
+        return Outcome(code,sufficient,correct,sufficient and correct,False,
                        tuple(missing),tuple(ENDING_SCRIPTS[code]))
     def reaction(self, outcome:Outcome,accused_id):
         from .reaction_selector import ReactionSelector
@@ -75,7 +77,8 @@ class OutcomeDirector:
     @staticmethod
     def public_projection(outcome:Outcome,reaction=None):
         # Deliberately omit correct_identity from public payload: would reveal culprit on failure
-        return {'ending_code':('substantiated' if outcome.report_accepted else ('ongoing' if outcome.code=='no_accusation' else 'recheck_required')),'report_accepted':outcome.report_accepted,
+        result=V21_RESULT[outcome.code]
+        return {'ending_code':result,'result':result,'report_accepted':outcome.report_accepted,
                 'may_continue':outcome.can_continue,'missing_proof_axes':list(outcome.missing_axes),
                 'beats':[{'location':a,'staging':b,'subtitle':c} for a,b,c in outcome.montage],
                 'reaction':reaction or {'variant_id':'none','beats':[]}}

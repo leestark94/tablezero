@@ -16,9 +16,15 @@ namespace TableZero
     /// </summary>
     public sealed class TZCaseFlow : MonoBehaviour
     {
-        const string RoomScene = "Case001_Room302", InterrogationScene = "Case001_Interrogation";
+        const string RoomScene = "Case001_Room302", HQScene = "Case001_HQ";
+        /// <summary>Set by the main menu / HQ revisit: the assignment brief was already read, show only the short arrival card.</summary>
+        public static bool SkipBriefing;
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        // attach on every load of the 302 scene (first scene at play start, and later loads from menu / HQ revisit)
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        static void Hook() { SceneManager.sceneLoaded -= OnLoaded; SceneManager.sceneLoaded += OnLoaded; }
+        static void OnLoaded(Scene sc, LoadSceneMode mode) { if (sc.name == RoomScene) Boot(); }
+
         static void Boot()
         {
             if (SceneManager.GetActiveScene().name != RoomScene) return;
@@ -53,6 +59,7 @@ namespace TableZero
             if (hud && hud.koreanFont) root.style.unityFontDefinition = FontDefinition.FromSDFFont(hud.koreanFont);
             BuildObjective(); BuildNotebook(); BuildFade(); BuildBriefing();
             Lock(true);
+            if (SkipBriefing) { SkipBriefing = false; BeginInvestigation(); }
         }
 
         // ------------------------------------------------------------------ UI
@@ -69,7 +76,7 @@ namespace TableZero
             var line = new VisualElement(); line.style.height = 1; line.style.backgroundColor = new Color(1, 1, 1, 0.15f); line.style.marginTop = 18; line.style.marginBottom = 18; col.Add(line);
             var c1 = L("2026. 10. 15 (목) 22:07 301호 주민 신고. 302호 거주 여성 1명이 의식을 잃은 상태로 발견돼 응급처치 후 이송, 병원에서 사망이 확인됐다.\n부상 경위와 정확한 시각은 조사 중이다. 피해자는 현장에 없다. 지금은 10월 16일 00:10.", 19, Ink); col.Add(c1);
             var steps = new[] { ("1", "302호 현장을 조사한다", "사물을 살펴보고, 사진을 찍고, 장갑을 끼고 증거를 채취한다"),
-                                ("2", "확보한 증거를 가지고 경찰서로 복귀한다", "Tab — 수사 수첩에서 복귀"),
+                                ("2", "수사본부로 복귀해 기록을 요청하고 대조한다", "Tab — 수사 수첩에서 복귀"),
                                 ("3", "관련자를 호출해 심문한다", "증거를 제시하고 진술을 대조한다") };
             foreach (var (n, t, d) in steps)
             {
@@ -104,7 +111,7 @@ namespace TableZero
             var nbt = L("수사 수첩", 34, ink); nbt.style.unityFontStyleAndWeight = FontStyle.Bold; paper.Add(nbt);
             var sub = L("CASE 001 · 302호 현장 · 확보 증거 (서버 기록 기준)", 16, new Color(0.30f, 0.28f, 0.25f)); sub.style.marginBottom = 16; paper.Add(sub);
             nbList = L("", 20, ink); nbList.style.unityFontStyleAndWeight = FontStyle.Bold; nbList.style.marginBottom = 22; paper.Add(nbList);
-            var hint = L("Enter   경찰서로 복귀해 심문 시작\nTab   현장 조사 계속", 20, ink); hint.style.unityFontStyleAndWeight = FontStyle.Bold; paper.Add(hint);
+            var hint = L("Enter   수사본부로 복귀\nTab   현장 조사 계속", 20, ink); hint.style.unityFontStyleAndWeight = FontStyle.Bold; paper.Add(hint);
             var warn = L("복귀하면 사건 시각이 흐른다 (이동·서류 처리 약 38분). 필요하면 나중에 현장으로 돌아올 수 있다.", 13, new Color(0.40f, 0.20f, 0.18f));
             warn.style.fontSize = 15; warn.style.color = new Color(0.45f, 0.16f, 0.14f); warn.style.marginTop = 12; paper.Add(warn);
             notebook.Add(paper); root.Add(notebook);
@@ -179,11 +186,11 @@ namespace TableZero
             else done = true;
             float t0 = 0; fadeCaption.text = "";
             while (t0 < 0.8f) { t0 += Time.unscaledDeltaTime; fade.style.opacity = Mathf.SmoothStep(0, 1, t0 / 0.8f); yield return null; }
-            fadeCaption.text = "○○경찰서 형사과 강력1팀";
+            fadeCaption.text = "○○경찰서 형사과 · 수사본부";
             float wait = 0; while (!done && wait < 10f) { wait += Time.unscaledDeltaTime; yield return null; }
             yield return new WaitForSecondsRealtime(1.2f);
             UnityEngine.Cursor.lockState = CursorLockMode.None; UnityEngine.Cursor.visible = true;
-            SceneManager.LoadScene(InterrogationScene);
+            SceneManager.LoadScene(HQScene);
         }
     }
 }

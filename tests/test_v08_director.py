@@ -46,26 +46,29 @@ class DirectorV08Tests(unittest.TestCase):
   with self.assertRaises(GuardError):self.ctrl.file_report(None,[],final=False)
  def test_13_defer_report(self):
   self.ctrl.transition('desk');r=self.ctrl.file_report(None,[],final=True)
-  self.assertEqual(r['ending_code'],'ongoing')
-  self.assertTrue(r['may_continue'])
+  # V21: 지목 보류도 정식 제출이면 사건은 그 결과로 종결
+  self.assertEqual(r['ending_code'],'UNRESOLVED')
+  self.assertFalse(r['may_continue'])
  def _all_evidence(self):
   for e in self.world._canon['evidence']:self.world.expose_evidence(e['id'])
  def test_14_correct_full_report(self):
   self._all_evidence();self.ctrl.transition('desk')
   r=self.ctrl.file_report('s3',sorted(self.world.available_evidence),final=True)
-  self.assertEqual(r['ending_code'],'substantiated')
+  self.assertEqual(r['ending_code'],'SOLVED_PROVEN')
   self.assertFalse(r['may_continue'])
  def test_15_wrong_accusation_not_accepted(self):
   self._all_evidence();self.ctrl.transition('desk')
   r=self.ctrl.file_report('s1',sorted(self.world.available_evidence),final=True)
-  self.assertEqual(r['ending_code'],'recheck_required')
+  self.assertEqual(r['ending_code'],'WRONG_ACCUSATION')
+  self.assertFalse(r['may_continue'])
   self.assertNotIn('correct_identity',r)
  def test_16_correct_but_missing_axis_no_spoiler(self):
   self.ctrl.transition('desk')
   r=self.ctrl.file_report('s3',['V21-E17'],final=True)
-  self.assertEqual(r['ending_code'],'recheck_required')
-  self.assertTrue(r['may_continue'])
-  self.assertNotIn('underproved_true_person',json.dumps(r,ensure_ascii=False))
+  # V21: 이름만 맞힌 단 한 번의 제출은 미입증 결말로 닫힌다 (재시도로 찍기 불가)
+  self.assertEqual(r['ending_code'],'CORRECT_UNPROVEN')
+  self.assertFalse(r['may_continue'])
+  self.assertFalse(r['report_accepted'])
  def test_17_chain_defect(self):
   self._all_evidence();self.ctrl.transition('desk')
   r=self.ctrl.file_report('s3',sorted(self.world.available_evidence),final=True,chain_defects=['V21-E16'])

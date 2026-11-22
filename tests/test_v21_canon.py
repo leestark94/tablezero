@@ -42,7 +42,7 @@ class V21CanonTests(unittest.TestCase):
 
     def test_s2_starting_prompt_has_no_post_exit_or_other_facts(self):
         p = self._prompt('s2')
-        for w in ('21시 50분', '54분', '밀쳤', '손목', '21시 39분', '소매', '28분'):
+        for w in ('21시 50분', '54분', '밀쳤', '손목', '21시 39분', '49분', '소매', '28분'):
             self.assertNotIn(w, p)
 
     def test_s3_starting_prompt_hides_own_crime_and_others(self):
@@ -58,6 +58,13 @@ class V21CanonTests(unittest.TestCase):
     def test_cctv_does_not_claim_the_blind_spot(self):
         e = next(x for x in self.w._canon['evidence'] if x['id'] == 'V21-E02')
         self.assertIn('시야 밖', e['detail'])
+
+
+    def test_api_main_guard_is_last(self):
+        # 'python -m server.api' (how the game starts the server) runs serve() at the guard; anything defined after it
+        # is missing at runtime (this broke the evidence list in the game while unit tests passed)
+        src = (ROOT / 'server' / 'api.py').read_text(encoding='utf-8').rstrip().splitlines()
+        self.assertTrue(src[-1].startswith("if __name__=='__main__'"))
 
 
 if __name__ == '__main__':
