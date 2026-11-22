@@ -2,7 +2,7 @@
 Paid remote calls disabled unless explicit environment opt-in. No secrets in Unity.
 """
 from __future__ import annotations
-import json, os, urllib.request, urllib.error, time
+import json, os, re, urllib.request, urllib.error, time
 from .runtime import MODES, ACTIONS, ALLOWED_MOTIONS
 
 class ProviderError(RuntimeError): pass
@@ -86,7 +86,33 @@ class OllamaProvider:
         self.label=f'OLLAMA_LOCAL:{self.model}'
         self.temperature=float(os.environ.get('TABLEZERO_OLLAMA_TEMPERATURE','0.7'))
         self.last_stats={}
+    supports_plain_line=True   # strategy engine decides mode/motion; the model only voices the line
+
+    def _plain_line(self,context):
+        payload={'model':self.model,'stream':False,'think':False,'keep_alive':'60m','messages':context['llm_messages'],
+                 'options':{'temperature':context.get('temperature',self.temperature),'top_p':0.9,'repeat_penalty':1.15,
+                            'num_predict':int(os.environ.get('TABLEZERO_LINE_TOKENS','56')),'num_ctx':2048,'stop':['\n\n','<|eot_id|>','<|im_end|>','<end_of_turn>']}}
+        if context.get('seed') is not None:payload['options']['seed']=context['seed']
+        if os.environ.get('TABLEZERO_OLLAMA_NUM_GPU') not in (None,''):
+            payload['options']['num_gpu']=int(os.environ['TABLEZERO_OLLAMA_NUM_GPU'])
+        if os.environ.get('TABLEZERO_OLLAMA_THREADS'):
+            payload['options']['num_thread']=int(os.environ['TABLEZERO_OLLAMA_THREADS'])
+        req=urllib.request.Request(self.url,data=json.dumps(payload,ensure_ascii=False).encode('utf-8'),headers={'Content-Type':'application/json'})
+        try:
+            with urllib.request.urlopen(req,timeout=self.timeout_s) as r:obj=json.loads(r.read(1_000_000).decode('utf-8'))
+        except (ValueError,KeyError,urllib.error.URLError,TimeoutError,OSError) as e:
+            raise ProviderError('Local model unavailable') from e
+        self.last_stats={k:obj.get(k) for k in ('total_duration','load_duration','prompt_eval_count','prompt_eval_duration','eval_count','eval_duration')}
+        line=(obj.get('message') or {}).get('content','').strip().strip('"').strip()
+        line=line.split('\n')[0].strip()
+        line=re.sub(r'<\|[^|>]*\|>|<end_of_turn>','',line).strip().strip('"“”').strip()
+        if line.startswith('{'):
+            try:line=json.loads(line).get('line','')
+            except ValueError:pass
+        return {'line':line}
+
     def reply(self,context):
+        if context.get('plain_line'):return self._plain_line(context)
         messages=context.get('llm_messages') or [
             {'role':'system','content':SYSTEM_RULES},
             {'role':'user','content':json.dumps({k:v for k,v in context.items() if k!='llm_messages'},ensure_ascii=False)}]

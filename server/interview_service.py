@@ -11,7 +11,8 @@ from .runtime import GuardError
 from .tactics import TacticDirector,TAC_COST
 from .dialogue_quality import clean_line,lint_line,KoreanDialogueError
 from .providers import ProviderError
-from .suspect_mind import build_messages,render_question,guard_utterance,active_memories
+from .suspect_mind import build_messages,render_question,guard_utterance,active_memories,personas
+from .strategy import SuspectState,plan_turn,speaker_messages,pick_motion
 
 RETRY_HINTS={
  'volunteered_concealed_detail':'[다시] 방금 대답은 형사가 묻지도 보여주지도 않은 구체적인 내용을 먼저 말했다. 지금 말할 수 있는 기억과 경찰에게 하기로 한 말 안에서만 다시 대답한다',
@@ -52,6 +53,7 @@ class TurnReceipt:
 class InterviewService:
     max_attempts=3
     def __init__(self,episode, tactics=None):
+        self._strategy={}; self.last_plan=None
         self.episode=episode
         self.tactics=tactics or TacticDirector()
         self._lock=threading.RLock()
@@ -98,6 +100,7 @@ class InterviewService:
         presented_before=set(world.presented_to[actor])
         presented_now=presented_before|({presented_evidence} if presented_evidence else set())
         ctx=world.prompt_context(actor,text,presented_evidence)
+        strategic=getattr(getattr(self.episode.provider,'provider',None),'supports_plain_line',False) and 'dossier' in personas()['suspects'].get(actor,{})
         tac=self.tactics.context(actor)
         ctx['interview_approach']=tac
         climate={'pressured':tac['pressured'],
@@ -113,6 +116,16 @@ class InterviewService:
         detective_text=' '.join([t['q_render'] for t in world.transcripts[actor]]+[text])
         memories=active_memories(actor,presented_now,climate)
         attempts=[];provider_reply=None;reply=None;total_ms=0.0
+        plan=None
+        if strategic:
+            st=self._strategy.setdefault(actor,SuspectState())
+            ev_by_id={e['id']:e for e in world._canon['evidence']}
+            plan=plan_turn(personas(),actor,st,text,presented_now,presented_evidence,ev_by_id,bool(tac['pressured']))
+            motions=sorted(set(world.suspects[actor].get('possible_motions',[]))&world.motions)
+            ctx['llm_messages']=speaker_messages(personas(),actor,plan,text,ev_by_id.get(presented_evidence) if presented_evidence else None,motions,recent)
+            ctx['plain_line']=True
+            memories=list(memories)+plan['allowed']   # what the plan allows may be voiced (gated-term check)
+            self.last_plan={k:plan[k] for k in ('tactic','mode','relevant','accused','bluff')}
         base_messages=list(ctx['llm_messages'])
         for attempt in range(self.max_attempts):
             if attempts and attempts[-1] not in ('provider_error',):
@@ -127,7 +140,13 @@ class InterviewService:
                 attempts.append('provider_error');continue
             total_ms+=provider_reply['latency_ms']
             try:
-                candidate=world.validate_reply(actor,provider_reply['result'])
+                result=provider_reply['result']
+                if plan is not None:
+                    motions=sorted(set(world.suspects[actor].get('possible_motions',[]))&world.motions)
+                    result={'utterance':result.get('line',''),'reply_mode':plan['mode'],'motion_id':pick_motion(plan['tactic'],motions),
+                            'asserted_claim_ids':[],'new_unsupported_assertion':None,
+                            'request_external_action':'request_counsel' if plan['tactic']=='STONEWALL' and plan['mode']=='request_counsel' else None}
+                candidate=world.validate_reply(actor,result)
                 issues=lint_line(candidate['utterance'],recent,for_llm=True)
                 if candidate['reply_mode']=='silence' and len(candidate['utterance'].strip())<2:
                     candidate['utterance']='…'
@@ -142,6 +161,12 @@ class InterviewService:
                 attempts.append(str(e));continue
         self.episode._log('interview_generation',{'actor':actor,'attempts':len(attempts)+(1 if reply else 0),
                           'rejections':attempts,'latency_ms_total':round(total_ms,1)})
+        if reply is None and plan is not None:
+            from .strategy import fallback_line
+            motions=sorted(set(world.suspects[actor].get('possible_motions',[]))&world.motions)
+            reply=world.validate_reply(actor,{'utterance':fallback_line(plan),'reply_mode':plan['mode'],'motion_id':pick_motion(plan['tactic'],motions),
+                                             'asserted_claim_ids':[],'new_unsupported_assertion':None,'request_external_action':None})
+            attempts.append('fallback_line')
         if reply is None:
             raise GuardError('AI response rejected by server gates (no time charged): '+' | '.join(attempts[-3:]))
         result=self.tactics.perform(actor,tactic,action_id=action_id,approved=True)

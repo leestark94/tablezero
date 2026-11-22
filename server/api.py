@@ -125,6 +125,20 @@ class LocalBridgeHandler(BaseHTTPRequestHandler):
             self._send(500,{'ok':False,'error':'internal_error'})
     def log_message(self,format,*args):pass
 
+def _warm_model():
+    """Load the local model into memory in the background while the player is still in the menu / at the scene."""
+    import threading, urllib.request
+    model=os.environ.get('TABLEZERO_OLLAMA_MODEL'); provider=os.environ.get('TABLEZERO_AI_PROVIDER','')
+    if not model or provider!='ollama':return
+    def go():
+        try:
+            body={'model':model,'prompt':'안녕','stream':False,'keep_alive':'60m','options':{'num_predict':1}}
+            if os.environ.get('TABLEZERO_OLLAMA_NUM_GPU') not in (None,''):body['options']['num_gpu']=int(os.environ['TABLEZERO_OLLAMA_NUM_GPU'])
+            urllib.request.urlopen(urllib.request.Request('http://127.0.0.1:11434/api/generate',json.dumps(body).encode(),{'Content-Type':'application/json'}),timeout=180).read()
+            print('model warm: '+model,flush=True)
+        except Exception as e:print('model warm failed: '+type(e).__name__,flush=True)
+    threading.Thread(target=go,daemon=True).start()
+
 def serve(host='127.0.0.1',port=8765):
     if host!='127.0.0.1':raise RuntimeError('LOCAL DEV ONLY: external bind forbidden')
     port=int(os.environ.get('TABLEZERO_PORT',port))
@@ -134,6 +148,7 @@ def serve(host='127.0.0.1',port=8765):
     LocalBridgeHandler.controller=EpisodeController(provider=choose_provider_from_env())
     LocalBridgeHandler.interview_service=InterviewService(LocalBridgeHandler.controller)
     print(f'TABLE//ZERO localhost bridge on {host}:{port}; NOT production; endpoints require dev token',flush=True)
+    _warm_model()
     server=ThreadingHTTPServer((host,port),LocalBridgeHandler)
     server.serve_forever()
 

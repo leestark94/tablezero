@@ -20,9 +20,9 @@ namespace TableZero
         public string baseUrl = "http://127.0.0.1:8765";
         public bool autoLaunchInDev = true;
         [Tooltip("Ollama model used by the dev server (local, zero API cost)")]
-        public string ollamaModel = "qwen3:4b";
+        public string ollamaModel = "hf.co/DevQuasar/kakaocorp.kanana-1.5-8b-instruct-2505-GGUF:Q4_K_M";   // Korean-specialised; ~1s/answer on GPU with the strategy engine
         [Tooltip("0 = CPU inference (VRAM stays with the renderer; dev PC GPU resets under CUDA, see BUG-0001)")]
-        public int ollamaNumGpu = 0;
+        public int ollamaNumGpu = -1;   // -1 = let Ollama place layers on the GPU (0 = CPU only, ~10x slower)
         public bool Online { get; private set; }
         public string LastError { get; private set; } = "";
         public event Action<bool> OnOnlineChanged;
@@ -95,7 +95,7 @@ namespace TableZero
                 psi.EnvironmentVariables["TABLEZERO_LOCAL_DEV_TOKEN"] = token;
                 psi.EnvironmentVariables["TABLEZERO_AI_PROVIDER"] = "ollama";
                 psi.EnvironmentVariables["TABLEZERO_OLLAMA_MODEL"] = ollamaModel;
-                psi.EnvironmentVariables["TABLEZERO_OLLAMA_NUM_GPU"] = ollamaNumGpu.ToString();
+                if (ollamaNumGpu >= 0) psi.EnvironmentVariables["TABLEZERO_OLLAMA_NUM_GPU"] = ollamaNumGpu.ToString();
                 psi.EnvironmentVariables["TABLEZERO_OLLAMA_THREADS"] = Mathf.Max(2, SystemInfo.processorCount / 2).ToString();
                 psi.EnvironmentVariables["TABLEZERO_ALLOW_UNAPPROVED_ART"] = "1";
                 psi.EnvironmentVariables["PYTHONIOENCODING"] = "utf-8";

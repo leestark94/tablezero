@@ -204,6 +204,18 @@ personas = {
     },
 }
 
+# strategy dossiers (server-only) + names; inner state is emotion only (it is shown to the model and must not carry facts)
+import importlib.util as _u
+_spec=_u.spec_from_file_location('v21_dossiers',os.path.join(os.path.dirname(__file__),'v21_dossiers.py')); _m=_u.module_from_spec(_spec); _spec.loader.exec_module(_m)
+for _sid,_p in personas['suspects'].items():
+    _p['dossier']=_m.DOSSIERS[_sid]; _p['name']=A[_sid]['name']
+personas['suspects']['s1']['inner_state']='억울하고 날이 서 있다. 의심받는 게 불쾌하다'
+personas['suspects']['s2']['inner_state']='충격이 크고 불안하지만 차분해 보이려고 애쓴다'
+personas['suspects']['s3']['inner_state']='신고자로서 할 만큼 했다고 생각한다. 일이 커지는 게 싫다'
+personas['suspects']['s2']['relationship_to_victim']='오래된 친구이자 같은 회사 동료, 공방 동업자'
+for _sid in ('s1','s2','s3'):
+    personas['suspects'][_sid]['secret_to_protect']='불리한 이야기는 먼저 꺼내지 않는다'
+
 os.makedirs(OUT, exist_ok=True)
 json.dump(runtime, open(os.path.join(OUT, 'CASE001_V21_RUNTIME.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 json.dump(personas, open(os.path.join(OUT, 'CASE001_V21_PERSONAS_SERVER_ONLY.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)

@@ -603,7 +603,7 @@ namespace TableZero.EditorTools
             RenderSettings.customReflectionTexture = cube;
 
             var ceil = B(objs, "fix_ceiling_light");
-            L["ceiling"] = MkLight("L_CeilingLED", LightType.Spot, ceil.center + Vector3.down * 0.06f, new Color(1f, 0.97f, 0.92f), 9f, 7f, lroot, 155);
+            L["ceiling"] = MkLight("L_CeilingLED", LightType.Spot, ceil.center + Vector3.down * 0.06f, new Color(1f, 0.97f, 0.92f), 5.5f, 7f, lroot, 155);
             L["ceiling"].transform.rotation = Quaternion.LookRotation(Vector3.down);
             var lamp = B(objs, "living_lamp");
             L["lamp"] = MkLight("L_StandLamp", LightType.Point, new Vector3(lamp.center.x, lamp.max.y - 0.12f, lamp.center.z), new Color(1f, 0.72f, 0.45f), 1.6f, 4.5f, lroot);
@@ -645,9 +645,9 @@ namespace TableZero.EditorTools
             foreach (var c in prof.components.ToList()) { prof.Remove(c.GetType()); }
             foreach (var sub in AssetDatabase.LoadAllAssetsAtPath(pp)) if (sub != prof) Object.DestroyImmediate(sub, true);
             var tm = prof.Add<Tonemapping>(true); tm.mode.Override(TonemappingMode.ACES);
-            var ca = prof.Add<ColorAdjustments>(true); ca.postExposure.Override(0.05f); ca.contrast.Override(18f); ca.saturation.Override(-14f);
+            var ca = prof.Add<ColorAdjustments>(true); ca.postExposure.Override(-0.15f); ca.contrast.Override(18f); ca.saturation.Override(-14f);
             var wb = prof.Add<WhiteBalance>(true); wb.temperature.Override(-12f); wb.tint.Override(2f);
-            var bl2 = prof.Add<Bloom>(true); bl2.threshold.Override(1.1f); bl2.intensity.Override(0.25f); bl2.scatter.Override(0.6f);
+            var bl2 = prof.Add<Bloom>(true); bl2.threshold.Override(1.4f); bl2.intensity.Override(0.16f); bl2.scatter.Override(0.6f);
             var vg = prof.Add<Vignette>(true); vg.intensity.Override(0.30f); vg.smoothness.Override(0.45f);
             var fg = prof.Add<FilmGrain>(true); fg.type.Override(FilmGrainLookup.Thin1); fg.intensity.Override(0.18f); fg.response.Override(0.85f);
             var smh = prof.Add<ShadowsMidtonesHighlights>(true); smh.shadows.Override(new Vector4(0.92f, 0.97f, 1.12f, -0.04f));
@@ -741,9 +741,9 @@ namespace TableZero.EditorTools
             var cam = camGo.AddComponent<Camera>(); cam.clearFlags = CameraClearFlags.SolidColor; cam.backgroundColor = Color.black; cam.nearClipPlane = 0.03f; cam.farClipPlane = 60; cam.fieldOfView = 62; cam.allowHDR = true; cam.allowMSAA = true;
             var ucd = camGo.AddComponent<UniversalAdditionalCameraData>(); ucd.renderPostProcessing = true; ucd.antialiasing = AntialiasingMode.TemporalAntiAliasing;
             camGo.AddComponent<AudioListener>();
-            var flash = MkLight("Flashlight", LightType.Spot, camGo.transform.position + camGo.transform.right * 0.18f - camGo.transform.up * 0.2f, new Color(1f, 0.96f, 0.9f), 8f, 10f, camGo.transform, 50);
+            var flash = MkLight("Flashlight", LightType.Spot, camGo.transform.position + camGo.transform.right * 0.18f - camGo.transform.up * 0.2f, new Color(1f, 0.95f, 0.88f), 3.0f, 9f, camGo.transform, 58);   // softer: no white hotspot at arm's length
             flash.transform.localRotation = Quaternion.Euler(1.5f, -2f, 0);
-            flash.innerSpotAngle = 18;
+            flash.innerSpotAngle = 30;
             var pc = player.AddComponent<TZPlayerController>(); pc.cam = cam; pc.flashlight = flash;
             TZViewModelSetup.Attach(cam);   // generated first-person hand (Higgsfield/Tripo, decimated)
             flash.transform.localPosition = TZViewModelSetup.RestPos + new Vector3(0f, 0.02f, 0.16f);   // beam leaves the lens, not the eye
