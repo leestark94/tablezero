@@ -1,5 +1,23 @@
 # 다음 AI 인계지시서 (Claude Code / Codex 공통)
 
+## ★★★ 최신 — 2026-11-23 V22-2 (Codex 실플레이 QA 17건 대응 + 자유 심문 재설계) — 가장 먼저 읽을 것
+**전체 평가·상태표: [`V22_종합평가.md`](V22_종합평가.md)** (완료/부분/미검증 분리). 이 블록 아래 "★★ V22", "★ 최신 상태"는 이전 세션.
+**사용자 최신 결정:** 2D도 허용(단 살아 있는 연기 필수), MetaHuman 대기로 멈추지 말 것, 질문 없이 구현→플레이→수정→검증, 이서연 결과 이미지는 채팅에 직접 표시. (Codex 자료 폴더: `C:\Users\imcok\Documents\Codex\2026-11-22\new-chat\outputs\TABLE_ZERO_HANDOFF`, `...\TABLE_ZERO_TEST`)
+**한 일(요약):**
+- 서버 `report_review.py` + `evaluate_report(axis_evidence)`: 보고서 schema v1(축별 claim+evidence_ids, session_id). 합집합 판정 폐기. 클라 `TZHQDesk.Submit`이 `ReportJson()`으로 전송.
+- 서버 새 사건 `/v1/case/new`, 클라 `TZSession`(세션 id 바인딩, 구역 캐시·제출 플래그 초기화). 장면 전이 멱등.
+- 음식 봉투/휴대전화/액자 채취 → V21 증거 ID 연결(`case_flow.PROP_EVIDENCE`), `custody` 목록.
+- 자유 심문: `question_frame.py`(질문 분석) → `interview_planner.py`(계획·기억·전제 검사) → LLM performer(실패 시 작성 대사, `performer` 필드로 구분) → 가드(숫자 날조·상담원 말투). 대사 "내용" 슬롯은 `tools/v21_dossiers.py`(수정 후 `python -I -X utf8 tools/build_v21_runtime.py`).
+- 클라: 질문 즉시 전송(사전 대기 제거), `TZLatencyLog`(qa/logs/perf/latency_unity.csv), 증거창 ScrollView, HQ 스크롤 보존, 문 프롬프트 갱신 등.
+- 도구: `tools/run_interview_regression.py`(30항목 실전 모델 회귀), `TZPlaytestDriver`(실제 화면 구동·지연 측정), `TZSuspectShot`/`TZRoomShot`(1080p 렌더), `tools/qa_suspect_shots.sh`.
+**테스트:** `python -m unittest discover -s tests` → 169개 통과(이 문서 작성 시점).
+**꼭 알 것(정직):**
+1. 응답 지연: 이 PC에서 `dwm.exe`가 GPU 3D를 87~97% 점유해 모델 첫 토큰이 5~10 s까지 밀린다(짧은 프롬프트도). 에디터 Play 실측 첫 표시 2.1~2.8 s, 완료 6.8~13 s. 목표(첫 표시 p50 1 s)는 **미달성**. 깨끗한 GPU/standalone에서 재측정 필요.
+2. LLM 비율: Kanana 8B 회귀에서 인물별 LLM 10~23/27, 나머지는 4초 기한 초과로 작성 대사 폴백. 폴백을 모델 답변이라 보고하지 말 것(`receipt.performer`).
+3. standalone 빌드 검증·UI 해상도 검증·8상태 연기 검수·저장/이어하기: **미완**. `LivingSuspectPortrait.cs`는 `Runtime/Portrait/`에 컴파일만, 레이어 아트가 없어 연결 안 함.
+4. 이서연 3D 자체 4~5/10. 9점은 MetaHuman(UE 5.6+, 사용자 설치·로그인 필요) 또는 레이어 2D 아트(유료 생성 시 비용 승인).
+**다음 우선순위:** (1) 에디터/standalone에서 새 사건→보고서 제출 전 과정 실플레이(우회 없이) (2) 1280×720·큰 글꼴 UI 확인 (3) 박현수·강도현 슬롯 보강+회귀 재실행 (4) 지연 재측정(GPU 한가할 때, standalone) (5) 수첩에 관찰/주장/가설 구분.
+
 ## ★★ 최신 — 2026-11-22 V22 (이 블록이 가장 최신. 아래 "★ 최신 상태"는 직전 세션)
 **사용자 지시:** 심문 AI 즉각 응답·지능 200%, 302 소품·조명 퀄리티, 용의자를 "고무찰흙"이 아닌 사람처럼 — **우선 Blender 경로**(MetaHuman은 UE 5.6+ 설치·로그인 필요해서 보류). 이서연 이미지는 채팅에서 바로 볼 수 있게 보낼 것(다운로드 말고).
 **끝낸 것 (검증):**

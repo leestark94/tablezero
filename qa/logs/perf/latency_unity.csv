@@ -1,0 +1,9 @@
+utc,session,actor,q_len,accepted_s,first_shown_s,complete_s,performer,model,server_first_token_ms,server_plan_ms,server_latency_ms,fps,editor
+2026-11-22T17:25:52.0381319Z,,s2,14,0.023,2.401,6.773,LLM,"OLLAMA_LOCAL:hf.co/DevQuasar/kakaocorp.kanana-1.5-8b-instruct-2505-GGUF:Q4_K_M",1865.5,2.26,5494.3,30,True
+2026-11-22T17:26:03.1824538Z,,s2,21,0.019,2.246,9.934,LLM,"OLLAMA_LOCAL:hf.co/DevQuasar/kakaocorp.kanana-1.5-8b-instruct-2505-GGUF:Q4_K_M",1790.9,0.48,5725.6,30,True
+2026-11-22T17:26:13.7211163Z,,s2,31,0.004,2.427,9.326,LLM,"OLLAMA_LOCAL:hf.co/DevQuasar/kakaocorp.kanana-1.5-8b-instruct-2505-GGUF:Q4_K_M",1980.7,0.32,8344.2,30,True
+2026-11-22T17:26:24.6635849Z,,s2,10,0.008,2.063,9.737,LLM,"OLLAMA_LOCAL:hf.co/DevQuasar/kakaocorp.kanana-1.5-8b-instruct-2505-GGUF:Q4_K_M",1676.1,0.25,5397.6,32,True
+2026-11-22T17:26:38.9903574Z,,s2,35,0.014,2.641,13.119,LLM,"OLLAMA_LOCAL:hf.co/DevQuasar/kakaocorp.kanana-1.5-8b-instruct-2505-GGUF:Q4_K_M",2061.8,0.27,12596.6,29,True
+2026-11-22T17:26:49.7393705Z,,s2,24,0.008,2.767,9.540,LLM,"OLLAMA_LOCAL:hf.co/DevQuasar/kakaocorp.kanana-1.5-8b-instruct-2505-GGUF:Q4_K_M",2270.4,0.34,7939.3,31,True
+2026-11-22T17:27:05.4820819Z,,s2,21,0.011,2.236,14.537,LLM,"OLLAMA_LOCAL:hf.co/DevQuasar/kakaocorp.kanana-1.5-8b-instruct-2505-GGUF:Q4_K_M",1879.5,0.27,9721.6,29,True
+2026-11-22T17:27:25.5507236Z,,s2,12,0.011,2.463,18.864,LLM,"OLLAMA_LOCAL:hf.co/DevQuasar/kakaocorp.kanana-1.5-8b-instruct-2505-GGUF:Q4_K_M",2111.3,0.26,9293.9,30,True
