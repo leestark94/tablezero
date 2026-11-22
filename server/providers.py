@@ -111,7 +111,7 @@ class OllamaProvider:
         if on_partial:payload['stream']=True
         req=urllib.request.Request(self.url,data=json.dumps(payload,ensure_ascii=False).encode('utf-8'),headers={'Content-Type':'application/json'})
         try:
-            with urllib.request.urlopen(req,timeout=self.timeout_s) as r:
+            with urllib.request.urlopen(req,timeout=min(self.timeout_s,float(context.get('first_token_s') or self.timeout_s))) as r:
                 if not on_partial:
                     obj=json.loads(r.read(1_000_000).decode('utf-8'))
                 else:

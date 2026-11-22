@@ -101,3 +101,53 @@ DOSSIERS = {
   },
  },
 }
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# V22: topics + ask-specific slots. A fact's `slots` hold what the suspect would SAY for each kind of question (time / place /
+# verify / why / what / yesno), once as `cover` (not proven: the suspect's own account, may be false) and once as `concede`
+# (proven: the most they admit). Lines are first person, in the suspect's voice; the planner picks by the question's ask type.
+# Cover lines may be lies, but only ones that fit the dossier (checkable against evidence); nothing here names a culprit.
+# ---------------------------------------------------------------------------------------------------------------------
+_TOPICS = {
+ 's1': {'visit': ['visit', 'depart'], 'money': ['money'], 'wrist': ['wound', 'phone', 'quarrel'], 'after': ['work', 'arrive', 'route', 'verify'], 'message': ['message']},
+ 's2': {'money': ['money'], 'call': ['call'], 'visit': ['visit', 'depart', 'route', 'video'], 'left_alive': ['alive'], 'glass': ['wound', 'quarrel'],
+        'head': ['push'], 'store': ['store', 'verify']},
+ 's3': {'doc': ['message'], 'appointment': ['message', 'visit'], 'entered': ['visit', 'video'], 'report_time': ['report'], 'push': ['push', 'quarrel']},
+}
+_SLOTS = {
+ 's1': {
+  'visit': {'cover': {'what': '짐 가지러 잠깐 들렀다가 나왔습니다', 'time': '12분쯤 들어가서 20분쯤 나왔습니다', 'place': '302호입니다 짐 때문에요',
+                      'why': '남은 짐 때문입니다', 'yesno': '네 짐 가지러 들렀습니다', 'verify': '영상이든 출입 기록이든 확인하셔도 됩니다'},
+           'concede': {'what': '12분쯤 가서 21분쯤 나왔습니다 짐 가지러요', 'time': '12분쯤 들어가서 21분쯤 나왔습니다', 'yesno': '네 갔습니다'}},
+  'after': {'cover': {'time': '바로 갔으니까 9시 반쯤 도착했을 겁니다', 'place': '직장으로 바로 갔습니다 야간 근무라서요', 'what': '나와서 곧장 직장으로 갔습니다',
+                      'why': '야간 근무 시간이 있어서 바로 간 겁니다', 'yesno': '네 바로 갔습니다', 'kw:집': '집이 아니라 직장으로 갔습니다', 'verify': '출입 기록이랑 점검 로그 있습니다 확인해 보십시오'},
+            'concede': {'time': '51분에 출입 태그를 찍었습니다', 'place': '나와서 차에 좀 있다가 직장으로 갔습니다', 'what': '바로 간 건 아닙니다 차에 있다가 35분쯤 출발했고 51분에 출입 태그 찍었습니다',
+                        'why': '차에서 정리할 게 좀 있었습니다 그게 문제입니까', 'yesno': '바로 간 건 아닙니다', 'verify': '출입 태그가 51분에 찍혔을 겁니다 그게 맞습니다'}},
+ },
+ 's2': {
+  'visit': {'cover': {'what': '그날 밤에는 수연이네 안 갔어요', 'yesno': '아니요 그날은 안 갔어요', 'time': '그 시간에 정확히 뭘 했는지는 기억이 잘 안 나요 302호는 아니에요',
+                      'place': '정확히 어디 있었는지는 기억이 안 나요 수연이네는 아니고요', 'why': '갈 이유가 없었어요', 'verify': '그 시간 일을 증명하기는 어렵네요 확인해 보세요'},
+            'concede': {'what': '얘기만 하고 나왔어요 제가 나올 땐 수연이 멀쩡했고요', 'yesno': '네 갔어요', 'time': '21시 39분쯤 가서 49분쯤 나왔어요',
+                        'place': '수연이 집 302호요 잠깐 있었어요', 'why': '서류 문제로 얘기하러 갔어요', 'verify': '영상이 있다니 확인되실 거예요'}},
+  'store': {'cover': {'yesno': '편의점은 자주 가서 그날 결제했는지는 기억이 안 나요', 'verify': '카드 내역은 조회해 보시면 나오겠죠 그날 거기 갔는지는 모르겠지만요',
+                      'time': '몇 시에 갔는지는 기억이 안 나요', 'what': '편의점이야 자주 가니까요', 'place': '집 근처 편의점일 거예요', 'why': '평소처럼 들른 거겠죠'},
+            'concede': {'yesno': '네 21시 55분에 편의점에서 카드로 계산했어요', 'time': '21시 55분쯤이요', 'verify': '카드 내역이랑 편의점 영상으로 확인되실 거예요',
+                        'what': '수연이 집에서 나와서 편의점에 들렀어요', 'place': '근처 편의점이요', 'why': '집에 가는 길에 들렀어요'}},
+ },
+ 's3': {
+  'entered': {'cover': {'yesno': '아니요 안에는 안 들어갔습니다', 'what': '302호 안에는 들어간 적 없습니다 신고할 때 문밖에서 봤어요', 'time': '들어간 적이 없으니 시각을 말씀드릴 게 없습니다',
+                        'place': '문 앞에서 본 게 전부입니다', 'why': '제가 왜 남의 집에 들어갑니까', 'verify': '제 쪽 서류는 보시면 나옵니다 그것과 들어갔다는 건 별개고요'},
+              'concede': {'yesno': '네 잠깐 들어갔습니다', 'time': '54분쯤 잠깐 들어갔습니다', 'what': '서류 얘기를 하러 잠깐 들어갔습니다', 'place': '302호 안에 잠깐 있었습니다',
+                          'why': '서류 얘기를 하러요 들어간 것과 다치게 한 건 다른 얘기고요'}},
+  'report_time': {'cover': {'time': '22시 7분에 처음 보고 바로 신고했습니다', 'what': '문이 열려 있어 봤더니 쓰러져 있어서 바로 신고했습니다', 'yesno': '네 바로 신고했습니다',
+                            'verify': '112 녹취를 보시면 나옵니다', 'why': '사람이 쓰러져 있으니까요'},
+                  'concede': {'time': '처음 본 시각과 신고 시각이 조금 다를 수는 있습니다', 'what': '그땐 정신이 없어서 정확한 분 단위는 장담 못 합니다'}},
+ },
+}
+for _sid, _f in _SLOTS.items():
+    for _fid, _s in _f.items():
+        DOSSIERS[_sid]['facts'][_fid]['slots'] = _s
+for _sid, _t in _TOPICS.items():
+    for _fid, _tl in _t.items():
+        DOSSIERS[_sid]['facts'][_fid]['topics'] = _tl

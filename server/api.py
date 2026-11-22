@@ -150,13 +150,14 @@ def _start_job(service,value):
     import threading
     job_id=uuid.uuid4().hex
     j=_JOBS[job_id]={'partial':'','done':False,'ok':False,'error':'','receipt':None}
+    epoch=service._epoch
     def set_partial(t):j['partial']=t
     def run():
         try:
             r=service.ask(value.get('question',''),input_mode=value.get('input_mode','typed'),
                           action_id=value.get('action_id') or uuid.uuid4().hex,
                           presented_evidence=value.get('evidence_id') or None,
-                          transcript_confirmed=value.get('transcript_confirmed',True) is True,on_partial=set_partial)
+                          transcript_confirmed=value.get('transcript_confirmed',True) is True,on_partial=set_partial,epoch=epoch)
             j['receipt']={k:getattr(r,k) for k in r.__dataclass_fields__};j['partial']=r.suspect_text;j['ok']=True
         except ProviderError:j['error']='ai_unavailable'
         except Exception as e:j['error']=str(e) if isinstance(e,(GuardError,ValueError)) else 'internal_error'
