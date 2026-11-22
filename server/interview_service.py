@@ -13,6 +13,7 @@ from .dialogue_quality import clean_line,lint_line,KoreanDialogueError
 from .providers import ProviderError
 from .suspect_mind import build_messages,render_question,guard_utterance,active_memories,personas
 from .strategy import SuspectState,plan_turn,speaker_messages,pick_motion
+from . import line_bank
 
 RETRY_HINTS={
  'volunteered_concealed_detail':'[다시] 방금 대답은 형사가 묻지도 보여주지도 않은 구체적인 내용을 먼저 말했다. 지금 말할 수 있는 기억과 경찰에게 하기로 한 말 안에서만 다시 대답한다',
@@ -139,7 +140,26 @@ class InterviewService:
                     gate['blocked']=True;on_partial('');return
                 on_partial(t)
             ctx['on_partial']=forward
-        for attempt in range(self.max_attempts):
+        # Authored in-voice line for this exact situation: instant, no model call. Same guards as a generated line.
+        if plan is not None and not os.environ.get('TABLEZERO_NO_LINE_BANK'):
+            banked=line_bank.pick(actor,plan,text,st.bank_used)
+            if banked:
+                try:
+                    motions=sorted(set(world.suspects[actor].get('possible_motions',[]))&world.motions)
+                    cand=world.validate_reply(actor,{'utterance':banked,'reply_mode':plan['mode'],'motion_id':pick_motion(plan['tactic'],motions),
+                        'asserted_claim_ids':[],'new_unsupported_assertion':None,
+                        'request_external_action':'request_counsel' if plan['tactic']=='STONEWALL' and plan['mode']=='request_counsel' else None})
+                    bad=guard_utterance(actor,cand['utterance'],presented=presented_now,detective_text=detective_text,memories=memories,
+                                        question=text,recent=[],mode=cand['reply_mode'])
+                    bad=[b for b in bad if b not in ('near_repeat','echoed_question')]
+                    if not bad:
+                        cand['utterance']=clean_line(cand['utterance']);reply=cand
+                        provider_reply={'provider':'LINE_BANK','latency_ms':0.0,'result':{}}
+                        if on_partial:on_partial(cand['utterance'])
+                    else:attempts.append('bank:'+','.join(bad))
+                except (GuardError,KoreanDialogueError) as e:
+                    attempts.append('bank:'+str(e))
+        for attempt in range(self.max_attempts if reply is None else 0):
             if on_partial and plan is not None:
                 gate['blocked']=False;on_partial('')
             if attempts and attempts[-1] not in ('provider_error',):

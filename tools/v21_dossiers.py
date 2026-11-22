@@ -54,7 +54,7 @@ DOSSIERS = {
              'then_volunteer': ['left_alive']},
    'left_alive': {'sensitivity': 'minor', 'cues': [], 'proven_by': [],
                   'concede': '제가 21시 49분에 나올 때 수연이는 말도 하고 문까지 걸어 나왔다'},
-   'glass': {'sensitivity': 'serious', 'cues': ['액자', '유리', '손', '피', '소매', '혈흔', '다쳤'],
+   'glass': {'sensitivity': 'serious', 'cues': ['액자', '유리', '손바닥', '손이', '피가', '피를', '피 묻', '소매', '혈흔', '다쳤'],
              'proven_by': ['V21-E08', 'V21-E09'], 'concede_after': 2,
              'cover': '그 물건이 왜 깨졌는지까지는 모르겠다',
              'challenge': '그 감정에 뭐가 나왔는지 직접 보여주실 수 있어요?',

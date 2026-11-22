@@ -1,0 +1,22 @@
+MODEL qwen3:4b num_gpu=default suspect=s2
+형사: 피해자와 무슨 사이였습니까
+  -> [DENY/deny] Okay, I need to respond to the question "피해자와 무슨 사이였습니까" (What's your relationship with the victim?) as 이서연 Let me think   (32.42s, 시도 2)
+형사: 너 범인이지?ㅋ
+  -> [DEMAND_PROOF/counter] 무슨 근거로 그러시는 거예요 있으면 보여주세요   (16.00s, 시도 5)
+형사: 그날 밤 아홉 시 반쯤 어디 계셨어요?
+  -> [DENY/deny] 그날 밤에는 302호에 가지 않았다. 정확히 몇 시에 뭘 했는지는 기억이 잘 안 난다   (19.83s, 시도 5)
+형사: 증거 다 있어. 빨리 말해
+  -> [DEMAND_PROOF/counter] 무슨 근거로 그러시는 거예요 있으면 보여주세요   (21.34s, 시도 5)
+형사: 이 화면 보세요. 이거 당신이죠?  [제시 V21-E02]
+  -> [CHALLENGE/counter] Okay, let's see The user is the detective who just showed me this CCTV footage I need to respond as 이서연   (8.10s, 시도 1)
+형사: 편의점 결제 기록도 있습니다  [제시 V21-E14]
+  -> [CONCEDE_MIN/partial_admission] 21시 39분쯤 수연이 집에 잠깐 갔다. 얘기만 하고 나왔다   (22.61s, 시도 5)
+형사: 그럼 그날 그 집에 갔던 거 맞죠?
+  -> [CONCEDE_MIN/partial_admission] Okay, let's see The user is a detective who just showed me CCTV footage and asked if I went to 수연's house that night   (6.33s, 시도 1)
+형사: 수연 씨 머리를 다치게 했습니까?
+  -> [DENY/deny] 저는 수연이를 다치게 한 적 없어요   (31.26s, 시도 5)
+형사: 정산 문제는 뭐였어요?
+  -> [DENY/deny] 정산이 좀 밀렸을 뿐이다   (15.51s, 시도 5)
+형사: 480만원 이체 기록입니다  [제시 V21-E11]
+  -> [CONCEDE_MIN/partial_admission] 사업계좌에서 480만원을 제가 잠깐 돌려 쓴 건 맞다. 채워 넣으려고 했다   (25.36s, 시도 5)
+SUMMARY avg 19.88s  max 32.42s  turns 10

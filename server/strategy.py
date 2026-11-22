@@ -34,6 +34,7 @@ class SuspectState:
     conceded: set = field(default_factory=set)        # fact ids admitted (become part of the allowed story)
     accusations: int = 0
     repeats: dict = field(default_factory=dict)       # fact id -> times the detective pushed on it
+    bank_used: dict = field(default_factory=dict)     # authored-line variants already spoken (server/line_bank.py)
     abused: int = 0                                   # degrading remarks by the detective in this interview
 
 
@@ -68,6 +69,7 @@ def plan_turn(personas: dict, sid: str, state: SuspectState, question: str, pres
         state.repeats[fid] = state.repeats.get(fid, 0) + 1
 
     say, avoid, directives, counter = [], [], [], None
+    focus = None
     tactic, mode = 'ANSWER', 'answer'
 
     # 0) degrading / sexual remark: in-character offence, never a polite refusal; repeated -> stop talking
@@ -100,12 +102,12 @@ def plan_turn(personas: dict, sid: str, state: SuspectState, question: str, pres
         tactic, mode = 'ANSWER', 'answer'
         proven = set(f.get('proven_by', [])) & presented_all
         if fid in state.conceded:
-            say.append(f['concede']); decided.append((RANK.get(f.get('sensitivity','minor'),1), 'CONCEDE_MIN', 'partial_admission')); continue
+            say.append(f['concede']); decided.append((RANK.get(f.get('sensitivity','minor'),1), 'CONCEDE_MIN', 'partial_admission', fid)); continue
         if not proven:
             # never volunteer; keep the cover
             if f.get('cover'):
                 say.append(f['cover'])
-            decided.append((RANK.get(f.get('sensitivity','minor'),1), 'DENY', 'deny' if f.get('sensitivity') != 'minor' else 'uncertain'))
+            decided.append((RANK.get(f.get('sensitivity','minor'),1), 'DENY', 'deny' if f.get('sensitivity') != 'minor' else 'uncertain', fid))
             continue
         shown = presented_now in f.get('proven_by', []) if presented_now else False
         weak = f.get('challenge') and fid not in state.challenged
@@ -129,12 +131,13 @@ def plan_turn(personas: dict, sid: str, state: SuspectState, question: str, pres
             tactic, mode = 'DENY', 'deny'
             if f.get('cover'):
                 say.append(f['cover'])
-        decided.append((RANK.get(f.get('sensitivity','minor'),1), tactic, mode))
+        decided.append((RANK.get(f.get('sensitivity','minor'),1), tactic, mode, fid))
     # accusation/bluff handling wins; otherwise the most sensitive fact sets the stance for the whole reply
     if base_tactic in ('STONEWALL', 'DEMAND_PROOF'):
         tactic, mode = base_tactic, base_mode
     elif decided:
-        tactic, mode = max(decided, key=lambda x: (x[0], x[1] != 'CONCEDE_MIN'))[1:]
+        best = max(decided, key=lambda x: (x[0], x[1] != 'CONCEDE_MIN'))
+        tactic, mode, focus = best[1], best[2], best[3]
     else:
         tactic, mode = base_tactic, base_mode
     if pressed and tactic not in ('STONEWALL',):
@@ -145,7 +148,9 @@ def plan_turn(personas: dict, sid: str, state: SuspectState, question: str, pres
     state.tactic_history.append(tactic)
     return {'tactic': tactic, 'mode': mode, 'allowed': allowed, 'this_turn': list(dict.fromkeys(say)),
             'directives': directives, 'counter_question': counter, 'relevant': rel,
-            'accused': accused, 'bluff': bluff, 'pressed': pressed}
+            'accused': accused, 'bluff': bluff, 'pressed': pressed, 'focus': focus,
+            'accusations': state.accusations, 'repeat': state.repeats.get(focus, 0) if focus else 0,
+            'shown_now': presented_now}
 
 
 TACTIC_KO = {
