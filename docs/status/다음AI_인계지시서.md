@@ -1,5 +1,18 @@
 # 다음 AI 인계지시서 (Claude Code / Codex 공통)
 
+## ★★ 최신 — 2026-11-22 V22 (이 블록이 가장 최신. 아래 "★ 최신 상태"는 직전 세션)
+**사용자 지시:** 심문 AI 즉각 응답·지능 200%, 302 소품·조명 퀄리티, 용의자를 "고무찰흙"이 아닌 사람처럼 — **우선 Blender 경로**(MetaHuman은 UE 5.6+ 설치·로그인 필요해서 보류). 이서연 이미지는 채팅에서 바로 볼 수 있게 보낼 것(다운로드 말고).
+**끝낸 것 (검증):**
+- **심문 AI 0ms 응답**: `server/line_bank.py` — 전략 엔진(plan)이 고른 전술×사실에 맞춰 사람이 쓴 인물별 대사(강도현·이서연·박현수)를 즉시 선택. 같은 질문 반복 시 단계적 변주, 소진되면 `REPEAT`, 주제 밖이면 `CLARIFY`. 모델 호출 없음(`TABLEZERO_NO_LINE_BANK=1`이면 기존 LLM 경로). 가드/lint 통과 못 하면 LLM으로 폴백. 라이브 프로브(`python -I -X utf8 tools/live_interrogation_probe.py gemma3:4b - s2`)로 10턴 평균 0.00s, 전술 흐름 DENY→DEMAND_PROOF→CHALLENGE→CONCEDE_MIN 정상. 단위 테스트 148개 통과. (측정 전 모델: 8B 평균 15s, gemma3:4b 10s, qwen3:4b 20s — 에디터 켠 상태 VRAM 경합)
+- 한계: 대사는 "작성된 범위"만 즉시. 자유 질문 중 은행에 없는 건 `CLARIFY`로 되묻기(의도적). 더 똑똑하게 하려면 `line_bank.py`의 BANK/TOPICS 확장. `-X utf8` 없이 `python -I`로 돌리면 콘솔 한글이 깨져 보임(실제 데이터는 정상).
+- **이서연 3D (Blender)**: 절차 생성 케이블 니트/울 바지/앞머리 텍스처(`tools/gen_cloth_textures.py`), 긴 소매 튜브·두피 캡·앞머리/옆머리 카드·손목시계(`blender/scripts/seoyeon_extras.py`), 체형 슬림화(muscle .28/weight .30), Unity 재질 연결(`TZSuspectCharacterBuilder`). 1080p 렌더: `qa/shots/v22/p5_room.png`, `p5_bust.png`. 눈은 앞머리 그림자 안.
+- **302 조명**: 복도 센서등·후드·손전등·블룸 낮춤, 종이 알베도 낮춤, 천장/스탠드 균형 → `qa/shots/v22/r3_1.png`(눈부심 감소). 오프라인 렌더 도구 `TZSuspectShot`/`TZRoomShot`(Editor), `tools/qa_suspect_shots.sh`.
+**남음 / 정직한 평가:**
+- 이서연은 아직 "사실적 사람" 아님(자체 평가 약 4/10): 피부 SSS·모공 없음, 정수리 머리카락 가장자리 톱니, 소매 질감 스케일이 몸통과 다름·남은 짧은 퍼프 소매, 손이 뭉툭, 얼굴 동일인 검증 안 됨. 다음: 피부 디테일 노멀/러프니스 + URP 피부 근사, 머리카락 카드 다층화, 소매 UV 스케일 맞춤, 표정 블렌드셰이프 연결. 9점은 MetaHuman(UE 5.6+) 필요.
+- 302 소품 재배치·'정신없는 분배'는 미착수(조명만). 종이 흩어짐(`xprop_scattered_papers`는 4장, 나머지 출처 확인 필요)·증거 표지 배치 정리 필요. 강도현·박현수 3D 모델 없음.
+- Unity Play 중 8B LLM 느림 문제는 대사 은행으로 우회(대부분 즉시). 빌드 FPS·AI 동시 측정 미실시.
+- 이 세션 커밋은 로컬(푸시 전 LFS 용량 사용자 확인 필요: 약 40MB 추가).
+
 ## ★ 최신 상태 — 2026-11-22 세션 종료 시점 (여기부터 읽어라)
 브랜치 `dev/v11-integration`. 최신 커밋은 `git log --oneline -5`로 확인.
 

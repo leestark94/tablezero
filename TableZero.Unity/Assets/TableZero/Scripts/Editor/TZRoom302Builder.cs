@@ -92,7 +92,7 @@ namespace TableZero.EditorTools
             {"M_Mirror", S(null, 1, C(0.9f,0.9f,0.9f), 0.98f, 1)},
             {"M_Rubber", S(null, 1, C(0.04f,0.04f,0.04f), 0.15f)},
             {"M_Mattress", S("cotton_jersey", 2f, C(0.93f,0.92f,0.88f), 0.08f)},
-            {"M_Paper", S(null, 1, C(0.92f,0.91f,0.87f), 0.12f)},
+            {"M_Paper", S(null, 1, C(0.78f,0.77f,0.73f), 0.12f)},
             {"M_Cardboard", S(null, 1, C(0.58f,0.44f,0.29f), 0.12f)},
             {"M_BloodDried", S(null, 1, C(0.11f,0.012f,0.012f), 0.55f)},
             {"M_LEDPanel", S(null, 1, C(0.95f,0.95f,0.93f), 0.4f, 0, false, 0f)},
@@ -603,17 +603,17 @@ namespace TableZero.EditorTools
             RenderSettings.customReflectionTexture = cube;
 
             var ceil = B(objs, "fix_ceiling_light");
-            L["ceiling"] = MkLight("L_CeilingLED", LightType.Spot, ceil.center + Vector3.down * 0.06f, new Color(1f, 0.97f, 0.92f), 5.5f, 7f, lroot, 155);
+            L["ceiling"] = MkLight("L_CeilingLED", LightType.Spot, ceil.center + Vector3.down * 0.06f, new Color(1f, 0.97f, 0.92f), 7.5f, 8f, lroot, 155);
             L["ceiling"].transform.rotation = Quaternion.LookRotation(Vector3.down);
             var lamp = B(objs, "living_lamp");
-            L["lamp"] = MkLight("L_StandLamp", LightType.Point, new Vector3(lamp.center.x, lamp.max.y - 0.12f, lamp.center.z), new Color(1f, 0.72f, 0.45f), 1.6f, 4.5f, lroot);
+            L["lamp"] = MkLight("L_StandLamp", LightType.Point, new Vector3(lamp.center.x, lamp.max.y - 0.12f, lamp.center.z), new Color(1f, 0.72f, 0.45f), 1.9f, 5f, lroot);
             var hood = B(objs, "kitchen_hood");
-            L["hood"] = MkLight("L_HoodLamp", LightType.Spot, new Vector3(hood.center.x, hood.min.y - 0.02f, hood.center.z), new Color(1f, 0.82f, 0.6f), 2.2f, 2.2f, lroot, 120);
+            L["hood"] = MkLight("L_HoodLamp", LightType.Spot, new Vector3(hood.center.x, hood.min.y - 0.02f, hood.center.z), new Color(1f, 0.82f, 0.6f), 1.3f, 2.4f, lroot, 105);
             L["hood"].transform.rotation = Quaternion.LookRotation(Vector3.down);
             var bl = B(objs, "xprop_bath_light");
             L["bath"] = MkLight("L_Bath", LightType.Point, bl.center + Vector3.down * 0.12f, new Color(0.92f, 0.95f, 1f), 1.5f, 3.2f, lroot);
             var hs = B(objs, "hall_sensor");
-            L["hall"] = MkLight("L_HallSensor", LightType.Point, hs.center + Vector3.down * 0.15f, new Color(1f, 0.80f, 0.55f), 1.7f, 6f, lroot);
+            L["hall"] = MkLight("L_HallSensor", LightType.Point, hs.center + Vector3.down * 0.15f, new Color(1f, 0.80f, 0.55f), 0.8f, 5f, lroot);
             var fr = B(objs, "fix_fridge_body");
             L["fridge"] = MkLight("L_FridgeInside", LightType.Point, new Vector3(fr.center.x, fr.min.y + 0.8f, fr.center.z), new Color(0.92f, 0.96f, 1f), 0.9f, 1.0f, lroot, 90, false);
             var ent = B(objs, "entrance_mat");
@@ -645,9 +645,9 @@ namespace TableZero.EditorTools
             foreach (var c in prof.components.ToList()) { prof.Remove(c.GetType()); }
             foreach (var sub in AssetDatabase.LoadAllAssetsAtPath(pp)) if (sub != prof) Object.DestroyImmediate(sub, true);
             var tm = prof.Add<Tonemapping>(true); tm.mode.Override(TonemappingMode.ACES);
-            var ca = prof.Add<ColorAdjustments>(true); ca.postExposure.Override(-0.15f); ca.contrast.Override(18f); ca.saturation.Override(-14f);
+            var ca = prof.Add<ColorAdjustments>(true); ca.postExposure.Override(-0.1f); ca.contrast.Override(18f); ca.saturation.Override(-14f);
             var wb = prof.Add<WhiteBalance>(true); wb.temperature.Override(-12f); wb.tint.Override(2f);
-            var bl2 = prof.Add<Bloom>(true); bl2.threshold.Override(1.4f); bl2.intensity.Override(0.16f); bl2.scatter.Override(0.6f);
+            var bl2 = prof.Add<Bloom>(true); bl2.threshold.Override(1.8f); bl2.intensity.Override(0.10f); bl2.scatter.Override(0.6f);
             var vg = prof.Add<Vignette>(true); vg.intensity.Override(0.30f); vg.smoothness.Override(0.45f);
             var fg = prof.Add<FilmGrain>(true); fg.type.Override(FilmGrainLookup.Thin1); fg.intensity.Override(0.18f); fg.response.Override(0.85f);
             var smh = prof.Add<ShadowsMidtonesHighlights>(true); smh.shadows.Override(new Vector4(0.92f, 0.97f, 1.12f, -0.04f));
@@ -741,7 +741,7 @@ namespace TableZero.EditorTools
             var cam = camGo.AddComponent<Camera>(); cam.clearFlags = CameraClearFlags.SolidColor; cam.backgroundColor = Color.black; cam.nearClipPlane = 0.03f; cam.farClipPlane = 60; cam.fieldOfView = 62; cam.allowHDR = true; cam.allowMSAA = true;
             var ucd = camGo.AddComponent<UniversalAdditionalCameraData>(); ucd.renderPostProcessing = true; ucd.antialiasing = AntialiasingMode.TemporalAntiAliasing;
             camGo.AddComponent<AudioListener>();
-            var flash = MkLight("Flashlight", LightType.Spot, camGo.transform.position + camGo.transform.right * 0.18f - camGo.transform.up * 0.2f, new Color(1f, 0.95f, 0.88f), 3.0f, 9f, camGo.transform, 58);   // softer: no white hotspot at arm's length
+            var flash = MkLight("Flashlight", LightType.Spot, camGo.transform.position + camGo.transform.right * 0.18f - camGo.transform.up * 0.2f, new Color(1f, 0.95f, 0.88f), 2.2f, 9f, camGo.transform, 68);   // softer: no white hotspot at arm's length
             flash.transform.localRotation = Quaternion.Euler(1.5f, -2f, 0);
             flash.innerSpotAngle = 30;
             var pc = player.AddComponent<TZPlayerController>(); pc.cam = cam; pc.flashlight = flash;
