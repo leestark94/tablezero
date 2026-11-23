@@ -2,3 +2,6 @@ utc,session,actor,q_len,accepted_s,reaction_s,first_shown_s,generation_complete_
 2026-11-23T02:29:31.6350678Z,,s1,17,0.084,0.404,3.569,7.370,7.370,AUTHORED_FALLBACK,"OLLAMA_LOCAL:hf.co/DevQuasar/kakaocorp.kanana-1.5-8b-instruct-2505-GGUF:Q4_K_M",0,2.25,0,24,True
 2026-11-23T02:29:43.1416450Z,,s1,34,0.074,0.852,4.514,10.266,10.266,LLM,"OLLAMA_LOCAL:hf.co/DevQuasar/kakaocorp.kanana-1.5-8b-instruct-2505-GGUF:Q4_K_M",3228.3,0.33,10057.3,11,True
 2026-11-23T02:29:52.7185295Z,,s1,40,0.011,0.986,3.621,8.347,8.347,AUTHORED_FALLBACK,"OLLAMA_LOCAL:hf.co/DevQuasar/kakaocorp.kanana-1.5-8b-instruct-2505-GGUF:Q4_K_M",0,0.47,0,28,True
+2026-11-23T02:30:05.2273146Z,,s1,17,0.080,0.511,4.216,11.266,11.266,LLM,"OLLAMA_LOCAL:hf.co/DevQuasar/kakaocorp.kanana-1.5-8b-instruct-2505-GGUF:Q4_K_M",3124.9,0.24,11090.1,11,True
+2026-11-23T02:30:12.9085872Z,,s1,14,0.016,0.552,3.569,6.473,6.473,AUTHORED_FALLBACK,"OLLAMA_LOCAL:hf.co/DevQuasar/kakaocorp.kanana-1.5-8b-instruct-2505-GGUF:Q4_K_M",0,0.26,0,29,True
+2026-11-23T02:30:21.1959261Z,,s1,24,0.072,0.536,3.651,7.038,7.038,AUTHORED_FALLBACK,"OLLAMA_LOCAL:hf.co/DevQuasar/kakaocorp.kanana-1.5-8b-instruct-2505-GGUF:Q4_K_M",0,0.25,0,17,True
