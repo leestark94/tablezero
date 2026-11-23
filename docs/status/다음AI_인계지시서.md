@@ -1,5 +1,19 @@
 # 다음 AI 인계지시서 (Claude Code / Codex 공통)
 
+## ★★★★ 최신 — 2026-11-23 V23 (Codex 17항목 실행 지시 대응) — 가장 먼저 읽을 것
+**상태표: [`V22_종합평가.md`](V22_종합평가.md) 맨 위 "V23" 표** (코드·테스트 / Play 확인 / 독립 실행 / 미완 구분). 테스트: `python -m unittest discover -s tests` 185개 통과.
+**새로 생긴 것:**
+- 서버: `question_frame.py`(틀린 인용 `quoted_times`, 복수 질문), `interview_planner.py`(절 단위 계획·정정·모순 차단·사건 밖 주제), `notebook.py`(관찰/진술/가설/다음 확인/비교), `report_review.py`(한계 메모·축별 실패 이유), `case_flow.py`(현장 관찰 지점 `observe`/`hint`, 요청 종류·막힘 안내), 모델 대기 정책(첫 토큰 3.5초·총 7초·연속 2회 지각 시 3턴 건너뜀, `fallback_reason`).
+- 데이터: `data/room302_observation_points.json`(휴대전화·영수증/봉투·서류·탁자·바닥 흔적 관찰 지점, canon 한계만).
+- 클라이언트: 확대 조사(드래그·휠·R·F·H, `TZInteractionDirector`), 겹친 대상 선택+Tab, HQ 수첩/비교, 첨부 바+언급 안내, 고대비 UI, `TZLivingPortrait2D`(2D 피의자 머리 레이어 리그), `TZLatencyLog` 단계별 CSV, `TZPlaytestDriver`, `TZBuild.BuildFull()`(전체 게임 dev standalone, `Builds/Full`).
+- 테스트: `tests/test_full_playthrough_http.py`(우회 없는 한 사건 전체, API 수준).
+**정직한 한계(꼭 읽을 것):**
+1. 2D 피의자: 눈깜빡임·입 레이어 아트가 없어 머리/어깨 미세 연기만. 이서연은 3D. `LivingSuspectPortrait.cs`는 미사용.
+2. 지연: 이 PC는 GPU 경쟁(dwm 87~97%)으로 모델 첫 토큰이 2~10초. 에디터 Play에서 LLM 비율 낮음, 폴백은 `performer`/`fallback_reason`으로 구분. 목표 미달성.
+3. standalone: 빌드 성공(590MB, 117초, 오류 0), 실행 시 서버 자동 기동·모델 예열·메인 메뉴 1280×720 렌더 확인. Windows 방화벽 허용 창이 떠서(시스템 보안 설정이라 건드리지 않음) 그 뒤 플레이는 미검증. Pipeline 런타임 연결은 안 되어 UI 자동 조작 불가.
+4. 저장/불러오기 미구현, 해상도·큰 글꼴·IME 시험 미실시, 휴대전화 확대 조사는 순간이동·메서드 호출로 확인(정상 완주 아님).
+**다음 우선순위:** 사람 손으로 새 사건→완주(standalone), 저장/불러오기, 해상도·IME, 박현수·강도현 슬롯 보강 후 회귀 재실행, 눈깜빡임/입 레이어 아트(2D) 또는 MetaHuman, 피해자 생활 흔적.
+
 ## ★★★ 최신 — 2026-11-23 V22-2 (Codex 실플레이 QA 17건 대응 + 자유 심문 재설계) — 가장 먼저 읽을 것
 **전체 평가·상태표: [`V22_종합평가.md`](V22_종합평가.md)** (완료/부분/미검증 분리). 이 블록 아래 "★★ V22", "★ 최신 상태"는 이전 세션.
 **사용자 최신 결정:** 2D도 허용(단 살아 있는 연기 필수), MetaHuman 대기로 멈추지 말 것, 질문 없이 구현→플레이→수정→검증, 이서연 결과 이미지는 채팅에 직접 표시. (Codex 자료 폴더: `C:\Users\imcok\Documents\Codex\2026-11-22\new-chat\outputs\TABLE_ZERO_HANDOFF`, `...\TABLE_ZERO_TEST`)
