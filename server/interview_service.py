@@ -12,7 +12,7 @@ from .tactics import TacticDirector,TAC_COST
 from .dialogue_quality import clean_line,lint_line,KoreanDialogueError
 from .providers import ProviderError
 from .suspect_mind import build_messages,render_question,guard_utterance,active_memories,personas
-from .strategy import SuspectState,plan_turn,speaker_messages,pick_motion
+from .strategy import SuspectState,plan_turn,speaker_messages,pick_motion,pick_beat
 from . import line_bank
 from . import interview_planner as IP
 import time as _time, re as _re
@@ -57,6 +57,9 @@ class TurnReceipt:
     claims_verified:bool=False
     reply_mode:str='answer'
     generation_attempts:int=1
+    beat:str='Answering'
+    beat_intensity:float=0.3
+    beat_seq:int=0
     performer:str='LLM'          # LLM | AUTHORED_FALLBACK (model failed/slow) | AUTHORED_MODE (forced) — never presented as a model answer
     first_token_ms:float=0.0
     plan_ms:float=0.0
@@ -204,7 +207,7 @@ class InterviewService:
                 result=provider_reply['result']
                 if plan is not None:
                     motions=sorted(set(world.suspects[actor].get('possible_motions',[]))&world.motions)
-                    result={'utterance':result.get('line',''),'reply_mode':plan['mode'],'motion_id':pick_motion(plan['tactic'],motions),
+                    result={'utterance':result.get('line',''),'reply_mode':plan['mode'],'motion_id':pick_motion(plan['tactic'],motions,len(st.history)+sum(map(ord,actor))),
                             'asserted_claim_ids':[],'new_unsupported_assertion':None,
                             'request_external_action':'request_counsel' if plan['tactic']=='STONEWALL' and plan['mode']=='request_counsel' else None}
                 candidate=world.validate_reply(actor,result)
@@ -245,7 +248,7 @@ class InterviewService:
             line=IP.authored_line(plan)
             if not plan['parts'] and not plan['this_turn']:
                 line=line_bank.pick(actor,plan,text,st.bank_used) or fallback_line(plan)
-            reply=world.validate_reply(actor,{'utterance':clean_line(line),'reply_mode':plan['mode'],'motion_id':pick_motion(plan['tactic'],motions),
+            reply=world.validate_reply(actor,{'utterance':clean_line(line),'reply_mode':plan['mode'],'motion_id':pick_motion(plan['tactic'],motions,len(st.history)+sum(map(ord,actor))),
                                              'asserted_claim_ids':[],'new_unsupported_assertion':None,
                                              'request_external_action':'request_counsel' if plan['tactic']=='STONEWALL' and plan['mode']=='request_counsel' else None})
             if on_partial:on_partial(reply['utterance'])
@@ -273,6 +276,7 @@ class InterviewService:
                            provider_reply['provider'],round(total_ms,1),
                            accepted['motion_proposal'],accepted['action_proposal'],
                            reply_mode=accepted['reply_mode'],generation_attempts=len(attempts)+1,
+                           beat=(pick_beat(plan,presented_evidence)[0] if plan is not None else 'Answering'),beat_intensity=(pick_beat(plan,presented_evidence)[1] if plan is not None else 0.3),beat_seq=len(st.history) if plan is not None else 0,
                            performer=performer,first_token_ms=round(first_token_ms,1),plan_ms=round(plan_ms,2),model=model_label)
         self._receipts[action_id]=receipt;self._fingerprints[action_id]=fingerprint
         self.episode._log('interview_turn',{'actor':actor,'input_mode':input_mode,

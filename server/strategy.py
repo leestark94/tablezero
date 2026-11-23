@@ -204,22 +204,42 @@ def speaker_messages(personas: dict, sid: str, plan: dict, question: str, presen
     return [{'role': 'system', 'content': '\n'.join(lines)}, {'role': 'user', 'content': question}]
 
 
+# Body language is chosen by the CONVERSATIONAL situation (what was just asked / done to them) and varies turn to turn.
+# It must never read as a lie detector: the same tactic (e.g. DENY) is used for true and false denials, so several motions are
+# acceptable for it and the pick rotates by turn number + suspect, not by whether the statement is true.
 MOTION_PREF = {
-    'ANSWER': ['still', 'cup_touch', 'finger_tap', 'look_down'],
-    'DENY': ['look_down', 'still', 'back_in_chair', 'avoid_gaze'],
-    'CHALLENGE': ['lean_forward', 'still', 'jaw_tight'],
-    'CONCEDE_MIN': ['exhale', 'look_down', 'deep_breath', 'hand_stop'],
-    'DEMAND_PROOF': ['lean_forward', 'jaw_tight', 'cross_arms', 'still'],
+    'ANSWER': ['still', 'cup_touch', 'finger_tap', 'look_down', 'chair_shift'],
+    'DENY': ['still', 'chair_shift', 'cup_touch', 'back_in_chair', 'look_down', 'finger_tap'],
+    'CHALLENGE': ['lean_forward', 'still', 'jaw_tight', 'cup_touch'],
+    'CONCEDE_MIN': ['exhale', 'hand_stop', 'deep_breath', 'look_down', 'chair_shift'],
+    'DEMAND_PROOF': ['lean_forward', 'jaw_tight', 'cross_arms', 'still', 'back_in_chair'],
     'STONEWALL': ['cross_arms', 'back_in_chair', 'lean_back', 'still'],
     'REBUKE': ['lean_back', 'jaw_tight', 'back_in_chair', 'cross_arms'],
+    'OFFTOPIC': ['still', 'chair_shift', 'finger_tap'],
+    'UNKNOWN_OTHER': ['still', 'cup_touch', 'chair_shift'],
+    'COUNSEL_Q': ['still', 'cross_arms', 'back_in_chair'],
+    'CLARIFY': ['still', 'lean_forward', 'chair_shift'],
 }
 
 
-def pick_motion(tactic: str, available: list) -> str:
-    for m in MOTION_PREF.get(tactic, []):
-        if m in available:
-            return m
+def pick_motion(tactic: str, available: list, variant: int = 0) -> str:
+    prefs = [m for m in MOTION_PREF.get(tactic, []) if m in available]
+    if prefs:
+        return prefs[variant % len(prefs)]
     return available[0] if available else 'still'
+
+
+# Portrait beat for the on-screen performance: derived from what the DETECTIVE just did (accused, showed a record, insulted, pressed),
+# never from whether the suspect is telling the truth.
+def pick_beat(plan: dict, presented_evidence) -> tuple:
+    t = plan['tactic']
+    if t == 'REBUKE': return 'Angry', 0.8
+    if t in ('STONEWALL', 'COUNSEL_Q'): return 'Withdrawn', 0.6
+    if presented_evidence: return 'Challenged', 0.5 + 0.1 * min(3, plan.get('accusations', 0))
+    if plan.get('accused') or t == 'DEMAND_PROOF': return 'Guarded', 0.5 + 0.1 * min(3, plan.get('accusations', 0))
+    if t in ('CLARIFY', 'UNKNOWN_OTHER', 'OFFTOPIC'): return 'Considering', 0.3
+    if plan.get('pressed'): return 'Guarded', 0.5
+    return 'Answering', 0.3
 
 
 FALLBACK = {

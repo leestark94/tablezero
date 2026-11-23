@@ -32,7 +32,7 @@ namespace TableZero
         [Serializable] class AskReq { public string question, action_id, input_mode, evidence_id; }
         [Serializable] class StartData { public string actor_id, clock; public int budget_left; }
         [Serializable] class StartResp { public bool ok; public StartData data; public string error; }
-        [Serializable] class Receipt { public string actor_id, suspect_text, motion_proposal, reply_mode, provider, performer, model; public int seconds_left, seconds_spent; public float latency_ms, first_token_ms, plan_ms; }
+        [Serializable] class Receipt { public string actor_id, suspect_text, motion_proposal, reply_mode, provider, performer, model, beat; public int seconds_left, seconds_spent, beat_seq; public float latency_ms, first_token_ms, plan_ms, beat_intensity; }
         [Serializable] class AskResp { public bool ok; public Receipt data; public string error, detail; }
         [Serializable] class JobData { public string job_id; }
         [Serializable] class JobResp { public bool ok; public JobData data; public string error; }
@@ -65,7 +65,7 @@ namespace TableZero
         VisualElement root, stageEl, bg, flicker, grainEl, vignette, picker, evidencePanel, memoList, thinking, topBar, leftCol, rightCol, dock;
         float bgZoom = 1f, bgShiftY = 0f;
         Label continueHint, roomLbl, nameLbl, metaJob, metaRel, metaStatus, clockLbl, recLbl, subName, subText, timeVal, qVal, eVal, toast;
-        VisualElement timeBar, portrait, subtitleBox;
+        VisualElement timeBar, portrait, subtitleBox; readonly TZLivingPortrait2D rig2d = new TZLivingPortrait2D();
         TextField input;
         Suspect cur;
         int asked, presented;
@@ -103,6 +103,7 @@ namespace TableZero
                 float f = 0.02f * Mathf.PerlinNoise(t * 3.1f, 0.3f) + (Mathf.PerlinNoise(t * 0.7f, 5f) > 0.86f ? 0.06f : 0f);
                 flicker.style.opacity = bg.style.backgroundImage.value.texture != null ? f : 0f;
                 grainEl.style.translate = new Translate(UnityEngine.Random.Range(-40, 40), UnityEngine.Random.Range(-40, 40));
+                rig2d.Tick(Time.unscaledDeltaTime, new Vector3(s, s, 1), new Vector2(Mathf.Sin(t * 0.13f) * 9f, Mathf.Sin(t * 0.17f + 1) * 6f + bgShiftY));
             }
             if (started)
             {
@@ -133,6 +134,7 @@ namespace TableZero
             bg = new VisualElement(); Abs(bg, 0, 0, 0, 0);
             bg.style.backgroundSize = new BackgroundSize(BackgroundSizeType.Cover);
             stage.Add(bg);
+            rig2d.Build(stage, 20261123);   // moving 2D head layer for suspects without a 3D actor
             flicker = new VisualElement(); Abs(flicker, 0, 0, 0, 0); flicker.pickingMode = PickingMode.Ignore;
             flicker.style.backgroundColor = Color.black; stage.Add(flicker);   // lamp flicker = brief brightness dips, never a colour wash
             grainEl = new VisualElement(); Abs(grainEl, -60, -60, -60, -60); grainEl.pickingMode = PickingMode.Ignore;
@@ -353,6 +355,7 @@ namespace TableZero
             if (!ok) { Toast("면담을 시작하지 못했습니다: " + err); yield break; }
             cur = s; asked = 0; presented = 0; secondsLeft = interviewSeconds; started = true; recStart = Time.unscaledTime;
             bg.style.backgroundImage = s.feed ? s.feed : s.background; portrait.style.backgroundImage = s.portrait;
+            { var a3 = TZInterrogationRoom3D.Instance ? TZInterrogationRoom3D.Instance.ActiveActor : null; bool is3D = a3 != null; var tex = s.feed ? s.feed : s.background; rig2d.SetImage(is3D ? null : tex); }
             roomLbl.text = $"{s.room}  ·  {s.name} ({s.age})";
             nameLbl.text = $"{s.name} ({s.age})"; metaJob.text = s.job; metaRel.text = s.relation; metaStatus.text = "면담 진행 중";
             memoList.Clear(); memoList.Add(L("심문 중 관찰된 행동이 여기에 기록됩니다", 13, Dim));
@@ -379,6 +382,7 @@ namespace TableZero
             var actor = TZInterrogationRoom3D.Instance ? TZInterrogationRoom3D.Instance.ActiveActor : null;
             Say("형사", q); RecordTurn(cur.id, "형사", q);
             if (actor) actor.SetState(TZSuspectActor.State.Listen);
+            rig2d.SetBeat(TZLivingPortrait2D.Beat.Listening, 0.4f);
             // The request leaves IMMEDIATELY; listening is acting that runs in parallel with generation (never a delay in front of it).
             float tSubmit = Time.realtimeSinceStartup;
             float listenFor = Mathf.Clamp(q.Length * 0.02f, 0.4f, 1.0f);
@@ -414,11 +418,12 @@ namespace TableZero
                 if (fin != null && !fin.ok) break;
                 // the server restarted a rejected attempt: what we typed is no longer the start of the line
                 if (shown > 0 && (target.Length < shown || string.CompareOrdinal(target, 0, subText.text, 0, shown) != 0)) { shown = 0; subText.text = ""; }
-                if (!thinkSet && now - tSubmit >= listenFor) { thinkSet = true; tReact = now - tSubmit; if (actor) actor.SetState(TZSuspectActor.State.Think); }
+                if (!thinkSet && now - tSubmit >= listenFor) { thinkSet = true; tReact = now - tSubmit; if (actor) actor.SetState(TZSuspectActor.State.Think); rig2d.SetBeat(TZLivingPortrait2D.Beat.Considering, 0.4f); }
                 if (!began && target.Length > 0 && now - tSubmit >= listenFor)
                 {
                     began = true; tFirst = now - tSubmit; thinking.style.display = DisplayStyle.None; Say(cur.name, ""); typing = true;
                     if (actor) actor.Speak(target, "answer", null);
+                    rig2d.SetBeat(TZLivingPortrait2D.Beat.Answering, 0.3f); rig2d.SetSpeaking(true);
                     nextChar = now + 0.45f;   // breath before the first syllable
                 }
                 if (began)
@@ -427,7 +432,7 @@ namespace TableZero
                     else if (shown < target.Length && now >= nextChar)
                     {
                         shown++; subText.text = target.Substring(0, shown);
-                        char c = target[shown - 1];
+                        char c = target[shown - 1]; if (c == ' ' || c == ',') rig2d.Pulse();
                         float per = Mathf.Min(0.06f, 2.0f / Mathf.Max(8, target.Length));   // whole line types in <= ~2 s: subtitles never add seconds on top of the answer
                         nextChar = now + (c == ' ' ? per * 0.5f : (c == ',' || c == '…' || c == '.' || c == '?' || c == '!') ? per * 3f : per);
                     }
@@ -446,6 +451,7 @@ namespace TableZero
                 yield break;
             }
             var rc = fin.receipt;
+            rig2d.SetSpeaking(false); rig2d.SetBeat(string.IsNullOrEmpty(rc.beat) ? "Idle" : rc.beat, rc.beat_intensity, rc.beat_seq);
             TZLatencyLog.Write(cur.id, q.Length, tAccepted, tFirst, Time.realtimeSinceStartup - tSubmit, rc, tReact, tSubDone);
             if (Application.isEditor || Debug.isDebugBuild) Toast(rc.performer == "LLM" ? $"[개발] 로컬 모델 · 첫 글자 {tFirst:0.0}s · 완료 {Time.realtimeSinceStartup - tSubmit:0.0}s" : $"[개발] {rc.performer} (모델 답변 아님) · {Time.realtimeSinceStartup - tSubmit:0.0}s");
             asked++; if (evidence != null) presented++;

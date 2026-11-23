@@ -141,3 +141,22 @@ class RealPlayRegressionTests(unittest.TestCase):
         a = ask(s, '얼굴 식별이 어렵다는 건 맞습니다. 그러면 21시 39분부터 49분까지 실제로 어디에 있었고 확인할 방법은 무엇입니까?').suspect_text
         self.assertIn('302호', a)
         self.assertNotRegex(a, r'갔는지는 모르|안 갔|간 적 없')
+
+
+class PersonaDepthTests(unittest.TestCase):
+    def setUp(self):
+        self._old = os.environ.get('TABLEZERO_PERFORMER'); os.environ['TABLEZERO_PERFORMER'] = 'authored'
+
+    def tearDown(self):
+        if self._old is None: os.environ.pop('TABLEZERO_PERFORMER', None)
+        else: os.environ['TABLEZERO_PERFORMER'] = self._old
+
+    def test_three_voices_differ_on_the_same_off_case_questions(self):
+        out = {}
+        for sid in ('s1', 's2', 's3'):
+            c, s = start(sid)
+            out[sid] = [ask(s, q).suspect_text for q in ('수연 씨는 어떤 사람이었습니까?', '지금 무섭거나 불안합니까?', '오늘 날씨가 춥네요')]
+        for i in range(3):
+            self.assertEqual(len({out[s][i] for s in out}), 3)                 # no copy-pasted evasion
+        self.assertTrue(all(len(a) < 90 for a in out['s1']))                    # 강도현: short lines
+        self.assertTrue(any(len(a) > 40 for a in out['s3']))                    # 박현수: longer, explaining

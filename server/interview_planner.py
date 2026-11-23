@@ -21,10 +21,19 @@ RANK = {'critical': 3, 'serious': 2, 'minor': 1}
 
 # Public, non-secret topic answers (relationship / background). Persona-voiced; used when a part touches no case fact.
 TOPIC_ANSWERS = {
-    's2': [(('relation',), {'what': '수연이랑은 오래된 친구예요 같은 회사 다니다가 공방도 같이 하게 됐고요'}),
+    's2': [(('victim',), {'what': '수연이는 정이 많고 고집 있는 애였어요 …요즘은 믿기지가 않아요'}),
+           (('fear',), {'what': '솔직히 불안해요 괜한 오해를 받을까 봐요'}),
+           (('smalltalk',), {'what': '지금은 그런 이야기를 할 기분이 아니에요'}),
+           (('relation',), {'what': '수연이랑은 오래된 친구예요 같은 회사 다니다가 공방도 같이 하게 됐고요'}),
            (('money',), {'what': '공방 돈은 제가 장부를 봤고 요즘 정산이 좀 복잡했어요'})],
-    's1': [(('relation',), {'what': '3년 사귀었고 헤어졌습니다 그게 전부입니다'})],
-    's3': [(('relation',), {'what': '옆집 301호 사는 이웃이고 정수연 씨 공방 배송 일을 도와 자주 오갔습니다'}),
+    's1': [(('victim',), {'what': '고집이 센 사람이었습니다 그 얘기는 길게 하고 싶지 않습니다'}),
+           (('fear',), {'what': '무서울 건 없습니다 억울한 건 싫을 뿐입니다'}),
+           (('smalltalk',), {'what': '지금 그런 얘기 할 때입니까'}),
+           (('relation',), {'what': '3년 사귀었고 헤어졌습니다 그게 전부입니다'})],
+    's3': [(('victim',), {'what': '이웃으로 인사 나누던 사이입니다 서류 일로 자주 마주쳤고요 …이런 일이 벌어질 줄은 몰랐습니다'}),
+           (('fear',), {'what': '신고한 사람이 의심받는 건 솔직히 마음이 편하지 않습니다 제가 아는 대로 말씀드리고 있습니다'}),
+           (('smalltalk',), {'what': '지금은 사건 쪽 얘기가 먼저인 것 같습니다'}),
+           (('relation',), {'what': '옆집 301호 사는 이웃이고 정수연 씨 공방 배송 일을 도와 자주 오갔습니다'}),
            (('report',), {'what': '22시 7분에 112에 신고했습니다 문이 열려 있어서요'})],
 }
 # What this person plainly does not know / cannot say: honest unknowns are better than a stock "what do you mean"
