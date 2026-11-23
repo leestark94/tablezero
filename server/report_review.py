@@ -33,7 +33,7 @@ def validate(payload, *, session_id: str, acquired: set, require_all_axes: bool 
         raise GuardError(KO[issues[0]])
     for unk in axes.keys() - set(AXES):
         issues.append('unknown_axis')
-    out_ev, out_cl = {}, {}
+    out_ev, out_cl, out_lim, out_against = {}, {}, {}, {}
     for axis in AXES:
         item = axes.get(axis)
         if not isinstance(item, dict):
@@ -55,7 +55,30 @@ def validate(payload, *, session_id: str, acquired: set, require_all_axes: bool 
         if any(r not in acquired for r in set(refs)):
             issues.append('evidence_not_acquired')
         out_ev[axis] = sorted(set(refs)); out_cl[axis] = (claim or '').strip()
+        lim = item.get('limit_note'); ag = item.get('against_ids') or []
+        if isinstance(lim, str): out_lim[axis] = lim.strip()[:1500]
+        if isinstance(ag, list): out_against[axis] = [a for a in ag if isinstance(a, str) and a in acquired][:16]
     if issues:
         first = list(dict.fromkeys(issues))
         raise GuardError(' · '.join(KO.get(i, i) for i in first))
-    return {'axes': out_ev, 'claims': out_cl}
+    return {'axes': out_ev, 'claims': out_cl, 'limits': out_lim, 'against': out_against}
+
+
+AXIS_KO = {'presence_or_timing': '접근 및 시간', 'motive': '갈등과 동기', 'physical_link': '치명상과 행위의 연결', 'exclude_alternative': '다른 두 사람의 대안 검토'}
+
+
+def axis_feedback(world, axis_evidence: dict, missing: list) -> list:
+    """Why an axis did not hold — described from what was attached, never by naming the missing record or the culprit."""
+    fam = {e['id']: e.get('source_family', '') for e in world._canon['evidence']}
+    out = []
+    for axis in missing:
+        ids = axis_evidence.get(axis, [])
+        fams = {fam.get(i) for i in ids if fam.get(i)}
+        if not ids:
+            why = '붙인 근거가 없다'
+        elif axis == 'physical_link' and len(fams) < 2:
+            why = '서로 다른 출처의 근거가 두 가지 이상 필요한데, 붙인 근거는 한 출처에 치우쳐 있다'
+        else:
+            why = '붙인 근거가 이 주장을 뒷받침하기에 부족하거나, 이 축과 직접 이어지지 않는다. 다른 축에 붙인 근거는 이 축에서 대신 쓰이지 않는다'
+        out.append({'axis': axis, 'axis_ko': AXIS_KO.get(axis, axis), 'why': why, 'attached': len(ids), 'source_groups': len(fams)})
+    return out

@@ -31,20 +31,22 @@ namespace TableZero
         [Serializable] class OptionsResp { public bool ok; public Options data; public string error; }
         [Serializable] class Beat { public string location, staging, subtitle; }
         [Serializable] class Reaction { public string variant_id; public Beat[] beats; }
-        [Serializable] class ReportData { public string ending_code, result; public bool report_accepted, may_continue; public string[] missing_proof_axes; public Beat[] beats; public Reaction reaction; }
+        [Serializable] class AxisFb { public string axis, axis_ko, why; public int attached, source_groups; }
+        [Serializable] class ReportData { public string ending_code, result; public bool report_accepted, may_continue; public string[] missing_proof_axes; public AxisFb[] axis_feedback; public Beat[] beats; public Reaction reaction; }
         [Serializable] class ReportResp { public bool ok; public ReportData data; public string error; }
         
         // draft survives scene hops inside one run (save/load is P2)
         static string draftNote = "", draftAccused = "";
         static readonly Dictionary<string, HashSet<string>> draftAxes = new Dictionary<string, HashSet<string>>();
         static readonly Dictionary<string, string> draftClaims = new Dictionary<string, string>();
+        static readonly Dictionary<string, string> draftLimits = new Dictionary<string, string>();
         static bool reportSubmitted;
         static Vector2 keepScroll;   // scroll offset to restore after an in-place rebuild (report evidence picks, request list)
 
         /// <summary>Drop everything that belongs to the previous investigation (called when the server session changes / Play starts).</summary>
         public static void ResetDraft()
         {
-            draftNote = ""; draftAccused = ""; draftAxes.Clear(); draftClaims.Clear(); reportSubmitted = false; keepScroll = Vector2.zero;
+            draftNote = ""; draftAccused = ""; draftAxes.Clear(); draftClaims.Clear(); draftLimits.Clear(); reportSubmitted = false; keepScroll = Vector2.zero;
         }
 
         static readonly (string id, string title, string hint)[] Axes =
@@ -405,6 +407,8 @@ namespace TableZero
                 claim.style.minHeight = 74; claim.style.whiteSpace = WhiteSpace.Normal;
                 claim.textEdition.placeholder = "주장: 이 축을 어떻게 설명하는가 (여러 줄 가능)"; var ax = axis;
                 claim.RegisterValueChangedCallback(ev => draftClaims[ax] = ev.newValue); box.Add(claim);
+                var lim = DarkInput(new TextField { multiline = true, value = draftLimits.TryGetValue(axis, out var lv) ? lv : "" }); lim.style.marginTop = 6; lim.style.minHeight = 46; lim.style.whiteSpace = WhiteSpace.Normal;
+                lim.textEdition.placeholder = "이 근거의 한계, 반대되는 기록, 다른 가능성을 배제한 이유"; lim.RegisterValueChangedCallback(ev => draftLimits[ax] = ev.newValue); box.Add(lim);
                 var picks = new VisualElement(); picks.style.flexDirection = FlexDirection.Row; picks.style.flexWrap = Wrap.Wrap; picks.style.marginTop = 8;
                 if (evidence.Length == 0) picks.Add(L("근거로 붙일 확보 기록이 없다", 13, Warn));
                 var summary = L("", 13, Dim); summary.style.marginTop = 6;
@@ -471,7 +475,8 @@ namespace TableZero
                 if (!first) sb.Append(','); first = false;
                 draftClaims.TryGetValue(axis, out var cl);
                 var ids = draftAxes.TryGetValue(axis, out var set) ? set.OrderBy(x => x).ToArray() : new string[0];
-                sb.Append(Q(axis)).Append(":{\"claim\":").Append(Q((cl ?? "").Trim())).Append(",\"evidence_ids\":[").Append(string.Join(",", ids.Select(Q))).Append("]}");
+                draftLimits.TryGetValue(axis, out var lmt);
+                sb.Append(Q(axis)).Append(":{\"claim\":").Append(Q((cl ?? "").Trim())).Append(",\"limit_note\":").Append(Q((lmt ?? "").Trim())).Append(",\"evidence_ids\":[").Append(string.Join(",", ids.Select(Q))).Append("]}");
             }
             sb.Append("}}");
             return sb.ToString();
@@ -512,6 +517,7 @@ namespace TableZero
             {
                 var m = L("입증되지 않은 축: " + string.Join(", ", d.missing_proof_axes.Select(a => AxisKo.TryGetValue(a, out var k) ? k : a)), 15, Warn);
                 m.style.marginTop = 16; col.Add(m);
+                foreach (var fb in d.axis_feedback ?? new AxisFb[0]) { var fl = L($"· {fb.axis_ko}: {fb.why}", 14, Ink); fl.style.marginTop = 4; col.Add(fl); }
             }
             var beats = (d.beats ?? new Beat[0]).Concat(d.reaction?.beats ?? new Beat[0]).ToArray();
             if (beats.Length > 0)

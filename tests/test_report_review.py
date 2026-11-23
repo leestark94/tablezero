@@ -95,3 +95,31 @@ class CollectEvidenceTests(unittest.TestCase):
         before = self.c.session_id
         self.assertEqual(self.c.transition('room302')['scene'], 'room302')   # re-asserting the current scene is not an error
         self.assertNotEqual(before, EpisodeController().session_id)
+
+
+class ReportFeedbackTests(unittest.TestCase):
+    def test_failed_axis_explains_why_without_naming_evidence_or_culprit(self):
+        c = EpisodeController()
+        for e in c.world._canon['evidence']: c.world.expose_evidence(e['id'])
+        c.transition('desk')
+        axes = {'presence_or_timing': ('t', ['V21-E07', 'V21-E18']), 'motive': ('m', ['V21-E10']), 'physical_link': ('p', ['V21-E15']),
+                'exclude_alternative': ('x', ['V21-E13', 'V21-E07'])}
+        r = c.file_report('s3', [], final=True, report=payload(c, 's3', axes))
+        fb = {f['axis']: f for f in r['axis_feedback']}
+        self.assertIn('physical_link', fb); self.assertIn('한 출처', fb['physical_link']['why'])
+        for f in r['axis_feedback']:
+            self.assertNotIn('V21-', f['why']); self.assertNotIn('박현수', f['why'])
+
+    def test_limit_note_is_kept_in_the_log_not_scored(self):
+        c = EpisodeController()
+        for e in c.world._canon['evidence']: c.world.expose_evidence(e['id'])
+        c.transition('desk')
+        pl = payload(c, 's3', TestPlaceholder.GOOD)
+        for a in pl['axes'].values(): a['limit_note'] = '한계 메모'
+        c.file_report('s3', [], final=True, report=pl)
+        self.assertTrue(any(l['type'] == 'report_claims' and l['limits'] for l in c.logs))
+
+
+class TestPlaceholder:
+    GOOD = {'presence_or_timing': ('t', ['V21-E07', 'V21-E18']), 'motive': ('m', ['V21-E10']),
+            'physical_link': ('p', ['V21-E16', 'V21-E15']), 'exclude_alternative': ('x', ['V21-E13', 'V21-E07'])}

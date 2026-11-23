@@ -217,11 +217,15 @@ class EpisodeController:
             axis_evidence=checked['axes']
             submitted_evidence=sorted({e for v in axis_evidence.values() for e in v})
             relevant=[d for d in self.state.chain_defects if prop_to_evidence.get(d.split(':')[0]) in set(submitted_evidence)]
-            self._log('report_claims',{'claims':checked['claims']})
+            self._log('report_claims',{'claims':checked['claims'],'limits':checked['limits'],'against':checked['against']})
         outcome=self.outcomes.submit(accused_id,submitted_evidence,chain_defects=list(chain_defects)+relevant,axis_evidence=axis_evidence)
         self.state.closed=not outcome.can_continue
         self._log('report_submitted',{'accepted':outcome.report_accepted,'missing_axis_count':len(outcome.missing_axes)})
-        return OutcomeDirector.public_projection(outcome,self.outcomes.reaction(outcome,accused_id))
+        proj=OutcomeDirector.public_projection(outcome,self.outcomes.reaction(outcome,accused_id))
+        if axis_evidence is not None and outcome.missing_axes:
+            from . import report_review
+            proj['axis_feedback']=report_review.axis_feedback(self.world,axis_evidence,list(outcome.missing_axes))
+        return proj
 
     def public_state(self):
         p=self.world.projection()
