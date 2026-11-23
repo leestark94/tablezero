@@ -35,8 +35,10 @@ namespace TableZero
         {
             get
             {
-                var d = new DirectoryInfo(Application.dataPath); // .../TABLE_ZERO/TableZero.Unity/Assets
-                return d.Parent != null && d.Parent.Parent != null ? d.Parent.Parent.FullName : "";
+                // Editor: .../TABLE_ZERO/TableZero.Unity/Assets. Standalone dev build: .../TABLE_ZERO/Builds/Full/TableZero_Data. Walk up to the folder holding server/api.py.
+                for (var d = new DirectoryInfo(Application.dataPath); d != null; d = d.Parent)
+                    if (File.Exists(Path.Combine(d.FullName, "server", "api.py"))) return d.FullName;
+                var e = new DirectoryInfo(Application.dataPath); return e.Parent != null && e.Parent.Parent != null ? e.Parent.Parent.FullName : "";
             }
         }
 
