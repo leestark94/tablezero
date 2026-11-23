@@ -104,7 +104,7 @@ class OllamaProvider:
     def _plain_line(self,context):
         payload={'model':self.model,'stream':False,'think':False,'keep_alive':'60m','messages':context['llm_messages'],
                  'options':{'temperature':context.get('temperature',self.temperature),'top_p':0.9,'repeat_penalty':1.15,
-                            'num_predict':int(os.environ.get('TABLEZERO_LINE_TOKENS','56')),'stop':['\n\n','<|eot_id|>','<|im_end|>','<end_of_turn>'],
+                            'num_predict':int(os.environ.get('TABLEZERO_LINE_TOKENS','48')),'stop':['\n\n','<|eot_id|>','<|im_end|>','<end_of_turn>'],
                             **line_load_options()}}
         if context.get('seed') is not None:payload['options']['seed']=context['seed']
         on_partial=context.get('on_partial')

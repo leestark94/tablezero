@@ -371,7 +371,7 @@ def performer_messages(personas: dict, sid: str, plan: dict, question: str, pres
         L.append('[직전 대화]')
         for h in memory.history[-3:]: L.append(f"형사: {h['q']}\n나: {h['a']}")
         L.append('[같은 말을 되풀이하지 않는다. 이미 한 말과 모순되면 안 된다]')
-    L.append('[규칙] 대사 한 줄만 쓴다(JSON·따옴표·설명 없이). 한국어 구어 1~3문장, 간결하게. 문장 끝 마침표 금지. 질문을 되풀이하지 않는다. 자신이 범인이라고 말하지 않는다. 다른 사람을 범인으로 단정하지 않는다')
+    L.append('[규칙] 대사 한 줄만 쓴다(JSON·따옴표·설명 없이). 한국어 구어 1~2문장, 70자 안팎으로 간결하게(복수 질문이면 3문장까지). 문장 끝 마침표 금지. 질문을 되풀이하지 않는다. 자신이 범인이라고 말하지 않는다. 다른 사람을 범인으로 단정하지 않는다')
     return [{'role': 'system', 'content': '\n'.join(L)}, {'role': 'user', 'content': question}]
 
 

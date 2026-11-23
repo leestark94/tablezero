@@ -180,9 +180,11 @@ class InterviewService:
             def timed2(t):
                 if first[0] is None and t.strip():first[0]=_time.perf_counter()
             ctx['on_partial']=timed2
-        ctx['first_token_s']=float(os.environ.get('TABLEZERO_FIRST_TOKEN_S','4'))
+        ctx['first_token_s']=float(os.environ.get('TABLEZERO_FIRST_TOKEN_S','3.5'))
         n_attempts=0 if (plan is not None and mode_env=='authored') else self.max_attempts
+        budget_s=float(os.environ.get('TABLEZERO_LLM_BUDGET_S','7'))   # total wall time the model may use for one answer (all retries)
         for attempt in range(n_attempts):
+            if plan is not None and attempt and (_time.perf_counter()-t_gen0)>budget_s:break
             if on_partial and plan is not None:
                 gate['blocked']=False;on_partial('')
             if attempts and attempts[-1] not in ('provider_error',):
@@ -256,7 +258,7 @@ class InterviewService:
         result=self.tactics.perform(actor,tactic,action_id=action_id,approved=True)
         accepted=world.accept_reply(actor,reply)
         if plan is not None:
-            st.history.append({'q':text[:120],'a':reply['utterance'][:160],'tactic':plan['tactic']})
+            st.history.append({'q':text[:120],'a':reply['utterance'][:160],'tactic':plan['tactic'],'evidence':presented_evidence})
             if presented_evidence:st.shown.add(presented_evidence)
         if presented_evidence:world.presented_to[actor].add(presented_evidence)
         world.transcripts[actor].append({

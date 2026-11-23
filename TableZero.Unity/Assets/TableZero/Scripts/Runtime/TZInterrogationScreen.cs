@@ -71,7 +71,7 @@ namespace TableZero
         int asked, presented;
         float recStart, secondsLeft;
         bool busy, started;
-        string pendingEvidence;
+        string pendingEvidence, pendingName, pendingFragment; VisualElement attachBar; Label attachLabel, attachHint; EvidenceCard[] evCache = new EvidenceCard[0];
         Coroutine typeCo, toastCo;
         bool awaitingContinue, typing; string typingFull = "";
 
@@ -93,7 +93,7 @@ namespace TableZero
 
         void Update()
         {
-            CallScreenUpdate();
+            CallScreenUpdate(); UpdateAttachHint();
             if (bg != null)
             {   // slow "camera breathing": push-in drift, never still
                 float t = Time.time;
@@ -258,6 +258,15 @@ namespace TableZero
             }
             dock.Add(chips);
             root.Add(dock);
+            // attached record: always visible above the input, so a record MENTIONED in a question is never confused with one actually PRESENTED
+            attachBar = new VisualElement(); Abs(attachBar, float.NaN, Length.Percent(19), 112, Length.Percent(19)); attachBar.style.flexDirection = FlexDirection.Row; attachBar.style.alignItems = Align.Center;
+            attachBar.style.backgroundColor = new Color(0.16f, 0.12f, 0.08f, 1f); Radius(attachBar, 6); Pad(attachBar, 8); attachBar.style.display = DisplayStyle.None;
+            attachBar.style.borderLeftWidth = 4; attachBar.style.borderLeftColor = new Color(0.86f, 0.68f, 0.40f);
+            attachLabel = L("", 16, new Color(1f, 0.93f, 0.80f)); attachLabel.style.flexGrow = 1; attachLabel.style.whiteSpace = WhiteSpace.Normal; attachBar.Add(attachLabel);
+            var viewBtn = new Button(() => OpenEvidence()) { text = "원본 보기" }; viewBtn.style.height = 32; viewBtn.style.marginRight = 6; attachBar.Add(viewBtn);
+            var clrBtn = new Button(() => ClearAttachment()) { text = "첨부 해제" }; clrBtn.style.height = 32; attachBar.Add(clrBtn);
+            root.Add(attachBar);
+            attachHint = L("※ 질문에 기록 이름을 적은 것만으로는 자료를 제시한 것이 아닙니다. E 키로 기록을 첨부하세요", 13, new Color(0.95f, 0.78f, 0.5f)); Abs(attachHint, float.NaN, Length.Percent(19), 112, Length.Percent(19)); attachHint.style.display = DisplayStyle.None; attachHint.pickingMode = PickingMode.Ignore; root.Add(attachHint);
         }
 
         void ToolBtn(VisualElement parent, string text, string key, Action act)
@@ -308,7 +317,7 @@ namespace TableZero
 
         void BuildEvidencePanel()
         {
-            evidencePanel = new VisualElement(); Abs(evidencePanel, 88, 380, 252, 380); evidencePanel.style.backgroundColor = new Color(0.05f, 0.05f, 0.06f, 0.96f);
+            evidencePanel = new VisualElement(); Abs(evidencePanel, 88, 380, 252, 380); evidencePanel.style.backgroundColor = new Color(0.075f, 0.08f, 0.09f, 1f);   // fully opaque: nothing shows through from the room behind
             Radius(evidencePanel, 8); Pad(evidencePanel, 20); evidencePanel.style.display = DisplayStyle.None;
             root.Add(evidencePanel);
         }
@@ -362,7 +371,7 @@ namespace TableZero
             busy = true; input.value = "";
             ShowDock(false);
             StartCoroutine(AskCo(q.Length < 2 ? "이걸 보세요. 설명해 보시겠습니까?" : q, pendingEvidence));
-            pendingEvidence = null;
+            ClearAttachment();
         }
 
         IEnumerator AskCo(string q, string evidence)
@@ -380,7 +389,7 @@ namespace TableZero
             string jobId = null, raw = "";
             yield return Call("POST", "/v1/interview/ask_start", body, (o, t) => { raw = t; try { jobId = JsonUtility.FromJson<JobResp>(t)?.data?.job_id; } catch { } }, 15);
             float tAccepted = Time.realtimeSinceStartup - tSubmit;   // input accepted by the server
-            bool thinkSet = false; float tFirst = -1f;
+            bool thinkSet = false; float tFirst = -1f, tReact = -1f, tSubDone = -1f;
             string target = ""; PollData fin = null; bool pollBusy = false; int pollFail = 0; int shown = 0; bool began = false;
             float t0 = Time.realtimeSinceStartup, nextPoll = 0, nextChar = 0;
             if (typeCo != null) { StopCoroutine(typeCo); typeCo = null; }
@@ -405,7 +414,7 @@ namespace TableZero
                 if (fin != null && !fin.ok) break;
                 // the server restarted a rejected attempt: what we typed is no longer the start of the line
                 if (shown > 0 && (target.Length < shown || string.CompareOrdinal(target, 0, subText.text, 0, shown) != 0)) { shown = 0; subText.text = ""; }
-                if (!thinkSet && now - tSubmit >= listenFor) { thinkSet = true; if (actor) actor.SetState(TZSuspectActor.State.Think); }
+                if (!thinkSet && now - tSubmit >= listenFor) { thinkSet = true; tReact = now - tSubmit; if (actor) actor.SetState(TZSuspectActor.State.Think); }
                 if (!began && target.Length > 0 && now - tSubmit >= listenFor)
                 {
                     began = true; tFirst = now - tSubmit; thinking.style.display = DisplayStyle.None; Say(cur.name, ""); typing = true;
@@ -419,10 +428,11 @@ namespace TableZero
                     {
                         shown++; subText.text = target.Substring(0, shown);
                         char c = target[shown - 1];
-                        nextChar = now + (c == ' ' ? 0.035f : (c == ',' || c == '…' || c == '.' || c == '?' || c == '!') ? 0.32f : 0.075f);
+                        float per = Mathf.Min(0.06f, 2.0f / Mathf.Max(8, target.Length));   // whole line types in <= ~2 s: subtitles never add seconds on top of the answer
+                        nextChar = now + (c == ' ' ? per * 0.5f : (c == ',' || c == '…' || c == '.' || c == '?' || c == '!') ? per * 3f : per);
                     }
                 }
-                if (fin != null && shown >= target.Length && began) break;
+                if (fin != null && shown >= target.Length && began) { tSubDone = now - tSubmit; break; }
                 yield return null;
             }
             TZFramePacing.AIBusy(false);
@@ -436,7 +446,7 @@ namespace TableZero
                 yield break;
             }
             var rc = fin.receipt;
-            TZLatencyLog.Write(cur.id, q.Length, tAccepted, tFirst, Time.realtimeSinceStartup - tSubmit, rc);
+            TZLatencyLog.Write(cur.id, q.Length, tAccepted, tFirst, Time.realtimeSinceStartup - tSubmit, rc, tReact, tSubDone);
             if (Application.isEditor || Debug.isDebugBuild) Toast(rc.performer == "LLM" ? $"[개발] 로컬 모델 · 첫 글자 {tFirst:0.0}s · 완료 {Time.realtimeSinceStartup - tSubmit:0.0}s" : $"[개발] {rc.performer} (모델 답변 아님) · {Time.realtimeSinceStartup - tSubmit:0.0}s");
             asked++; if (evidence != null) presented++;
             secondsLeft = rc.seconds_left; RefreshState();
@@ -460,6 +470,24 @@ namespace TableZero
             }));
         }
 
+        void SetAttachment(EvidenceCard ev, string fragment)
+        {
+            pendingEvidence = ev.id; pendingName = ev.name; pendingFragment = fragment;
+            attachLabel.text = "첨부한 기록: " + ev.name + (string.IsNullOrEmpty(fragment) ? "" : "  ·  짚은 부분: “" + fragment + "”") + "\n질문을 보내면 이 기록을 상대에게 정식으로 제시합니다";
+            attachBar.style.display = DisplayStyle.Flex; attachHint.style.display = DisplayStyle.None;
+        }
+
+        void ClearAttachment() { pendingEvidence = null; pendingName = null; pendingFragment = null; if (attachBar != null) attachBar.style.display = DisplayStyle.None; }
+
+        /// <summary>Mentioned but not attached: tell the player (the suspect only reacts to attached records).</summary>
+        void UpdateAttachHint()
+        {
+            if (attachHint == null || input == null) return;
+            bool mention = pendingEvidence == null && !string.IsNullOrEmpty(input.value) && System.Array.Exists(evCache, e => e != null && !string.IsNullOrEmpty(e.name) && input.value.Contains(ShortName(e.name)));
+            attachHint.style.display = mention ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+        static string ShortName(string n) { int i = n.IndexOfAny(new[] { ' ', '·', '(' }); return (i > 2 ? n.Substring(0, i) : n); }
+
         void OpenEvidence()
         {
             if (cur == null) return;
@@ -469,22 +497,22 @@ namespace TableZero
                 // bounded modal: title + scrolling list + a close bar that can never leave the panel (7+ records no longer spill over the dialogue)
                 evidencePanel.style.flexDirection = FlexDirection.Column;
                 var head = new VisualElement(); head.style.flexDirection = FlexDirection.Row; head.style.alignItems = Align.Center; head.style.flexShrink = 0;
-                var h = L("증거 제시", 22, Ink); h.style.flexGrow = 1; head.Add(h);
+                var h = L("증거 제시", 24, new Color(1f, 0.96f, 0.88f)); h.style.flexGrow = 1; head.Add(h);
                 var x = new Button(() => evidencePanel.style.display = DisplayStyle.None) { text = "닫기 (Esc)" }; x.style.height = 34; x.style.fontSize = 15; head.Add(x);
                 evidencePanel.Add(head);
-                var hint = L("기록을 고르면 질문에 첨부됩니다. 아래 조각을 고르면 그 부분을 짚어 묻습니다", 13, Dim); hint.style.marginTop = 4; hint.style.marginBottom = 8; hint.style.flexShrink = 0; evidencePanel.Add(hint);
+                var hint = L("기록을 고르면 질문에 첨부됩니다. 아래 조각을 고르면 그 부분을 짚어 묻습니다", 14, new Color(0.85f, 0.86f, 0.88f)); hint.style.marginTop = 4; hint.style.marginBottom = 8; hint.style.flexShrink = 0; evidencePanel.Add(hint);
                 var sv = new ScrollView(); sv.style.flexGrow = 1; sv.style.flexShrink = 1; sv.style.minHeight = 0; evidencePanel.Add(sv);
                 var r = JsonUtility.FromJson<EvidenceResp>(t);
-                var list = r?.data?.evidence ?? new EvidenceCard[0];
+                var list = r?.data?.evidence ?? new EvidenceCard[0]; evCache = list;
                 if (list.Length == 0) sv.Add(L("아직 확보한 증거가 없습니다. 현장에서 채취·봉인하거나 데스크에서 기록을 요청하세요.", 15, Dim));
                 foreach (var e in list)
                 {
                     var ev = e;
-                    var card = new VisualElement(); card.style.backgroundColor = new Color(1, 1, 1, 0.05f); card.style.marginBottom = 8; Pad(card, 10); Radius(card, 4);
-                    var b2 = new Button(() => { pendingEvidence = ev.id; evidencePanel.style.display = DisplayStyle.None; input.value = $"이 {ev.name}, 설명해 보시겠습니까?"; input.Focus(); });
+                    var card = new VisualElement(); card.style.backgroundColor = new Color(0.14f, 0.15f, 0.17f, 1f); card.style.marginBottom = 8; Pad(card, 12); Radius(card, 4); card.style.borderLeftWidth = 3; card.style.borderLeftColor = new Color(0.86f, 0.68f, 0.40f);
+                    var b2 = new Button(() => { SetAttachment(ev, null); evidencePanel.style.display = DisplayStyle.None; input.value = $"이 {ev.name}, 설명해 보시겠습니까?"; input.Focus(); });
                     b2.style.flexDirection = FlexDirection.Column; b2.style.alignItems = Align.FlexStart; b2.style.backgroundColor = new Color(0, 0, 0, 0); b2.style.borderTopWidth = b2.style.borderBottomWidth = b2.style.borderLeftWidth = b2.style.borderRightWidth = 0; b2.style.paddingLeft = 0;
-                    b2.Add(L(ev.name, 17, Ink));
-                    var d = L($"출처: {ev.source} · 한계: {ev.limitation}", 13, Dim); d.style.whiteSpace = WhiteSpace.Normal; b2.Add(d);
+                    b2.Add(L(ev.name, 18, new Color(1f, 0.96f, 0.88f)));
+                    var d = L($"출처: {ev.source}\n한계: {ev.limitation}", 14, new Color(0.82f, 0.84f, 0.86f)); d.style.whiteSpace = WhiteSpace.Normal; b2.Add(d);
                     card.Add(b2);
                     if (!string.IsNullOrEmpty(ev.detail))
                     {
@@ -492,8 +520,8 @@ namespace TableZero
                         foreach (var seg in ev.detail.Split(new[] { ',', '·', ';', '/' }, StringSplitOptions.RemoveEmptyEntries))
                         {
                             var sg = seg.Trim(); if (sg.Length < 3 || sg.Length > 40) continue;
-                            var c = new Button(() => { pendingEvidence = ev.id; evidencePanel.style.display = DisplayStyle.None; input.value = $"이 {ev.name}에서 '{sg}' 부분은 어떻게 설명하시겠습니까?"; input.Focus(); }) { text = sg };
-                            c.style.fontSize = 13; c.style.marginRight = 6; c.style.marginTop = 4; c.style.height = 28; chips.Add(c);
+                            var c = new Button(() => { SetAttachment(ev, sg); evidencePanel.style.display = DisplayStyle.None; input.value = $"이 {ev.name}에서 '{sg}' 부분은 어떻게 설명하시겠습니까?"; input.Focus(); }) { text = sg };
+                            c.style.fontSize = 14; c.style.marginRight = 6; c.style.marginTop = 4; c.style.height = 30; c.style.backgroundColor = new Color(0.30f, 0.23f, 0.14f, 1f); c.style.color = new Color(1f, 0.95f, 0.85f); chips.Add(c);
                         }
                         card.Add(chips);
                     }

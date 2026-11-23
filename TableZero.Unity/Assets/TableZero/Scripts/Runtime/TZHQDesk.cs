@@ -160,6 +160,7 @@ namespace TableZero
             var right = Box(Panel); right.style.width = 330;
             right.Add(L("수사 행동", 20, Ink, true));
             right.Add(Btn("용의자 호출 → 진술녹화실", () => SceneManager.LoadScene(InterrogationScene), primary: true));
+            right.Add(Btn("수사 수첩 · 기록 비교", () => StartCoroutine(OpenNotebook())));
             right.Add(Btn("기록 요청 · 감식 의뢰", () => { keepScroll = Vector2.zero; Requests(); }));
             right.Add(Btn("302호 현장 재방문", () => StartCoroutine(Revisit())));
             right.Add(Btn("최종 수사보고서", () => { keepScroll = Vector2.zero; Report(); }, enabled: !reportSubmitted, whyDisabled: "보고서는 이미 제출됐습니다"));
@@ -179,6 +180,148 @@ namespace TableZero
             if (!ok) { Say("지금은 현장으로 이동할 수 없습니다"); yield break; }
             TZCaseFlow.SkipBriefing = true;
             SceneManager.LoadScene(RoomScene);
+        }
+
+
+        // ------------------------------------------------------------------ investigation notebook (facts / statements / hypotheses / to-check / compare)
+        [Serializable] class NbTime { public string[] times; public string certainty_ko, note; }
+        [Serializable] class NbObs { public string id, title, what, found, source_family, limitation; public NbTime time; }
+        [Serializable] class NbStmt { public string actor, name, asked, said, kind; public int turn; public string[] times; }
+        [Serializable] class NbHyp { public string id, text, clock; public string[] links; }
+        [Serializable] class NbReq { public string request_id, label, blocked_reason; public int cost, minutes; public bool available; }
+        [Serializable] class NbQ { public string id, text, clock; }
+        [Serializable] class NbCheck { public NbReq[] requests; public NbQ[] questions; }
+        [Serializable] class NbCust { public string prop_id, label, status; }
+        [Serializable] class NbData { public NbObs[] observations; public NbStmt[] statements; public NbHyp[] hypotheses; public NbCheck to_check; public NbCust[] custody; public string clock; }
+        [Serializable] class NbResp { public bool ok; public NbData data; }
+        [Serializable] class CmpSide { public string item_ref, kind, title, text, certainty, time_note, source_family, limitation; public string[] times; }
+        [Serializable] class CmpData { public CmpSide a, b; public bool same_source_family; public string[] notes; }
+        [Serializable] class CmpResp { public bool ok; public CmpData data; public string error; }
+        [Serializable] class TextReq { public string text; }
+        [Serializable] class CmpReq { public string a, b; }
+
+        NbData nb; string nbTab = "obs"; readonly List<string> picks = new List<string>(); CmpData cmp; string hypDraft = "", qDraft = "";
+
+        IEnumerator OpenNotebook(bool keep = false)
+        {
+            string text = ""; yield return Post("/v1/notebook", "{}", (o, t) => text = t);
+            try { nb = JsonUtility.FromJson<NbResp>(text)?.data; } catch { }
+            if (nb == null) { Say("수첩을 불러오지 못했습니다"); yield break; }
+            if (!keep) keepScroll = Vector2.zero;
+            Notebook();
+        }
+
+        void Notebook()
+        {
+            var s = Shell("수사 수첩");
+            var tabs = new VisualElement(); tabs.style.flexDirection = FlexDirection.Row; tabs.style.marginBottom = 6;
+            void Tab(string id, string label) { var b = Btn(label + (id == "cmp" ? $" ({picks.Count}/2)" : ""), () => { nbTab = id; keepScroll = Vector2.zero; Notebook(); }, primary: nbTab == id); b.style.width = 190; b.style.marginRight = 8; tabs.Add(b); }
+            Tab("obs", "관찰·기록 " + (nb.observations?.Length ?? 0)); Tab("stmt", "진술 " + (nb.statements?.Length ?? 0)); Tab("hyp", "내 가설 " + (nb.hypotheses?.Length ?? 0)); Tab("todo", "다음 확인"); Tab("cmp", "나란히 비교");
+            s.Add(tabs);
+            var sub = L("관찰 사실·진술·내 가설은 섞이지 않는다. 기록에 적힌 시각은 사건이 일어난 시각과 다를 수 있다", 13, Dim); sub.style.marginBottom = 8; s.Add(sub);
+            var sv = new ScrollView(); sv.style.flexGrow = 1; sv.style.marginBottom = 14; KeepScroll(sv); s.Add(sv);
+            void Pick(string r) { if (picks.Contains(r)) picks.Remove(r); else { if (picks.Count >= 2) picks.RemoveAt(0); picks.Add(r); } StartCoroutine(Compare()); }
+            Button PickBtn(string r) { bool on = picks.Contains(r); var b = Btn(on ? "✓ 비교에 담음" : "비교에 담기", () => { keepScroll = new Vector2(0, sv.verticalScroller.value); Pick(r); }, primary: on); b.style.width = 150; b.style.height = 34; b.style.fontSize = 14; return b; }
+            if (nbTab == "obs")
+            {
+                if (nb.custody != null && nb.custody.Length > 0)
+                {
+                    var cb = Box(Panel); cb.style.marginBottom = 10; cb.Add(L("채취·봉인한 실물 (분석 결과 아님)", 16, Accent, true));
+                    foreach (var c in nb.custody) cb.Add(L($"• {c.label} — {c.status}", 14, Ink));
+                    sv.Add(cb);
+                }
+                foreach (var o in nb.observations ?? new NbObs[0])
+                {
+                    var card = Box(Panel); card.style.marginBottom = 8;
+                    var head = new VisualElement(); head.style.flexDirection = FlexDirection.Row; head.style.alignItems = Align.Center;
+                    var tt = L(o.title, 17, Ink, true); tt.style.flexGrow = 1; head.Add(tt); head.Add(PickBtn(o.id)); card.Add(head);
+                    card.Add(L(o.what, 15, Ink));
+                    card.Add(L("출처군: " + o.source_family + "  ·  입수 경로: " + o.found, 12, Dim));
+                    if (o.time != null && o.time.times != null && o.time.times.Length > 0) card.Add(L("시각: " + string.Join(", ", o.time.times) + "  (" + o.time.certainty_ko + ")", 13, Accent, true));
+                    if (o.time != null && !string.IsNullOrEmpty(o.time.note)) card.Add(L("※ " + o.time.note, 12, Warn));
+                    card.Add(L("한계: " + o.limitation, 12, Warn));
+                    sv.Add(card);
+                }
+                if ((nb.observations?.Length ?? 0) == 0) sv.Add(L("아직 확보한 기록이 없다", 15, Dim));
+            }
+            else if (nbTab == "stmt")
+            {
+                if ((nb.statements?.Length ?? 0) == 0) sv.Add(L("아직 받은 진술이 없다. 진술은 본인의 주장이며 확인 전에는 사실이 아니다", 15, Dim));
+                foreach (var st in nb.statements ?? new NbStmt[0])
+                {
+                    var card = Box(Panel); card.style.marginBottom = 8;
+                    var head = new VisualElement(); head.style.flexDirection = FlexDirection.Row; head.style.alignItems = Align.Center;
+                    var tt = L($"{st.name}  ·  진술 {st.turn}  ·  {KindKo(st.kind)}", 15, Accent, true); tt.style.flexGrow = 1; head.Add(tt);
+                    if (st.turn > 0) head.Add(PickBtn(st.actor + "#" + st.turn)); card.Add(head);
+                    if (!string.IsNullOrEmpty(st.asked)) card.Add(L("질문: " + st.asked, 13, Dim));
+                    card.Add(L("“" + st.said + "”", 16, Ink));
+                    if (st.times != null && st.times.Length > 0) card.Add(L("언급한 시각: " + string.Join(", ", st.times) + " (본인 주장)", 12, Warn));
+                    sv.Add(card);
+                }
+            }
+            else if (nbTab == "hyp")
+            {
+                var inp = DarkInput(new TextField { multiline = true, value = hypDraft }); inp.style.minHeight = 70; inp.style.whiteSpace = WhiteSpace.Normal; inp.textEdition.placeholder = "내 가설 (확인되기 전에는 사실로 취급되지 않는다)";
+                inp.RegisterValueChangedCallback(ev => hypDraft = ev.newValue); sv.Add(inp);
+                var add = Btn("가설 추가", () => StartCoroutine(AddNote("/v1/notebook/hypothesis", hypDraft, () => hypDraft = "")), primary: true); add.style.width = 160; sv.Add(add);
+                foreach (var h in nb.hypotheses ?? new NbHyp[0]) { var card = Box(Panel); card.style.marginTop = 8; card.Add(L($"{h.id} · 사건 시각 {h.clock} · 미확인", 12, Dim)); card.Add(L(h.text, 16, Ink)); if (h.links != null && h.links.Length > 0) card.Add(L("연결한 기록: " + string.Join(", ", h.links), 12, Dim)); sv.Add(card); }
+            }
+            else if (nbTab == "todo")
+            {
+                var inp = DarkInput(new TextField { value = qDraft }); inp.textEdition.placeholder = "내가 확인해야 할 의문"; inp.RegisterValueChangedCallback(ev => qDraft = ev.newValue); sv.Add(inp);
+                var add = Btn("의문 추가", () => StartCoroutine(AddNote("/v1/notebook/question", qDraft, () => qDraft = "")), primary: true); add.style.width = 160; sv.Add(add);
+                foreach (var q in nb.to_check?.questions ?? new NbQ[0]) { var c = Box(Panel); c.style.marginTop = 6; c.Add(L("? " + q.text, 15, Ink)); sv.Add(c); }
+                var hd = L("지금 요청할 수 있는 확인 (결과는 요청해야 알 수 있다)", 15, Accent, true); hd.style.marginTop = 12; sv.Add(hd);
+                foreach (var r in nb.to_check?.requests ?? new NbReq[0])
+                {
+                    var c = Box(Panel); c.style.marginTop = 6; c.Add(L(r.label, 16, r.available ? Ink : Dim, true));
+                    c.Add(L($"수사 자원 {r.cost} · 약 {r.minutes}분" + (r.available ? "" : "  ·  선행 조건: " + r.blocked_reason), 13, r.available ? Dim : Warn));
+                    sv.Add(c);
+                }
+            }
+            else
+            {
+                if (cmp == null || picks.Count < 2) sv.Add(L("기록이나 진술 두 개를 '비교에 담기'로 고르면 여기에 나란히 보인다. 이 화면은 결론을 내려 주지 않고, 판단에 필요한 사실만 보여 준다", 15, Dim));
+                else
+                {
+                    var row = new VisualElement(); row.style.flexDirection = FlexDirection.Row;
+                    foreach (var side in new[] { cmp.a, cmp.b })
+                    {
+                        var col = Box(Panel); col.style.flexGrow = 1; col.style.flexBasis = 0; col.style.marginRight = 8;
+                        col.Add(L(side.title, 17, Ink, true)); col.Add(L(side.text, 15, Ink));
+                        col.Add(L("시각: " + (side.times != null && side.times.Length > 0 ? string.Join(", ", side.times) : "없음") + "  (" + side.certainty + ")", 13, Accent, true));
+                        col.Add(L("출처군: " + side.source_family, 12, Dim)); col.Add(L("한계: " + side.limitation, 12, Warn)); row.Add(col);
+                    }
+                    sv.Add(row);
+                    var nbx = Box(Panel); nbx.style.marginTop = 10; nbx.Add(L("판단에 필요한 사실", 15, Accent, true));
+                    foreach (var n in cmp.notes ?? new string[0]) nbx.Add(L("• " + n, 14, Ink));
+                    if (cmp.notes == null || cmp.notes.Length == 0) nbx.Add(L("• 겹치는 시각이나 같은 출처군은 확인되지 않았다", 14, Dim));
+                    sv.Add(nbx);
+                }
+            }
+            var back = Btn("수사본부로", Hub); back.style.width = 160; back.style.marginBottom = 26; s.Add(back);
+            Show(s);
+        }
+
+        static string KindKo(string k) => k == "admission" ? "인정" : k == "challenge" ? "자료에 반박" : k == "claim" ? "주장" : k == "pushback" ? "근거 요구" : k == "refusal" ? "답변 거부" : k == "change_of_story" ? "말이 바뀜" : "진술";
+
+        IEnumerator AddNote(string path, string text, Action cleared)
+        {
+            if (busy) yield break; busy = true;
+            string r = ""; yield return Post(path, JsonUtility.ToJson(new TextReq { text = text }), (o, t) => r = t); busy = false;
+            if (!(r.Contains("\"ok\": true") || r.Contains("\"ok\":true"))) { Say(Err(r)); yield break; }
+            cleared?.Invoke(); yield return OpenNotebook(true);
+        }
+
+        IEnumerator Compare()
+        {
+            cmp = null;
+            if (picks.Count == 2)
+            {
+                string r = ""; yield return Post("/v1/notebook/compare", JsonUtility.ToJson(new CmpReq { a = picks[0], b = picks[1] }), (o, t) => r = t);
+                try { var cr = JsonUtility.FromJson<CmpResp>(r); if (cr != null && cr.ok) { cmp = cr.data; nbTab = "cmp"; } else Say(Err(r)); } catch { }
+            }
+            Notebook();
         }
 
         // ------------------------------------------------------------------ requests

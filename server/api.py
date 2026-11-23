@@ -82,6 +82,18 @@ class LocalBridgeHandler(BaseHTTPRequestHandler):
                 result=self.controller.desk.options()
             elif path=='/v1/desk/request':
                 result=self.controller.desk.request(value.get('request_id'))
+            elif path=='/v1/notebook':
+                from . import notebook
+                result=notebook.projection(self.controller,self.interview_service)
+            elif path=='/v1/notebook/hypothesis':
+                from . import notebook
+                result=notebook.add_hypothesis(self.controller,value.get('text',''),value.get('links') or [])
+            elif path=='/v1/notebook/question':
+                from . import notebook
+                result=notebook.add_question(self.controller,value.get('text',''))
+            elif path=='/v1/notebook/compare':
+                from . import notebook
+                result=notebook.compare(self.controller,self.interview_service,value.get('a',''),value.get('b',''))
             elif path=='/v1/evidence/list':
                 result={'evidence':evidence_cards(self.controller)}
             elif path in ('/v1/interview/ask','/v1/interview/ask-v11'):
