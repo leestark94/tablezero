@@ -30,6 +30,7 @@ RETRY_HINTS={
  'too_long_for_one_utterance':'[다시] 너무 길다. 한두 문장으로 짧게 다시 대답한다',
  'cross_suspect_knowledge_leak':'[다시] 너는 그 사람의 사정을 모른다. 모르는 건 모른다고 다시 대답한다',
  'invented_numbers':'[다시] 방금 대답에 네가 말해도 되는 내용에 없는 숫자·시각이 들어 있다. 위 "답할 내용"과 "말해도 되는 사실"에 있는 숫자만 쓴다',
+ 'contradicts_admission':'[다시] 너는 이미 그곳에 갔다고 인정했다. 갔다는 사실을 부정하거나 모른다고 하지 말고, 인정한 범위 안에서 다시 대답한다',
  'assistant_voice':'[다시] 상담원처럼 말했다. 너는 의심받는 실제 사람이다. 감정이 있는 평범한 구어로, "죄송합니다만" 같은 말 없이 다시 대답한다',
  'content_numbers_changed':'[다시] "답할 내용"의 시각·숫자를 그대로 넣어서 다시 대답한다',
  'default':'[다시] 규칙에 맞게 짧고 자연스러운 한국어로 다시 대답한다',
@@ -218,6 +219,7 @@ class InterviewService:
                     bad_nums=[n for n in _re.findall(r'\d+',candidate['utterance']) if n not in ok_nums]
                     if bad_nums:blocking=list(blocking)+['invented_numbers']
                     if ASSISTANT_VOICE.search(candidate['utterance']):blocking=list(blocking)+['assistant_voice']
+                    if IP.contradicts_admission(personas(),actor,st,candidate['utterance']):blocking=list(blocking)+['contradicts_admission']
                     if len(candidate['utterance'])>260:blocking=list(blocking)+['too_long_for_one_utterance']
                     # fidelity: every number/time the plan put in the allowed content must survive into the spoken line
                     need=set(_re.findall(r'\d+',' '.join(po['line'] for po in plan['parts'] if po.get('line'))))

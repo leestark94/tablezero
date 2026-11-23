@@ -108,3 +108,36 @@ class PlannerTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class RealPlayRegressionTests(unittest.TestCase):
+    """Fixed from Codex's real play (2026-11-23 retest): wrong quotation, compound question, self-contradicting answer."""
+    def setUp(self):
+        self._old = os.environ.get('TABLEZERO_PERFORMER'); os.environ['TABLEZERO_PERFORMER'] = 'authored'
+
+    def tearDown(self):
+        if self._old is None: os.environ.pop('TABLEZERO_PERFORMER', None)
+        else: os.environ['TABLEZERO_PERFORMER'] = self._old
+
+    def test_kang_misquoted_arrival_time_is_corrected_and_departure_is_answered(self):
+        c, s = start('s1')
+        a1 = ask(s, '직장에는 몇 시에 도착했습니까?').suspect_text
+        self.assertIn('9시 반', a1)
+        a3 = ask(s, '방금 직장에 10시 반에 도착했다고 했죠? 집에서는 몇 시에 나왔습니까?').suspect_text
+        self.assertIn('9시 반', a3)                      # the real statement is kept
+        self.assertIn('아니', a3)                        # the 10:30 attribution is corrected
+        self.assertRegex(a3, r'20분|21분')               # and the departure question is answered too
+        self.assertIn('9시', a3.split('아니')[-1])       # hours stated, not only minutes
+
+    def test_correct_quotation_is_not_flagged(self):
+        c, s = start('s1')
+        ask(s, '직장에는 몇 시에 도착했습니까?')
+        a = ask(s, '아까 9시 반에 도착했다고 했죠? 어디서 오셨습니까?').suspect_text
+        self.assertNotIn('아니요', a.split(' ')[0])
+
+    def test_seoyeon_admission_and_doubt_never_in_one_answer(self):
+        c, s = start('s2', ('V21-E02', 'V21-E14'))
+        ask(s, '그날 302호에 갔습니까?'); ask(s, '이 화면 보세요', 'V21-E02'); ask(s, '편의점 결제도 있습니다', 'V21-E14')
+        a = ask(s, '얼굴 식별이 어렵다는 건 맞습니다. 그러면 21시 39분부터 49분까지 실제로 어디에 있었고 확인할 방법은 무엇입니까?').suspect_text
+        self.assertIn('302호', a)
+        self.assertNotRegex(a, r'갔는지는 모르|안 갔|간 적 없')

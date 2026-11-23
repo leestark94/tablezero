@@ -14,7 +14,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
-from .question_frame import analyse, Frame
+from .question_frame import analyse, Frame, clock_mentions
 from .strategy import ABUSE, PRESSURE, SuspectState as _BaseState  # noqa: F401  (ABUSE/PRESSURE keep one definition)
 
 RANK = {'critical': 3, 'serious': 2, 'minor': 1}
@@ -74,6 +74,28 @@ class SuspectMemory(_BaseState):
     shown: set = field(default_factory=set)
     history: list = field(default_factory=list)       # [{'q','a','tactic'}] last turns (dialogue memory for the performer)
     unanswered: list = field(default_factory=list)    # parts the suspect deliberately did not answer
+
+
+NEG_VISIT = re.compile(r'안\s*갔|간\s*적\s*없|들어간\s*적\s*없|가지\s*않았|갔는지는\s*(모르|기억)|거기\s*(안|간\s*적)|수연이네는\s*아니')
+MISQUOTE = {
+    's1': ('아니요 {real}라고 했습니다 {wrong}가 아니고요', '그런 말 한 적 없습니다'),
+    's2': ('아니요 {real}라고 말씀드렸어요 {wrong}는 아니에요', '그런 말씀은 드린 적 없어요'),
+    's3': ('아니요 {real}라고 말씀드렸습니다 {wrong}는 아닙니다', '그런 말씀은 드린 적 없습니다'),
+}
+
+
+def _times_in(line: str):
+    out = []
+    for m in re.finditer(r'(?:밤\s*|오후\s*)?(\d{1,2})\s*시\s*(반|\d{1,2}\s*분)?', line):
+        h = int(m.group(1)); mi = 30 if m.group(2) == '반' else (int(re.sub(r'\D', '', m.group(2))) if m.group(2) else 0)
+        out.append((f'{h:02d}:{mi:02d}', m.group(0).strip()))
+    return out
+
+
+def contradicts_admission(personas: dict, sid: str, state, line: str) -> bool:
+    """True if `line` denies/doubts a visit the suspect already admitted (checked for model lines AND authored fallback)."""
+    facts = personas['suspects'][sid].get('dossier', {}).get('facts', {})
+    return any('visit' in facts[x].get('topics', []) for x in state.conceded if x in facts) and bool(NEG_VISIT.search(line or ''))
 
 
 def slot(fact: dict, kind: str, ask: str, text: str = '') -> str:
@@ -209,10 +231,16 @@ def plan_turn(personas: dict, sid: str, state: SuspectMemory, question: str, pre
 
     # --- 4) parts that touch no case fact: public knowledge, honest unknown ---------------------------------------------------
     parts_out, lines = [], []
+    from .question_frame import ASK as _ASK
     for p, fl in part_facts:
-        fid = next((x for x in fl if x in say), None)
-        if fid:
-            parts_out.append({'text': p.text, 'ask': p.ask, 'fact': fid, 'kind': say[fid][0], 'line': say[fid][1]})
+        fids = [x for x in fl if x in say][:2]       # one clause can touch two points ("어디 있었고 확인할 방법은") — answer both
+        if fids:
+            for fid in fids:
+                kind = say[fid][0]
+                ask = 'verify' if ('verify' in facts[fid].get('topics', []) and _ASK[2][1].search(p.text)) else p.ask
+                if kind == 'challenge': line = say[fid][1]
+                else: line = state.said.setdefault((fid, ask, kind), slot(facts[fid], 'concede' if kind == 'concede' else 'cover', ask, p.text))
+                parts_out.append({'text': p.text, 'ask': ask, 'fact': fid, 'kind': kind, 'line': line})
             continue
         pub = next((l for tp, l in TOPIC_ANSWERS.get(sid, []) if set(tp) & set(p.topics)), None)
         if pub and not (fr.accuse and not p.topics):
@@ -239,6 +267,28 @@ def plan_turn(personas: dict, sid: str, state: SuspectMemory, question: str, pre
         if acc:
             parts_out.append({'text': fr.text, 'ask': 'what', 'fact': None, 'kind': 'account', 'line': ' '.join(acc)}); lines = [parts_out[-1]['line']]
             tactic, mode = 'ANSWER', 'answer'
+
+    # --- 4b) the detective attributes a time to the suspect: compare with what was really said (never silently accept it) ---------------
+    claimed = state.said.setdefault(('__claimed_times__',), {})     # 'HH:MM' -> text, from the suspect's own earlier lines
+    for qt, qraw in fr.quotes:
+        if qt in claimed: continue                                   # a correct quotation
+        part_topics = {t for p in fr.parts for t in p.topics}
+        real = next(iter(claimed.values()), None) if claimed else None
+        fmt = MISQUOTE.get(sid)
+        if fmt:
+            pl = fmt[0].format(real=real, wrong=qraw) if real else fmt[1]
+            parts_out.insert(0, {'text': fr.text, 'ask': 'yesno', 'fact': None, 'kind': 'correction', 'line': pl})
+            directives.append('형사가 네가 한 적 없는 시각을 네 말이라고 인용했다. 그대로 받지 말고 정정한다(네가 한 말은 위 "답할 내용"). 이어서 나머지 질문에도 답한다')
+        break
+
+    # --- 4c) one answer must not contradict itself or an earlier admission (applies to authored AND model lines) -------------------
+    visit_admitted = any('visit' in facts[x].get('topics', []) for x in state.conceded if x in facts)
+    if visit_admitted:
+        kept = [po for po in parts_out if not (po.get('line') and NEG_VISIT.search(po['line']) and po['kind'] in ('cover', 'public', 'unknown', 'correction'))]
+        if len(kept) != len(parts_out):
+            parts_out = kept
+            directives.append('이미 방문을 인정했다. 방문을 부정하거나 모른다고 하는 말은 하지 않는다')
+    if state.said.get(('__claim_conflicts__',)) is None: state.said[('__claim_conflicts__',)] = 0
 
     if fr.admit_premise and not state.conceded and not presented_now:
         pl = ADMIT_FALSE.get(sid)
@@ -271,6 +321,9 @@ def plan_turn(personas: dict, sid: str, state: SuspectMemory, question: str, pre
         if ln: fresh.append(ln)
     spoken.update(fresh)
     lines = [po['line'] for po in parts_out if po.get('line')]
+    for po in parts_out:
+        if po['kind'] in ('cover', 'concede') and po.get('line'):
+            for hhmm, raw in _times_in(po['line']): claimed.setdefault(hhmm, raw)
     state.last_topics = [t for t in fr.topics if t not in ('verify', 'route')] or state.last_topics
     allowed = list(dict.fromkeys(allowed_base + lines))
     state.tactic_history.append(tactic); state.revision += 1

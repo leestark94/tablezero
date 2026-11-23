@@ -86,6 +86,7 @@ def normalise(text: str) -> str:
         return out
     t = re.sub(r'([영공일이삼사오육칠팔구십]{1,4})\s*시\s*(([영공일이삼사오육칠팔구십]{1,4})\s*분)?', kt, t)
     t = t.replace('아홉 시', '9시').replace('열 시', '10시')
+    t = re.sub(r'(\d{1,2})\s*시\s*반', lambda m: m.group(1) + '시 30분', t)   # "10시 반" -> "10시 30분" (one clock value, not two)
     return t
 
 
@@ -97,6 +98,18 @@ def clock_mentions(t: str):
     if '반' in t:
         for m in re.finditer(r'(\d{1,2})\s*시\s*반', t): out.append(f'{int(m.group(1)):02d}:30')
     return list(dict.fromkeys(out))
+
+
+QUOTE = re.compile(r'(방금|아까|조금\s*전|앞에서|처음에)?[^?？.]*?(\d{1,2}\s*시(?:\s*\d{1,2}\s*분)?)[^?？.]*?(했죠|했잖아|라고\s*했|말했|하셨|이라고\s*했|라고\s*하셨)')
+
+
+def quoted_times(text: str):
+    """Times the DETECTIVE attributes to the suspect ("방금 10시 반에 도착했다고 했죠") — to be checked against what was actually said."""
+    out = []
+    for m in QUOTE.finditer(text):
+        for t in clock_mentions(m.group(0)):
+            out.append((t, m.group(2)))
+    return out
 
 
 @dataclass
@@ -118,6 +131,7 @@ class Frame:
     injection: bool = False
     counsel: bool = False
     third_party: bool = False
+    quotes: list = field(default_factory=list)
     reversal_premise: bool = False
     admit_premise: bool = False
     ambiguous: bool = False
@@ -150,5 +164,5 @@ def analyse(question: str, last_topics=None) -> Frame:
     amb = len(t) < 16 and not all_topics and bool(PRONOUN.search(t)) and not any(rx.search(t) for _, rx in ASK) 
     return Frame(raw=raw, text=t, parts=parts, times=clock_mentions(t), accuse=bool(ACCUSE.search(t)), bluff=bool(BLUFF.search(t)),
                  injection=bool(INJECTION.search(t)), counsel=bool(COUNSEL.search(t)), third_party=bool(THIRD_PARTY.search(t)),
-                 reversal_premise=bool(REVERSAL.search(t)), admit_premise=bool(ADMIT_PREMISE.search(t)), ambiguous=amb,
+                 quotes=quoted_times(t), reversal_premise=bool(REVERSAL.search(t)), admit_premise=bool(ADMIT_PREMISE.search(t)), ambiguous=amb,
                  topics=list(dict.fromkeys(all_topics + [x for p in parts for x in p.topics])))
