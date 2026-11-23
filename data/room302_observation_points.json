@@ -1,0 +1,51 @@
+{
+ "schema": 1,
+ "note": "Scene observation points for key props. Every text states only what is visible in the scene or defined by the CASE001 V21 evidence limits; none names a culprit or a forensic result. face: front/back = the two large faces of a thin object, edge = its long edge, any = no orientation needed.",
+ "props": {
+  "living_phone": {
+   "label": "피해자 휴대전화",
+   "intro": "화면 쪽과 뒷면을 모두 돌려 보며 눈에 띄는 곳을 찾아 보세요",
+   "points": [
+    {"id": "screen", "label": "화면 파손", "face": "front", "text": "액정이 여러 갈래로 깨져 있다. 깨진 모양만으로는 언제, 누가, 어떻게 깨뜨렸는지 알 수 없다", "limit": "파손 시각·경위는 외형으로 확정할 수 없음 (파손 이전 손상, 이송 중 물품 이동 가능성)"},
+    {"id": "lock", "label": "잠금 상태", "face": "front", "text": "잠금 화면이 남아 있고 일부 기능은 동작하는 듯 보인다. 내용은 적법한 포렌식 절차 전에는 열람하지 않는다", "limit": "화면에 보이는 것은 외형 관찰일 뿐 통화·메모 내용이 아님"},
+    {"id": "back", "label": "뒷면·가장자리", "face": "back", "text": "뒷면과 가장자리의 상태를 기록한다. 이 외형 기록은 파손 경위를 정하지 않는다", "limit": "외형 관찰은 디지털 자료(통화기록·메모)와 별개의 출처"}
+   ],
+   "hints": ["앞면과 뒷면을 모두 돌려 보세요", "화면이 정면으로 보이도록 가까이 당겨 보세요 (마우스 휠)", "파손 모양과 잠금 상태는 따로 기록됩니다"]
+  },
+  "living_food_bag": {
+   "label": "음식 배달 봉투",
+   "intro": "봉투 겉면과 안의 영수증을 나눠 살펴보세요",
+   "points": [
+    {"id": "receipt", "label": "영수증 시각", "face": "front", "text": "영수증에 20:47 배달 시각이 찍혀 있다. 배달 도착 기록이며 누가 먹었는지는 알 수 없다", "limit": "식사 인원·방문자·범행 시각은 이 영수증으로 알 수 없음"},
+    {"id": "bag", "label": "봉투 겉면", "face": "back", "text": "봉투 겉면의 표기와 상태를 기록한다. 소품이 옮겨졌거나 음식이 섞였을 수 있어 위치만으로 판단하지 않는다", "limit": "현장 소품 이동·음식 섞임 가능성"}
+   ],
+   "hints": ["봉투를 열어 안의 종이를 먼저 확인하세요", "영수증의 시각 칸을 정면으로 보세요"]
+  },
+  "living_paper_stack": {
+   "label": "서류 더미",
+   "intro": "앞뒤와 가장자리를 모두 비교해 보세요",
+   "points": [
+    {"id": "front", "label": "앞면 책임자 칸", "face": "front", "text": "책임자 칸에 '박현수' 이름이 인쇄돼 있다. 이 서류가 최종본인지는 발행·수정 기록을 봐야 안다", "limit": "인쇄된 이름과 실제 책임은 별개. 원본 대조 전에는 사실로 단정 금지"},
+    {"id": "back", "label": "뒷면 손글씨", "face": "back", "text": "뒷면에 손으로 쓴 정정 메모가 있다. 쓴 사람과 쓴 시점은 이 종이만으로 알 수 없다", "limit": "필적·시점은 별도 대조가 필요"},
+    {"id": "edge", "label": "찢긴 가장자리", "face": "edge", "text": "가장자리 한쪽이 찢겨 조각이 없다. 떨어져 나간 조각이 어디에 있는지는 이 서류만으로 알 수 없다", "limit": "조각의 행방·찢은 사람은 확정 불가 (서류 겹침·사후 오염 가능)"}
+   ],
+   "hints": ["뒷면도 보세요", "가장자리를 가까이에서 보세요"]
+  },
+  "living_table": {
+   "label": "낮은 식탁",
+   "intro": "모서리와 다리 아래를 가까이에서 살펴보세요",
+   "points": [
+    {"id": "edge", "label": "상판 모서리", "face": "any", "text": "상판 모서리의 높이와 모양을 기록한다. 이 모서리가 부상과 관련 있는지는 현장 재구성 감정 전에는 단정할 수 없다", "limit": "정확한 가해자·시각은 재구성으로도 확정되지 않을 수 있음 (구급대 재배치)"}
+   ],
+   "hints": ["모서리에 가까이 다가가 보세요"]
+  },
+  "living_floor_blood": {
+   "label": "바닥 흔적",
+   "intro": "흔적의 형태만 기록하세요. 원인은 감정 전에 단정하지 않습니다",
+   "points": [
+    {"id": "trace", "label": "흔적의 형태", "face": "any", "text": "고인 자국과 이어진 자국의 형태를 기록한다. 원인과 시각은 감정 전에 단정하지 않는다", "limit": "구급 처치 흔적과 섞여 있을 수 있음"}
+   ],
+   "hints": ["형태와 방향만 기록하세요"]
+  }
+ }
+}

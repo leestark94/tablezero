@@ -97,6 +97,8 @@ class PropAuthority:
         self.photo_order: list[str] = []   # evidence marker numbers follow the order things were first photographed
         self.gloves_on = False
         self.collected: dict[str, dict] = {}
+        self.observed: dict[str, dict] = {}       # prop_id -> {point_id: record}
+        self.hint_level: dict[str, int] = {}
 
     def _asset_ready(self, prop_id):
         status = self.art.get(prop_id, 'UNASSIGNED_NEEDS_QUALITY_ASSET')
@@ -216,6 +218,58 @@ class PropAuthority:
                         'photographed': pid in self.photos, 'defects': list(rec.get('defects', [])),
                         'status': '봉인 · 현장 기록 확보' if ev else '봉인 · 감식 의뢰 대기',
                         'evidence_id': ev})
+        return out
+
+    # ------------------------------------------------------------------ close observation (hands-on examine)
+    def _points(self, prop_id):
+        import json as _json, os as _os
+        path = _os.path.join(_os.path.dirname(_os.path.dirname(__file__)), 'data', 'room302_observation_points.json')
+        if not hasattr(PropAuthority, '_POINTS'):
+            PropAuthority._POINTS = _json.load(open(path, encoding='utf-8'))['props']
+        d = self.props.definitions[prop_id]
+        cfg = PropAuthority._POINTS.get(prop_id)
+        if cfg: return cfg
+        # every other prop gets one short, relevance-neutral point from its own manifest line (no 'this matters' signal)
+        return {'label': d['label_ko'], 'intro': '', 'points': [{'id': 'general', 'label': '살펴보기', 'face': 'any', 'text': d.get('observation_ko', ''), 'limit': ''}], 'hints': []}
+
+    def observation_info(self, prop_id, *, player_pos):
+        if prop_id not in self.props.definitions: raise GuardError('Unknown scene prop')
+        self._check_player(prop_id, player_pos)
+        cfg = self._points(prop_id); seen = self.observed.get(prop_id, {})
+        return {'prop_id': prop_id, 'label': cfg['label'], 'intro': cfg['intro'], 'total': len(cfg['points']), 'done': len(seen),
+                'points': [{'id': p['id'], 'label': p['label'] if p['id'] in seen else '', 'face': p['face'], 'observed': p['id'] in seen} for p in cfg['points']],
+                'photographed': prop_id in self.photos}
+
+    def observe(self, prop_id, point_id, *, player_pos):
+        if prop_id not in self.props.definitions: raise GuardError('Unknown scene prop')
+        self._check_player(prop_id, player_pos)
+        cfg = self._points(prop_id)
+        pt = next((p for p in cfg['points'] if p['id'] == point_id), None)
+        if not pt: raise GuardError('이 물건에는 그런 관찰 지점이 없습니다')
+        seen = self.observed.setdefault(prop_id, {})
+        first = point_id not in seen
+        if first:
+            seen[point_id] = {'prop_id': prop_id, 'prop_label': cfg['label'], 'point_id': point_id, 'label': pt['label'], 'text': pt['text'], 'limit': pt['limit'],
+                              'clock': self.episode.clock_text(), 'photographed_first': prop_id in self.photos}
+            self.episode._log('scene_observe', {'prop': prop_id, 'point': point_id})
+        done = len(seen)
+        note = '' if prop_id in self.photos else '먼저 현장 사진(C)으로 원위치를 남겨 두면 위치 기록이 보존됩니다'
+        return {'point': point_id, 'label': pt['label'], 'text': pt['text'], 'limit': pt['limit'], 'first': first, 'done': done, 'total': len(cfg['points']),
+                'complete': done >= len(cfg['points']), 'note': note}
+
+    def hint(self, prop_id, *, player_pos):
+        if prop_id not in self.props.definitions: raise GuardError('Unknown scene prop')
+        self._check_player(prop_id, player_pos)
+        cfg = self._points(prop_id); hints = cfg.get('hints', [])
+        seen = len(self.observed.get(prop_id, {}))
+        if seen >= len(cfg['points']): return {'hint': '이 물건에서 볼 수 있는 곳은 모두 기록했습니다', 'level': 0}
+        lvl = min(self.hint_level.get(prop_id, 0), max(0, len(hints) - 1)) if hints else 0
+        self.hint_level[prop_id] = self.hint_level.get(prop_id, 0) + 1
+        return {'hint': hints[lvl] if hints else '아직 보지 않은 곳이 있습니다', 'level': lvl + 1}
+
+    def scene_observations(self):
+        out = []
+        for pid, pts in self.observed.items(): out.extend(pts.values())
         return out
 
     def set_gloves(self, on: bool):

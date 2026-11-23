@@ -28,6 +28,18 @@ namespace TableZero
         TZInspectableProp examining;
         Vector3 exPos; Quaternion exRot; Transform exParent;
         Vector2 exSpin;
+        float exDist = 0.42f; Quaternion exStartRot; Vector3 exThin, exLong; float exFrontSign = 1f;
+        ObsInfo exInfo; bool exBusy;
+        [Serializable] class ObsReq { public string prop_id, point_id; public float[] player_pos; }
+        [Serializable] class ObsPoint { public string id, label, face; public bool observed; }
+        [Serializable] class ObsInfo { public string prop_id, label, intro; public int total, done; public bool photographed; public ObsPoint[] points; }
+        [Serializable] class ObsInfoResp { public bool ok; public ObsInfo data; public string error; }
+        [Serializable] class ObsData { public string point, label, text, limit, note; public bool first, complete; public int done, total; }
+        [Serializable] class ObsResp { public bool ok; public ObsData data; public string error; }
+        [Serializable] class HintData { public string hint; public int level; }
+        [Serializable] class HintResp { public bool ok; public HintData data; }
+        // overlapping targets (a receipt lying on a bag): all candidates under the crosshair, Tab cycles
+        readonly System.Collections.Generic.List<TZInspectableProp> cands = new System.Collections.Generic.List<TZInspectableProp>(); int candIx;
 
         [Serializable] class PropReq { public string prop_id, verb, action_id; public float[] player_pos; }
         [Serializable] class ProcReq { public string prop_id, action; public float[] player_pos; }
@@ -64,11 +76,13 @@ namespace TableZero
         {
             var kb = Keyboard.current; if (kb == null) return;
             if (examining) { UpdateExamine(kb); return; }
+            if (kb.tabKey.wasPressedThisFrame && cands.Count > 1) { candIx = (candIx + 1) % cands.Count; current = null; }   // cycle overlapped targets
             UpdateFocus();
             if (kb.gKey.wasPressedThisFrame) ToggleGloves();
             if (current == null || pending) { collectHeld = 0; return; }
             if (kb.eKey.wasPressedThisFrame) current.TryRequest(current.PrimaryAction());
             else if (kb.qKey.wasPressedThisFrame) Send(current, TZPropAction.Inspect);
+            else if (kb.vKey.wasPressedThisFrame && ExaminableKind(current)) StartCoroutine(BeginExamineServer(current));
             else if (kb.cKey.wasPressedThisFrame && !kb.leftShiftKey.isPressed) Procedure(current, "photograph");
             if (kb.xKey.isPressed)
             {
@@ -81,10 +95,32 @@ namespace TableZero
         void UpdateFocus()
         {
             TZInspectableProp next = null;
-            if (cam && Physics.Raycast(cam.transform.position, cam.transform.forward, out var hit, reach, mask, QueryTriggerInteraction.Ignore))
+            cands.Clear();
+            if (cam)
             {
-                var c = hit.collider.GetComponentInParent<TZInspectableProp>();
-                if (c && c.CanTarget() && hit.distance <= c.interactionDistanceMeters) next = c;
+                // aim tolerance scales with the screen (a fixed pixel-size crosshair on a small window is a bigger cone): ~1.2 degrees per 100 px of half-height
+                float tol = Mathf.Clamp(0.05f + 0.00005f * (1080f - Mathf.Min(Screen.height, 1080)), 0.05f, 0.11f);
+                var hits = Physics.SphereCastAll(cam.transform.position, tol, cam.transform.forward, reach, mask, QueryTriggerInteraction.Ignore);
+                var seen = new System.Collections.Generic.Dictionary<TZInspectableProp, float>();
+                foreach (var h in hits)
+                {
+                    var c = h.collider.GetComponentInParent<TZInspectableProp>();
+                    if (!c || !c.CanTarget() || h.distance > c.interactionDistanceMeters) continue;
+                    // angular distance from the crosshair ray to the object's nearest point (the ray itself hitting it counts as 0)
+                    Vector3 near = h.collider.ClosestPoint(cam.transform.position + cam.transform.forward * Mathf.Max(0.2f, h.distance));
+                    float ang = Vector3.Angle(cam.transform.forward, near - cam.transform.position);
+                    if (Physics.Raycast(cam.transform.position, cam.transform.forward, out var direct, reach, mask, QueryTriggerInteraction.Ignore) && direct.collider.GetComponentInParent<TZInspectableProp>() == c) ang = 0f;
+                    if (!seen.TryGetValue(c, out var old) || ang < old) seen[c] = ang;
+                }
+                foreach (var kv in seen) cands.Add(kv.Key);
+                cands.Sort((x, y) => seen[x].CompareTo(seen[y]));
+                if (cands.Count > 0)
+                {
+                    // hysteresis: keep the current target while it is still a near-best candidate (no flicker between bag and receipt)
+                    if (current != null && cands.Contains(current) && seen[current] <= seen[cands[0]] + 2.5f) candIx = cands.IndexOf(current);
+                    else if (candIx >= cands.Count || current == null || !cands.Contains(current)) candIx = 0;
+                    next = cands[Mathf.Clamp(candIx, 0, cands.Count - 1)];
+                }
             }
             // same target but its state changed (door closed/opened, switch toggled): the prompt must follow at once, not on the next retarget
             string label = next != null ? PromptFor(next) : null;
@@ -95,18 +131,20 @@ namespace TableZero
                 if (current == null) TZHud.I.SetFocus(null, null);
                 else
                 {
-                    TZHud.I.SetFocus(current.KoreanLabel, label);
+                    TZHud.I.SetFocus(current.KoreanLabel + (cands.Count > 1 ? $"  ({cands.IndexOf(current) + 1}/{cands.Count})" : ""), label + (cands.Count > 1 ? "   Tab 겹친 대상 전환" : ""));
                 }
             }
         }
 
         string lastPrompt;
+        static bool ExaminableKind(TZInspectableProp p) => p != null && (p.handheld || p.kind == TZPropKind.Move || p.kind == TZPropKind.EvidenceAnchor);
+
         static string PromptFor(TZInspectableProp p)
         {
             string extra = p.kind == TZPropKind.Inspect || p.kind == TZPropKind.EvidenceAnchor ? "" : "   Q 자세히";
             // same verbs for mundane and case-relevant objects: the HUD never hints which matters
             string collect = p.kind == TZPropKind.Move || p.kind == TZPropKind.EvidenceAnchor || p.handheld ? "   X 길게 채취" : "";
-            return VerbKo(p) + extra + "   C 촬영" + collect;
+            return VerbKo(p) + extra + (ExaminableKind(p) ? "   V 확대 조사" : "") + "   C 촬영" + collect;
         }
 
         void OnRequested(TZInspectableProp p, TZPropAction a) => Send(p, a);
@@ -129,7 +167,7 @@ namespace TableZero
                 var r = JsonUtility.FromJson<PropResp>(text);
                 if (r == null || !r.ok || r.data == null) { Fail(text); return; }
                 p.ApplyServerApproved(a);
-                if (a == TZPropAction.Move && p.handheld) BeginExamine(p);
+                if (a == TZPropAction.Move && p.handheld) StartCoroutine(BeginExamineServer(p));
                 if (!string.IsNullOrEmpty(r.data.observation) && TZHud.I) TZHud.I.ShowSubtitle(r.data.observation);
                 TZEventLog.Record("prop_" + Verb(a), p.propId);
             });
@@ -201,15 +239,67 @@ namespace TableZero
             Debug.Log("[interaction] " + raw);
         }
 
-        // ---------- hands-on examine (pick up, turn over, put back exactly) ----------
+        // ---------- hands-on examine: drag to rotate, wheel to zoom, R = original pose, F = record what faces the camera, H = hint, E = put back ----------
+        IEnumerator BeginExamineServer(TZInspectableProp p)
+        {
+            if (pending || TZServer.I == null || examining) yield break;
+            pending = true; ObsInfo info = null; string raw = "";
+            TZServer.I.Post("/v1/prop/observe_info", JsonUtility.ToJson(new ObsReq { prop_id = p.propId, player_pos = PlayerPos() }), (ok, t) => { raw = t; if (ok) { try { info = JsonUtility.FromJson<ObsInfoResp>(t)?.data; } catch { } } });
+            while (raw == "") yield return null;
+            pending = false;
+            if (info == null) { Fail(raw); yield break; }
+            exInfo = info; BeginExamine(p);
+        }
+
         void BeginExamine(TZInspectableProp p)
         {
             examining = p;
-            exParent = p.transform.parent; exPos = p.transform.position; exRot = p.transform.rotation;
-            exSpin = Vector2.zero;
+            exParent = p.transform.parent; exPos = p.transform.position; exRot = p.transform.rotation; exStartRot = exRot;
+            exSpin = Vector2.zero; exDist = 0.42f; exBusy = false;
+            // thin axis = the face normal of a phone / receipt / sheet; the face that points up while it lies on the floor is its "front"
+            var rends = p.GetComponentsInChildren<MeshFilter>();
+            Bounds lb = new Bounds(); bool first = true;
+            foreach (var mf in rends) { if (!mf.sharedMesh) continue; var b = mf.sharedMesh.bounds; var t = mf.transform;
+                Vector3 c = p.transform.InverseTransformPoint(t.TransformPoint(b.center)); var bb = new Bounds(c, p.transform.InverseTransformVector(t.TransformVector(b.size))); if (first) { lb = bb; first = false; } else lb.Encapsulate(bb); }
+            Vector3 e = lb.extents; int thin = 0, lng = 0; float[] ev = { Mathf.Abs(e.x), Mathf.Abs(e.y), Mathf.Abs(e.z) };
+            for (int i = 1; i < 3; i++) { if (ev[i] < ev[thin]) thin = i; if (ev[i] > ev[lng]) lng = i; }
+            Vector3 ax(int i) => i == 0 ? p.transform.right : i == 1 ? p.transform.up : p.transform.forward;
+            exThin = ax(thin).normalized; exLong = ax(lng).normalized; exFrontSign = Vector3.Dot(exThin, Vector3.up) >= 0 ? 1f : -1f;
             if (player) player.inputLocked = true;
-            StartCoroutine(MoveTo(p.transform, cam.transform.position + cam.transform.forward * 0.42f - cam.transform.up * 0.05f, 0.35f));
-            if (TZHud.I) TZHud.I.SetFocus(p.KoreanLabel, "마우스로 돌려 보기   E 내려놓기");
+            StartCoroutine(HoldInFront());
+            UpdateExamineHud();
+            if (TZHud.I && exInfo != null && !string.IsNullOrEmpty(exInfo.intro)) TZHud.I.ShowSubtitle(exInfo.intro, 5f);
+        }
+
+        IEnumerator HoldInFront()
+        {
+            var p = examining; if (!p) yield break;
+            Vector3 a = p.transform.position;
+            for (float k = 0; k < 1 && examining == p; k += Time.deltaTime / 0.35f) { p.transform.position = Vector3.Lerp(a, ExTarget(), Mathf.SmoothStep(0, 1, k)); yield return null; }
+        }
+        Vector3 ExTarget() => cam.transform.position + cam.transform.forward * exDist - cam.transform.up * 0.05f;
+
+        void UpdateExamineHud()
+        {
+            if (!TZHud.I || examining == null) return;
+            string prog = exInfo != null ? $"관찰 {exInfo.done}/{exInfo.total}   " : "";
+            TZHud.I.SetFocus(examining.KoreanLabel, prog + "드래그 회전 · 휠 확대 · F 이 면 기록 · H 힌트 · R 처음 방향 · E 내려놓기(현장 복귀)");
+        }
+
+        // which recorded point is the camera looking at right now? (front/back by the face that was up, edge by the long axis, any = always)
+        string FacingPointId()
+        {
+            if (exInfo?.points == null) return null;
+            Vector3 toCam = (cam.transform.position - examining.transform.position).normalized;
+            float face = Vector3.Dot(exThin, toCam) * exFrontSign;          // >0 => the original front faces the camera
+            bool edgeOn = Mathf.Abs(Vector3.Dot(exThin, toCam)) < 0.45f;
+            foreach (var pt in exInfo.points)
+            {
+                if (pt.observed) continue;
+                bool ok = pt.face == "any" || (pt.face == "front" && face > 0.8f) || (pt.face == "back" && face < -0.8f) || (pt.face == "edge" && edgeOn);
+                if (ok && exDist <= 0.46f) return pt.id;
+            }
+            return null;
         }
 
         void UpdateExamine(Keyboard kb)
@@ -217,11 +307,51 @@ namespace TableZero
             var m = Mouse.current;
             if (m != null)
             {
-                Vector2 d = m.delta.ReadValue() * 0.25f;
-                examining.transform.Rotate(cam.transform.up, -d.x, Space.World);
-                examining.transform.Rotate(cam.transform.right, d.y, Space.World);
+                if (m.leftButton.isPressed)   // rotate only while dragging (no accidental spin)
+                {
+                    Vector2 d = m.delta.ReadValue() * 0.3f;
+                    examining.transform.Rotate(cam.transform.up, -d.x, Space.World);
+                    examining.transform.Rotate(cam.transform.right, d.y, Space.World);
+                }
+                float w = m.scroll.ReadValue().y;
+                if (Mathf.Abs(w) > 0.01f) { exDist = Mathf.Clamp(exDist - Mathf.Sign(w) * 0.04f, 0.2f, 0.7f); examining.transform.position = ExTarget(); }
             }
+            if (kb.rKey.wasPressedThisFrame) StartCoroutine(ResetPose());
+            if (kb.fKey.wasPressedThisFrame && !exBusy) StartCoroutine(RecordFacing());
+            if (kb.hKey.wasPressedThisFrame && !exBusy) StartCoroutine(AskHint());
             if (kb.eKey.wasPressedThisFrame || kb.escapeKey.wasPressedThisFrame) StartCoroutine(PutBack());
+        }
+
+        IEnumerator ResetPose()
+        {
+            var p = examining; if (!p) yield break; Quaternion a = p.transform.rotation;
+            for (float k = 0; k < 1 && examining == p; k += Time.deltaTime / 0.3f) { p.transform.rotation = Quaternion.Slerp(a, exStartRot, Mathf.SmoothStep(0, 1, k)); yield return null; }
+        }
+
+        IEnumerator RecordFacing()
+        {
+            string id = FacingPointId();
+            if (id == null) { if (TZHud.I) TZHud.I.Toast("아직 눈에 띄는 곳을 찾지 못했다 — 돌려 보거나 가까이 당겨 보자 (H 힌트)"); yield break; }
+            exBusy = true; string raw = ""; ObsData od = null;
+            TZServer.I.Post("/v1/prop/observe", JsonUtility.ToJson(new ObsReq { prop_id = examining.propId, point_id = id, player_pos = PlayerPos() }), (ok, t) => { raw = t; if (ok) { try { od = JsonUtility.FromJson<ObsResp>(t)?.data; } catch { } } });
+            while (raw == "") yield return null; exBusy = false;
+            if (od == null) { Fail(raw); yield break; }
+            if (exInfo != null) { exInfo.done = od.done; foreach (var pt in exInfo.points) if (pt.id == od.point) { pt.observed = true; pt.label = od.label; } }
+            if (TZHud.I)
+            {
+                TZHud.I.ShowSubtitle((od.first ? "[기록] " + od.label + " — " : "") + od.text + (string.IsNullOrEmpty(od.limit) ? "" : "\n한계: " + od.limit), 8f);
+                if (!string.IsNullOrEmpty(od.note) && od.first) TZHud.I.Toast(od.note, 4f);
+                if (od.complete) TZHud.I.Toast("이 물건에서 볼 수 있는 곳을 모두 기록했다", 3f);
+            }
+            TZEventLog.Record("observe_" + id, examining.propId); UpdateExamineHud();
+        }
+
+        IEnumerator AskHint()
+        {
+            exBusy = true; string raw = ""; string h = null;
+            TZServer.I.Post("/v1/prop/hint", JsonUtility.ToJson(new ObsReq { prop_id = examining.propId, player_pos = PlayerPos() }), (ok, t) => { raw = t; if (ok) { try { h = JsonUtility.FromJson<HintResp>(t)?.data?.hint; } catch { } } });
+            while (raw == "") yield return null; exBusy = false;
+            if (TZHud.I && !string.IsNullOrEmpty(h)) TZHud.I.ShowSubtitle("힌트: " + h, 5f);
         }
 
         IEnumerator MoveTo(Transform t, Vector3 target, float dur)

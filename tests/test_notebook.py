@@ -41,3 +41,37 @@ class NotebookTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class SceneObservationTests(unittest.TestCase):
+    def setUp(self):
+        from tests.test_v11int_case_flow import near
+        self.c = EpisodeController(); self.c.transition('room302')
+        self.me = near(self.c, 'living_phone'); self.p = self.c.props
+
+    def test_phone_points_are_staged_hinted_and_never_name_a_culprit(self):
+        info = self.p.observation_info('living_phone', player_pos=self.me)
+        self.assertEqual(info['total'], 3); self.assertEqual(info['done'], 0)
+        self.assertTrue(all(pt['label'] == '' for pt in info['points']))          # nothing is pre-highlighted
+        h1 = self.p.hint('living_phone', player_pos=self.me)['hint']; h2 = self.p.hint('living_phone', player_pos=self.me)['hint']
+        self.assertNotEqual(h1, h2)                                              # hints escalate step by step
+        r = self.p.observe('living_phone', 'screen', player_pos=self.me)
+        self.assertTrue(r['first']); self.assertIn('알 수 없다', r['text'])
+        self.assertFalse(self.p.observe('living_phone', 'screen', player_pos=self.me)['first'])
+        for pid in ('lock', 'back'): r = self.p.observe('living_phone', pid, player_pos=self.me)
+        self.assertTrue(r['complete'])
+        for rec in self.p.scene_observations():
+            for bad in ('범인', '박현수가', '이서연이', '강도현이'): self.assertNotIn(bad, rec['text'])
+
+    def test_observation_is_comparable_and_separate_from_records(self):
+        self.p.observe('living_phone', 'screen', player_pos=self.me)
+        self.c.world.expose_evidence('V21-E07')
+        r = notebook.compare(self.c, None, 'obs:living_phone:screen', 'V21-E07')
+        self.assertEqual(r['a']['kind'], 'observation'); self.assertFalse(r['same_source_family'])   # external look vs digital data
+        self.assertIsNone(r['verdict'])
+        self.assertEqual({o['id'] for o in notebook.observations(self.c)}, {'V21-E17', 'V21-E07'})   # records only; the observation lives in scene_observations
+
+    def test_every_other_prop_gets_one_neutral_point(self):
+        from tests.test_v11int_case_flow import near
+        me = near(self.c, 'kitchen_mug'); info = self.p.observation_info('kitchen_mug', player_pos=me)
+        self.assertEqual(info['total'], 1)

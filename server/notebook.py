@@ -97,6 +97,12 @@ def compare(ctrl, service, a, b):
             e = ev[ref]; ti = _time_info(e)
             return {'item_ref': ref, 'kind': 'record', 'title': e['name'], 'text': e['detail'], 'times': ti['times'], 'certainty': ti['certainty_ko'], 'time_note': ti['note'],
                     'source_family': e.get('source_family', ''), 'facts': e.get('fact_ids', []), 'limitation': e['limitations']}
+        mo = re.fullmatch(r'obs:([a-z0-9_]+):([a-z0-9_]+)', ref or '')
+        if mo:
+            rec = ctrl.props.observed.get(mo.group(1), {}).get(mo.group(2))
+            if not rec: raise GuardError('아직 기록하지 않은 관찰입니다')
+            return {'item_ref': ref, 'kind': 'observation', 'title': f"{rec['prop_label']} — {rec['label']}", 'text': rec['text'], 'times': [], 'certainty': '현장에서 직접 본 것',
+                    'time_note': '', 'source_family': 'SCENE:' + mo.group(1), 'facts': [], 'limitation': rec['limit']}
         m = re.fullmatch(r'(s[1-3])#(\d+)', ref or '')
         if m and service:
             mem = getattr(service, '_strategy', {}).get(m.group(1))
@@ -121,4 +127,4 @@ def compare(ctrl, service, a, b):
 
 def projection(ctrl, service):
     return {'observations': observations(ctrl), 'statements': statements(ctrl, service), 'hypotheses': list(getattr(ctrl, 'hypotheses', [])),
-            'to_check': to_check(ctrl), 'custody': ctrl.props.custody(), 'clock': ctrl.clock_text()}
+            'scene_observations': ctrl.props.scene_observations(), 'to_check': to_check(ctrl), 'custody': ctrl.props.custody(), 'clock': ctrl.clock_text()}

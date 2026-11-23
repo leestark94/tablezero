@@ -76,6 +76,12 @@ class LocalBridgeHandler(BaseHTTPRequestHandler):
             elif path=='/v1/prop/procedure':
                 result=self.controller.props.procedure(value.get('prop_id'),value.get('action'),
                     player_pos=value.get('player_pos'))
+            elif path=='/v1/prop/observe_info':
+                result=self.controller.props.observation_info(value.get('prop_id'),player_pos=value.get('player_pos'))
+            elif path=='/v1/prop/observe':
+                result=self.controller.props.observe(value.get('prop_id'),value.get('point_id'),player_pos=value.get('player_pos'))
+            elif path=='/v1/prop/hint':
+                result=self.controller.props.hint(value.get('prop_id'),player_pos=value.get('player_pos'))
             elif path=='/v1/player/gloves':
                 result=self.controller.props.set_gloves(value.get('on') is True)
             elif path=='/v1/desk/options':

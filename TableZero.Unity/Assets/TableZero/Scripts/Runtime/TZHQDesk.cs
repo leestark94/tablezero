@@ -192,7 +192,8 @@ namespace TableZero
         [Serializable] class NbQ { public string id, text, clock; }
         [Serializable] class NbCheck { public NbReq[] requests; public NbQ[] questions; }
         [Serializable] class NbCust { public string prop_id, label, status; }
-        [Serializable] class NbData { public NbObs[] observations; public NbStmt[] statements; public NbHyp[] hypotheses; public NbCheck to_check; public NbCust[] custody; public string clock; }
+        [Serializable] class NbScene { public string prop_id, prop_label, point_id, label, text, limit, clock; }
+        [Serializable] class NbData { public NbScene[] scene_observations; public NbObs[] observations; public NbStmt[] statements; public NbHyp[] hypotheses; public NbCheck to_check; public NbCust[] custody; public string clock; }
         [Serializable] class NbResp { public bool ok; public NbData data; }
         [Serializable] class CmpSide { public string item_ref, kind, title, text, certainty, time_note, source_family, limitation; public string[] times; }
         [Serializable] class CmpData { public CmpSide a, b; public bool same_source_family; public string[] notes; }
@@ -229,6 +230,19 @@ namespace TableZero
                     var cb = Box(Panel); cb.style.marginBottom = 10; cb.Add(L("채취·봉인한 실물 (분석 결과 아님)", 16, Accent, true));
                     foreach (var c in nb.custody) cb.Add(L($"• {c.label} — {c.status}", 14, Ink));
                     sv.Add(cb);
+                }
+                if (nb.scene_observations != null && nb.scene_observations.Length > 0)
+                {
+                    var hd = L("현장에서 직접 본 것 (내가 확대 조사로 기록한 외형 관찰)", 16, Accent, true); hd.style.marginBottom = 6; sv.Add(hd);
+                    foreach (var o in nb.scene_observations)
+                    {
+                        var card = Box(Panel); card.style.marginBottom = 8; card.style.borderLeftWidth = 3; card.style.borderLeftColor = Accent;
+                        var head = new VisualElement(); head.style.flexDirection = FlexDirection.Row; head.style.alignItems = Align.Center;
+                        var tt = L($"{o.prop_label} — {o.label}  ·  사건 시각 {o.clock}", 16, Ink, true); tt.style.flexGrow = 1; head.Add(tt); head.Add(PickBtn("obs:" + o.prop_id + ":" + o.point_id)); card.Add(head);
+                        card.Add(L(o.text, 15, Ink)); if (!string.IsNullOrEmpty(o.limit)) card.Add(L("한계: " + o.limit, 12, Warn));
+                        sv.Add(card);
+                    }
+                    var hd2 = L("확보한 기록 (출처가 있는 자료)", 16, Accent, true); hd2.style.marginTop = 10; hd2.style.marginBottom = 6; sv.Add(hd2);
                 }
                 foreach (var o in nb.observations ?? new NbObs[0])
                 {
