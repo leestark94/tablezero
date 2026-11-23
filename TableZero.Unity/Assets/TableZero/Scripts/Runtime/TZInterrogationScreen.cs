@@ -32,7 +32,7 @@ namespace TableZero
         [Serializable] class AskReq { public string question, action_id, input_mode, evidence_id; }
         [Serializable] class StartData { public string actor_id, clock; public int budget_left; }
         [Serializable] class StartResp { public bool ok; public StartData data; public string error; }
-        [Serializable] class Receipt { public string actor_id, suspect_text, motion_proposal, reply_mode, provider, performer, model, beat; public int seconds_left, seconds_spent, beat_seq; public float latency_ms, first_token_ms, plan_ms, beat_intensity; }
+        [Serializable] class Receipt { public string actor_id, suspect_text, motion_proposal, reply_mode, provider, performer, model, beat, fallback_reason; public int seconds_left, seconds_spent, beat_seq; public float latency_ms, first_token_ms, plan_ms, beat_intensity; }
         [Serializable] class AskResp { public bool ok; public Receipt data; public string error, detail; }
         [Serializable] class JobData { public string job_id; }
         [Serializable] class JobResp { public bool ok; public JobData data; public string error; }

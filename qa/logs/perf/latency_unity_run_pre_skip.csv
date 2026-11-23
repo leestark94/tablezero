@@ -1,0 +1,5 @@
+utc,session,actor,q_len,accepted_s,reaction_s,first_shown_s,generation_complete_s,subtitle_done_s,performer,model,server_first_token_ms,server_plan_ms,server_latency_ms,fps,editor
+2026-11-23T02:27:58.6686513Z,,s1,17,0.116,0.421,3.623,7.703,7.703,AUTHORED_FALLBACK,"OLLAMA_LOCAL:hf.co/DevQuasar/kakaocorp.kanana-1.5-8b-instruct-2505-GGUF:Q4_K_M",0,1.98,0,4,True
+2026-11-23T02:28:07.7873515Z,,s1,34,0.018,0.727,3.586,7.902,7.902,AUTHORED_FALLBACK,"OLLAMA_LOCAL:hf.co/DevQuasar/kakaocorp.kanana-1.5-8b-instruct-2505-GGUF:Q4_K_M",0,0.39,0,10,True
+2026-11-23T02:28:17.5450137Z,,s1,40,0.102,0.929,3.617,8.541,8.541,AUTHORED_FALLBACK,"OLLAMA_LOCAL:hf.co/DevQuasar/kakaocorp.kanana-1.5-8b-instruct-2505-GGUF:Q4_K_M",0,0.58,0,48,True
+2026-11-23T02:28:25.8726220Z,,s1,17,0.008,0.403,3.575,7.112,7.112,AUTHORED_FALLBACK,"OLLAMA_LOCAL:hf.co/DevQuasar/kakaocorp.kanana-1.5-8b-instruct-2505-GGUF:Q4_K_M",0,0.27,0,37,True

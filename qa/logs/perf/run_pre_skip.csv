@@ -1,0 +1,5 @@
+actor,accepted_s,reaction_s,first_shown_s,generation_complete_s,subtitle_done_s,performer,server_first_token_ms,server_plan_ms,server_latency_ms
+s1,0.116,0.421,3.623,7.703,7.703,AUTHORED_FALLBACK,0,1.98,0
+s1,0.018,0.727,3.586,7.902,7.902,AUTHORED_FALLBACK,0,0.39,0
+s1,0.102,0.929,3.617,8.541,8.541,AUTHORED_FALLBACK,0,0.58,0
+s1,0.008,0.403,3.575,7.112,7.112,AUTHORED_FALLBACK,0,0.27,0

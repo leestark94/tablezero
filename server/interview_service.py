@@ -62,13 +62,14 @@ class TurnReceipt:
     beat_seq:int=0
     performer:str='LLM'          # LLM | AUTHORED_FALLBACK (model failed/slow) | AUTHORED_MODE (forced) — never presented as a model answer
     first_token_ms:float=0.0
+    fallback_reason:str=''        # '' | model_slow (deadline missed) | model_skipped (recent misses: no waiting) | rejected (guards) | forced
     plan_ms:float=0.0
     model:str=''
 
 class InterviewService:
     max_attempts=3
     def __init__(self,episode, tactics=None):
-        self._strategy={}; self.last_plan=None; self._epoch=0
+        self._strategy={}; self.last_plan=None; self._epoch=0; self._miss_streak=0; self._skip_turns=0
         self.episode=episode
         self.tactics=tactics or TacticDirector()
         self._lock=threading.RLock()
@@ -184,7 +185,11 @@ class InterviewService:
                 if first[0] is None and t.strip():first[0]=_time.perf_counter()
             ctx['on_partial']=timed2
         ctx['first_token_s']=float(os.environ.get('TABLEZERO_FIRST_TOKEN_S','3.5'))
+        fallback_reason=''
         n_attempts=0 if (plan is not None and mode_env=='authored') else self.max_attempts
+        if plan is not None and mode_env!='authored' and self._skip_turns>0:
+            # the model missed its deadline twice in a row: do not make the player wait for a third miss. Answer from the plan at once (labelled), probe the model again after a few turns
+            n_attempts=0; self._skip_turns-=1; fallback_reason='model_skipped'
         budget_s=float(os.environ.get('TABLEZERO_LLM_BUDGET_S','7'))   # total wall time the model may use for one answer (all retries)
         for attempt in range(n_attempts):
             if plan is not None and attempt and (_time.perf_counter()-t_gen0)>budget_s:break
@@ -198,7 +203,7 @@ class InterviewService:
             try:
                 provider_reply=self.episode.provider.run(ctx)
             except ProviderError as e:
-                attempts.append('provider_error')
+                attempts.append('provider_error'); fallback_reason='model_slow'
                 if plan is not None:break        # model unreachable/too slow: do not wait through more attempts, answer from the plan
                 continue
             total_ms+=provider_reply['latency_ms']
@@ -237,6 +242,12 @@ class InterviewService:
             except (GuardError,KoreanDialogueError) as e:
                 attempts.append(str(e));continue
         if first[0] is not None:first_token_ms=(first[0]-t_gen0)*1000
+        if plan is not None and mode_env!='authored' and fallback_reason!='model_skipped':
+            if reply is not None:self._miss_streak=0
+            elif fallback_reason=='model_slow':
+                self._miss_streak+=1
+                if self._miss_streak>=2:self._skip_turns=3;self._miss_streak=0
+            elif not fallback_reason:fallback_reason='rejected'
         model_label=provider_label
         self.episode._log('interview_generation',{'actor':actor,'attempts':len(attempts)+(1 if reply else 0),
                           'rejections':attempts,'latency_ms_total':round(total_ms,1),'first_token_ms':round(first_token_ms,1),
@@ -277,7 +288,7 @@ class InterviewService:
                            accepted['motion_proposal'],accepted['action_proposal'],
                            reply_mode=accepted['reply_mode'],generation_attempts=len(attempts)+1,
                            beat=(pick_beat(plan,presented_evidence)[0] if plan is not None else 'Answering'),beat_intensity=(pick_beat(plan,presented_evidence)[1] if plan is not None else 0.3),beat_seq=len(st.history) if plan is not None else 0,
-                           performer=performer,first_token_ms=round(first_token_ms,1),plan_ms=round(plan_ms,2),model=model_label)
+                           performer=performer,fallback_reason=(fallback_reason if performer!='LLM' else ''),first_token_ms=round(first_token_ms,1),plan_ms=round(plan_ms,2),model=model_label)
         self._receipts[action_id]=receipt;self._fingerprints[action_id]=fingerprint
         self.episode._log('interview_turn',{'actor':actor,'input_mode':input_mode,
              'seconds_spent':receipt.seconds_spent,'provider':receipt.provider,
