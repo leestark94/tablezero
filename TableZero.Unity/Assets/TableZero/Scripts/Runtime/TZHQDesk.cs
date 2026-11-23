@@ -26,8 +26,8 @@ namespace TableZero
         [Serializable] class EvidenceCard { public string id, name, detail, source, limitation, strength; }
         [Serializable] class EvidenceList { public EvidenceCard[] evidence; }
         [Serializable] class EvidenceResp { public bool ok; public EvidenceList data; public string error; }
-        [Serializable] class ReqOpt { public string request_id, label, blocked_reason; public int cost, minutes; public bool available, done; }
-        [Serializable] class Options { public int budget_left, budget_total; public ReqOpt[] requests; public string clock; }
+        [Serializable] class ReqOpt { public string request_id, label, blocked_reason, kind; public int cost, minutes; public bool available, done, affordable; }
+        [Serializable] class Options { public int budget_left, budget_total, next_interview_cost; public ReqOpt[] requests; public string clock, advice; }
         [Serializable] class OptionsResp { public bool ok; public Options data; public string error; }
         [Serializable] class Beat { public string location, staging, subtitle; }
         [Serializable] class Reaction { public string variant_id; public Beat[] beats; }
@@ -165,7 +165,7 @@ namespace TableZero
             right.Add(Btn("302호 현장 재방문", () => StartCoroutine(Revisit())));
             right.Add(Btn("최종 수사보고서", () => { keepScroll = Vector2.zero; Report(); }, enabled: !reportSubmitted, whyDisabled: "보고서는 이미 제출됐습니다"));
             right.Add(Divider());
-            right.Add(L("현장 재방문은 이동·서류 처리로 사건 시각이 흐른다. 기록 요청은 수사 자원을 쓴다", 13, Dim));
+            right.Add(L("현장 재방문은 이동·서류 처리로 사건 시각이 흐른다. 기록 요청은 수사 자원을 쓴다" + (opts != null ? $"\n다음 면담 개시 비용: {(opts.next_interview_cost == 0 ? "없음(첫 면담)" : "수사 자원 " + opts.next_interview_cost)}" : ""), 13, Dim));
             cols.Add(right);
             s.Add(cols);
             Show(s);
@@ -343,7 +343,8 @@ namespace TableZero
         {
             var s = Shell("기록 요청 · 감식 의뢰");
             s.Add(L("확인되지 않은 사실은 요청과 감식으로만 검증한다", 26, Ink));
-            var sub = L("각 요청은 수사 자원을 쓰고, 실제 회신까지 걸리는 시간이 있다. 대상·절차 요건이 안 되면 이유가 표시된다", 14, Dim); sub.style.marginBottom = 14; s.Add(sub);
+            var sub = L("각 요청은 수사 자원을 쓰고, 실제 회신까지 걸리는 시간이 있다. 대상·절차 요건이 안 되면 이유가 표시된다", 14, Dim); sub.style.marginBottom = 6; s.Add(sub);
+            if (opts != null && !string.IsNullOrEmpty(opts.advice)) { var adv = L(opts.advice, 15, Warn, true); adv.style.marginBottom = 10; s.Add(adv); }
             var sv = new ScrollView(); sv.style.flexGrow = 1; sv.style.marginBottom = 16; KeepScroll(sv);
             foreach (var r in opts?.requests ?? new ReqOpt[0])
             {
@@ -352,7 +353,7 @@ namespace TableZero
                 row.style.backgroundColor = Panel; Pad(row, 12); Radius(row, 5); row.style.marginBottom = 8;
                 var info = new VisualElement(); info.style.flexGrow = 1;
                 info.Add(L(r.label, 17, Ink, true));
-                var meta = L($"수사 자원 {r.cost}  ·  회신까지 약 {r.minutes}분 (사건 시각 기준)", 13, Dim); info.Add(meta);
+                var meta = L($"자료 종류: {r.kind}  ·  수사 자원 {r.cost}  ·  회신까지 약 {r.minutes}분 (사건 시각 기준)  ·  결과는 요청해야 알 수 있다", 13, new Color(0.80f, 0.82f, 0.85f)); info.Add(meta);
                 if (!string.IsNullOrEmpty(r.blocked_reason)) info.Add(L("요건 미충족: " + r.blocked_reason, 13, Warn));
                 else if (!r.done && !afford) info.Add(L($"수사 자원이 부족합니다 (필요 {r.cost}, 남음 {opts.budget_left}). 확보한 기록만으로 보고서를 쓸 수 있습니다", 13, Warn));
                 row.Add(info);

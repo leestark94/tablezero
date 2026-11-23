@@ -79,6 +79,11 @@ WHY_KO = {'Physical evidence requires scene': '302호 안에서만 채취할 수
           'Starting record already present': '이미 확보된 기록입니다', 'Case closed': '이미 종결된 사건입니다'}
 
 
+REQUEST_KIND = {'V21-E02': '영상 자료', 'V21-E03': '신고 접수 녹취', 'V21-E04': '음성 녹음', 'V21-E05': '의료 소견', 'V21-E07': '통신·디지털 포렌식', 'V21-E09': '의료 감정',
+                'V21-E10': '문서 대조', 'V21-E11': '금융 자료', 'V21-E12': '메시지 원본', 'V21-E13': '근무 기록', 'V21-E14': '결제·영상 기록', 'V21-E15': '현장 재구성 감정',
+                'V21-E16': '압수수색·물증 감정', 'V21-E18': '통신 기록', 'V21-E19': '표면 감정'}
+
+
 class PropAuthority:
     def __init__(self, episode):
         self.episode = episode
@@ -293,8 +298,18 @@ class RecordDesk:
             out.append({'request_id': eid, 'label': r['label'], 'cost': r['cost'], 'minutes': r['minutes'],
                         'available': ok and eid not in self.episode.world.available_evidence,
                         'done': eid in self.episode.world.available_evidence,
-                        'blocked_reason': '' if ok else why})
-        return {'budget_left': self.budget - self.spent, 'budget_total': self.budget, 'requests': out,
+                        'blocked_reason': '' if ok else why, 'kind': REQUEST_KIND.get(eid, '기록'),
+                        'affordable': r['cost'] <= self.budget - self.spent})
+        left = self.budget - self.spent
+        todo = [o for o in out if o['available'] and not o['done']]
+        advice = ''
+        if todo and not any(o['affordable'] for o in todo):
+            advice = '남은 수사 자원으로 요청할 수 있는 확인이 없습니다. 확보한 기록으로 보고서를 쓰거나 판단을 보류할 수 있습니다'
+        elif not todo:
+            blocked = [o for o in out if not o['available'] and not o['done']]
+            if blocked: advice = '지금 요청할 수 있는 확인이 없습니다. 선행 조건(면담·현장 채취·앞선 기록)을 확인하세요'
+        nxt = 0 if not self.episode.state.interviewed else self.episode.world._canon['production_rules']['major_action_costs']['new_interview_session']
+        return {'budget_left': left, 'budget_total': self.budget, 'requests': out, 'next_interview_cost': nxt, 'advice': advice,
                 'clock': self.episode.clock_text()}
 
     def _eligible(self, eid):
