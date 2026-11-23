@@ -151,3 +151,5 @@ for _sid, _f in _SLOTS.items():
 for _sid, _t in _TOPICS.items():
     for _fid, _tl in _t.items():
         DOSSIERS[_sid]['facts'][_fid]['topics'] = _tl
+
+DOSSIERS['s1']['facts']['visit']['cover_admits'] = True   # his cover story already admits the visit (짐 가지러): proof does not change his story

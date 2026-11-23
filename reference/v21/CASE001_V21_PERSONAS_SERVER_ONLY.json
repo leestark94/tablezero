@@ -129,7 +129,8 @@
       "topics": [
        "visit",
        "depart"
-      ]
+      ],
+      "cover_admits": true
      },
      "money": {
       "sensitivity": "minor",

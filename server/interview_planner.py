@@ -210,7 +210,7 @@ def plan_turn(personas: dict, sid: str, state: SuspectMemory, question: str, pre
                 state.challenged.add(fid); tactic, mode = 'CHALLENGE', 'counter'; counter = f['challenge']
             elif strong or fid in state.challenged or state.repeats.get(fid, 0) >= 3:
                 state.conceded.add(fid); tactic, mode, kind = 'CONCEDE_MIN', 'partial_admission', 'concede'
-                if fid in state.denied and fid not in state.reversals: state.reversals.append(fid)   # explicit, recorded change of story
+                if fid in state.denied and fid not in state.reversals and not f.get('cover_admits'): state.reversals.append(fid)   # explicit, recorded change of story
                 if f.get('reframe'): directives.append(f['reframe'])
                 for other in f.get('then_volunteer', []):
                     if other in facts: say.setdefault(other, ('concede', facts[other].get('concede') or facts[other].get('cover', '')))

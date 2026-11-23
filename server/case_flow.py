@@ -230,7 +230,7 @@ class PropAuthority:
         import json as _json, os as _os
         path = _os.path.join(_os.path.dirname(_os.path.dirname(__file__)), 'data', 'room302_observation_points.json')
         if not hasattr(PropAuthority, '_POINTS'):
-            PropAuthority._POINTS = _json.load(open(path, encoding='utf-8'))['props']
+            with open(path, encoding='utf-8') as fh: PropAuthority._POINTS = _json.load(fh)['props']
         d = self.props.definitions[prop_id]
         cfg = PropAuthority._POINTS.get(prop_id)
         if cfg: return cfg
