@@ -504,7 +504,7 @@ namespace TableZero
                 evidencePanel.style.flexDirection = FlexDirection.Column;
                 var head = new VisualElement(); head.style.flexDirection = FlexDirection.Row; head.style.alignItems = Align.Center; head.style.flexShrink = 0;
                 var h = L("증거 제시", 24, new Color(1f, 0.96f, 0.88f)); h.style.flexGrow = 1; head.Add(h);
-                var x = new Button(() => evidencePanel.style.display = DisplayStyle.None) { text = "닫기 (Esc)" }; x.style.height = 34; x.style.fontSize = 15; head.Add(x);
+                var x = new Button(() => evidencePanel.style.display = DisplayStyle.None) { text = "닫기 (Esc)" }; x.style.height = 34; x.style.fontSize = 15; x.style.backgroundColor = new Color(0.34f, 0.24f, 0.11f); x.style.color = new Color(1f, 0.95f, 0.84f); x.style.borderTopColor = x.style.borderBottomColor = x.style.borderLeftColor = x.style.borderRightColor = new Color(0.86f, 0.68f, 0.40f); head.Add(x);
                 evidencePanel.Add(head);
                 var hint = L("기록을 고르면 질문에 첨부됩니다. 아래 조각을 고르면 그 부분을 짚어 묻습니다", 14, new Color(0.85f, 0.86f, 0.88f)); hint.style.marginTop = 4; hint.style.marginBottom = 8; hint.style.flexShrink = 0; evidencePanel.Add(hint);
                 var sv = new ScrollView(); sv.style.flexGrow = 1; sv.style.flexShrink = 1; sv.style.minHeight = 0; evidencePanel.Add(sv);
@@ -517,8 +517,8 @@ namespace TableZero
                     var card = new VisualElement(); card.style.backgroundColor = new Color(0.14f, 0.15f, 0.17f, 1f); card.style.marginBottom = 8; Pad(card, 12); Radius(card, 4); card.style.borderLeftWidth = 3; card.style.borderLeftColor = new Color(0.86f, 0.68f, 0.40f);
                     var b2 = new Button(() => { SetAttachment(ev, null); evidencePanel.style.display = DisplayStyle.None; input.value = $"이 {ev.name}, 설명해 보시겠습니까?"; input.Focus(); });
                     b2.style.flexDirection = FlexDirection.Column; b2.style.alignItems = Align.FlexStart; b2.style.backgroundColor = new Color(0, 0, 0, 0); b2.style.borderTopWidth = b2.style.borderBottomWidth = b2.style.borderLeftWidth = b2.style.borderRightWidth = 0; b2.style.paddingLeft = 0;
-                    b2.Add(L(ev.name, 18, new Color(1f, 0.96f, 0.88f)));
-                    var d = L($"출처: {ev.source}\n한계: {ev.limitation}", 14, new Color(0.82f, 0.84f, 0.86f)); d.style.whiteSpace = WhiteSpace.Normal; b2.Add(d);
+                    var nm = L(ev.name, 18, new Color(1f, 0.96f, 0.88f)); nm.style.unityTextAlign = TextAnchor.UpperLeft; b2.Add(nm);
+                    var d = L($"출처: {ev.source}\n한계: {ev.limitation}", 14, new Color(0.82f, 0.84f, 0.86f)); d.style.whiteSpace = WhiteSpace.Normal; d.style.unityTextAlign = TextAnchor.UpperLeft; b2.Add(d);
                     card.Add(b2);
                     if (!string.IsNullOrEmpty(ev.detail))
                     {

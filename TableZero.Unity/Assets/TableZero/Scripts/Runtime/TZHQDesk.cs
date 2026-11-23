@@ -417,7 +417,7 @@ namespace TableZero
                 {
                     var eid = e.id; var ename = e.name;
                     var t = Btn(ename, null); t.style.fontSize = 13; t.style.height = 34; t.style.marginRight = 8;
-                    void Paint() { bool on = draftAxes[ax].Contains(eid); t.text = (on ? "✓ " : "") + ename; t.style.backgroundColor = on ? Accent : new Color(0.11f, 0.14f, 0.17f); t.style.color = on ? new Color(0.05f, 0.05f, 0.05f) : Ink; }
+                    void Paint() { bool on = draftAxes[ax].Contains(eid); t.text = (on ? "✓ " : "") + ename; t.style.backgroundColor = on ? PrimaryBg : new Color(0.11f, 0.14f, 0.17f); t.style.color = on ? PrimaryInk : Ink; Border(t, on ? Accent : new Color(0.33f, 0.38f, 0.42f), on ? 2 : 1); }
                     t.clicked += () => { if (!draftAxes[ax].Remove(eid)) draftAxes[ax].Add(eid); Paint(); Refresh(); };   // in place: no rebuild, so the scroll position and the text focus stay
                     Paint(); picks.Add(t);
                 }

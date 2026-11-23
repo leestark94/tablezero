@@ -13,6 +13,9 @@ namespace TableZero
             Accent = new Color(0.73f, 0.60f, 0.45f), Paper = new Color(0.90f, 0.86f, 0.78f), PaperInk = new Color(0.13f, 0.16f, 0.17f),
             Warn = new Color(0.78f, 0.64f, 0.48f);
 
+        /// <summary>Active/primary buttons: bright text on a deep amber ground with an amber frame. (Dark text on a light amber fill read as thin grey with this font.)</summary>
+        public static readonly Color PrimaryBg = new Color(0.34f, 0.24f, 0.11f), PrimaryInk = new Color(1f, 0.95f, 0.84f);
+
         public static Label L(string t, int size, Color c, bool bold = false)
         {
             var l = new Label(t); l.style.fontSize = size; l.style.color = c; l.style.whiteSpace = WhiteSpace.Normal;
@@ -40,10 +43,10 @@ namespace TableZero
             var b = new Button(() => { if (enabled) act?.Invoke(); }) { text = text };
             b.style.fontSize = 17; b.style.height = 46; b.style.marginTop = 6; b.style.marginBottom = 6; b.style.unityTextAlign = TextAnchor.MiddleLeft;
             b.style.paddingLeft = 16; b.style.paddingRight = 16; Radius(b, 5);
-            b.style.backgroundColor = primary ? Accent : new Color(0.11f, 0.14f, 0.17f);
-            b.style.color = primary ? new Color(0.04f, 0.045f, 0.05f) : Ink;
+            b.style.backgroundColor = primary ? PrimaryBg : new Color(0.11f, 0.14f, 0.17f);
+            b.style.color = primary ? PrimaryInk : Ink;
             if (primary) b.style.unityFontStyleAndWeight = FontStyle.Bold;   // active gold buttons must never read as the thin grey 'disabled' look
-            Border(b, primary ? Accent : new Color(0.33f, 0.38f, 0.42f));
+            Border(b, primary ? Accent : new Color(0.33f, 0.38f, 0.42f), primary ? 2 : 1);
             if (!enabled) { b.style.opacity = 0.42f; b.style.backgroundColor = new Color(0.08f, 0.09f, 0.10f); b.style.color = new Color(0.70f, 0.70f, 0.70f); b.style.unityFontStyleAndWeight = FontStyle.Normal; if (!string.IsNullOrEmpty(whyDisabled)) b.tooltip = whyDisabled; }
             b.RegisterCallback<MouseEnterEvent>(_ => { if (enabled && !primary) b.style.backgroundColor = new Color(0.17f, 0.20f, 0.23f); });
             b.RegisterCallback<MouseLeaveEvent>(_ => { if (enabled && !primary) b.style.backgroundColor = new Color(0.11f, 0.14f, 0.17f); });

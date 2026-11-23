@@ -264,7 +264,8 @@ namespace TableZero
             Vector3 e = lb.extents; int thin = 0, lng = 0; float[] ev = { Mathf.Abs(e.x), Mathf.Abs(e.y), Mathf.Abs(e.z) };
             for (int i = 1; i < 3; i++) { if (ev[i] < ev[thin]) thin = i; if (ev[i] > ev[lng]) lng = i; }
             Vector3 ax(int i) => i == 0 ? p.transform.right : i == 1 ? p.transform.up : p.transform.forward;
-            exThin = ax(thin).normalized; exLong = ax(lng).normalized; exFrontSign = Vector3.Dot(exThin, Vector3.up) >= 0 ? 1f : -1f;
+            exFrontSign = Vector3.Dot(ax(thin).normalized, Vector3.up) >= 0 ? 1f : -1f;
+            exThin = p.transform.InverseTransformDirection(ax(thin)).normalized; exLong = p.transform.InverseTransformDirection(ax(lng)).normalized;   // LOCAL axes: they turn with the object
             if (player) player.inputLocked = true;
             StartCoroutine(HoldInFront());
             UpdateExamineHud();
@@ -291,8 +292,9 @@ namespace TableZero
         {
             if (exInfo?.points == null) return null;
             Vector3 toCam = (cam.transform.position - examining.transform.position).normalized;
-            float face = Vector3.Dot(exThin, toCam) * exFrontSign;          // >0 => the original front faces the camera
-            bool edgeOn = Mathf.Abs(Vector3.Dot(exThin, toCam)) < 0.45f;
+            Vector3 thinW = examining.transform.TransformDirection(exThin);
+            float face = Vector3.Dot(thinW, toCam) * exFrontSign;           // >0 => the original front faces the camera
+            bool edgeOn = Mathf.Abs(Vector3.Dot(thinW, toCam)) < 0.45f;
             foreach (var pt in exInfo.points)
             {
                 if (pt.observed) continue;

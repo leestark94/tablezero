@@ -43,17 +43,21 @@ namespace TableZero
             promptBox = new VisualElement { pickingMode = PickingMode.Ignore };
             promptBox.style.position = Position.Absolute; promptBox.style.left = 0; promptBox.style.right = 0;
             promptBox.style.top = Length.Percent(60); promptBox.style.alignItems = Align.Center; promptBox.style.opacity = 0;
-            promptName = MkLabel(21, new Color(0.95f, 0.94f, 0.90f, 0.96f));
-            promptVerbs = MkLabel(15, new Color(0.86f, 0.86f, 0.83f, 0.85f));
+            promptName = MkLabel(23, new Color(1f, 0.97f, 0.90f, 1f));
+            promptVerbs = MkLabel(17, new Color(1f, 0.96f, 0.86f, 1f));
             promptVerbs.style.marginTop = 4; promptVerbs.style.letterSpacing = 1;
-            promptBox.Add(promptName); promptBox.Add(promptVerbs);
+            // a dark plate behind the prompt: readable on white paper / bright surfaces too (QA: guide text vanished over lit paper)
+            var plate = new VisualElement { pickingMode = PickingMode.Ignore }; plate.style.backgroundColor = new Color(0.03f, 0.03f, 0.035f, 0.78f); plate.style.alignItems = Align.Center;
+            plate.style.paddingTop = 8; plate.style.paddingBottom = 10; plate.style.paddingLeft = 20; plate.style.paddingRight = 20; SetRadius(plate, 6);
+            plate.Add(promptName); plate.Add(promptVerbs); promptBox.Add(plate);
             root.Add(promptBox);
 
             subtitleBox = new VisualElement { pickingMode = PickingMode.Ignore };
             subtitleBox.style.position = Position.Absolute; subtitleBox.style.left = Length.Percent(18); subtitleBox.style.right = Length.Percent(18);
             subtitleBox.style.bottom = Length.Percent(9); subtitleBox.style.alignItems = Align.Center; subtitleBox.style.opacity = 0;
-            subtitle = MkLabel(21, new Color(0.96f, 0.95f, 0.92f, 1));
+            subtitle = MkLabel(21, new Color(1f, 0.98f, 0.94f, 1));
             subtitle.style.whiteSpace = WhiteSpace.Normal; subtitle.style.unityTextAlign = TextAnchor.MiddleCenter;
+            subtitle.style.backgroundColor = new Color(0.02f, 0.02f, 0.025f, 0.72f); subtitle.style.paddingLeft = 18; subtitle.style.paddingRight = 18; subtitle.style.paddingTop = 8; subtitle.style.paddingBottom = 8; SetRadius(subtitle, 6);
             subtitleBox.Add(subtitle);
             root.Add(subtitleBox);
 
